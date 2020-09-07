@@ -1,7 +1,29 @@
 {% extends "navigate/base.html" %}
 
 {% block content %}
-<h1>
-	Navigate
-</h1>
+<!-- search bar -->
+<div class="row top" id="top-container">
+	<div class="col-sm-10">
+		<div class="row" id="search-bar-container">
+			<input type="text" placeholder="Search..">
+		</div>
+	
+		<div class=row id="options-container">
+			<p>dummy options</p>
+		</div>
+	</div>
+</div>
+
+<!-- map and list -->
+<div class="row bottom">
+	<!-- map -->
+	<div class="col-sm-8" id="map-container">
+
+	</div>
+
+	<!-- list -->
+	<div class="col-sm-4" id="list-container">
+		
+	</div>
+</div>
 {% endblock content %}
