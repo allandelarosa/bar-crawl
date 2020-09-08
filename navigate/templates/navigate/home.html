@@ -1,29 +1,19 @@
 {% extends "navigate/base.html" %}
 
 {% block content %}
-<!-- search bar -->
-<div class="row top" id="top-container">
-	<div class="col-sm-10">
-		<div class="row" id="search-bar-container">
-			<input type="text" placeholder="Search..">
-		</div>
-	
-		<div class=row id="options-container">
-			<p>dummy options</p>
-		</div>
-	</div>
-</div>
-
-<!-- map and list -->
-<div class="row bottom">
-	<!-- map -->
-	<div class="col-sm-8" id="map-container">
+<!-- Search form -->
+	<div class="centered">
+		<h1 class="test">
+			Something
+		</h1>
+		<form class="form-inline d-flex justify-content-center md-form form-sm mt-0">
+		 <i class="fas fa-search" aria-hidden="true"></i>
+		 <input class="form-control form-control-sm ml-3 w-75" type="text" placeholder="Search"
+		    aria-label="Search">
+		</form>
 
 	</div>
 
-	<!-- list -->
-	<div class="col-sm-4" id="list-container">
-		
-	</div>
-</div>
+
+
 {% endblock content %}
