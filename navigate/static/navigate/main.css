@@ -6,6 +6,22 @@ body {
     overflow: hidden;
 }
 
+.searchbar-color {
+
+    color: black;
+}
+
+.form-control:focus {
+  box-shadow: none;
+}
+
+
+.form-control::placeholder {
+  font-size: 0.95rem;
+  color: black;
+  font-style: italic;
+}
+
 .centered {
     position: absolute;
     top: 50%;
@@ -27,17 +43,20 @@ body {
     height: 80vh;
 }
 
+.homepage-search{
+    width: 80%;
+
+}
+
 #top-container {
     background: red;
 }
 
 #search-bar-container {
-    padding: 0 0 0 20px;
     height: 50%;
 }
 
 #options-container {
-    padding: 0 0 0 20px;
     height: 50%;
 }
 
