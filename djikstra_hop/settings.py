@@ -12,10 +12,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECRET_KEY = '=^hrl9xq25i4xv6e7p#=n811vyesw^bg!l5wnkm62vp=6gnld8'
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
+API_KEY = os.environ.get('API_KEY')
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['djikstrahopapp.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['djikstrahopapp.herokuapp.com', '127.0.0.1', 'localhost']
 
 
 # Application definition

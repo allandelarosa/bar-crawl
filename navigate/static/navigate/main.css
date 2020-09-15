@@ -67,3 +67,8 @@ body {
 #list-container {
     background: blue;
 }
+
+#map {
+    height: 90%;
+    width: 90%;
+}
