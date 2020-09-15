@@ -43,18 +43,49 @@
 </div>
 
 <script>
-	// Initialize and add the map
+	let map;
+	let service;
+	let infowindow;
+
 	function initMap() {
-		// The location of Uluru
-		var uluru = { lat: -25.344, lng: 131.036 };
-		// The map, centered at Uluru
-		var map = new google.maps.Map(
-			document.getElementById('map'), { zoom: 4, center: uluru });
-		// The marker, positioned at Uluru
-		var marker = new google.maps.Marker({ position: uluru, map: map });
+		const sydney = new google.maps.LatLng(-33.867, 151.195);
+		infowindow = new google.maps.InfoWindow();
+		map = new google.maps.Map(document.getElementById("map"), {
+			center: sydney,
+			zoom: 15
+		});
+		const request = {
+			query: "bar",
+			fields: ["name", "geometry"]
+		};
+		service = new google.maps.places.PlacesService(map);
+		service.findPlaceFromQuery(request, (results, status) => {
+			console.log(results)
+			if (status === google.maps.places.PlacesServiceStatus.OK) {
+				for (let i = 0; i < results.length; i++)
+					createMarker(results[i]);
+				map.setCenter(results[0].geometry.location);
+			}
+		});
+	}
+
+	function createMarker(place) {
+		const marker = new google.maps.Marker({
+			map,
+			position: place.geometry.location
+		});
+		google.maps.event.addListener(marker, "click", () => {
+			let content = "<strong>"+place.name+"</strong>"
+			
+			let infowindow = new google.maps.InfoWindow({
+				content: content
+			});
+
+			infowindow.open(map, marker);
+		});
 	}
 </script>
 
-<script defer src="https://maps.googleapis.com/maps/api/js?key={{ API_KEY }}&callback=initMap">
+<script defer src="https://maps.googleapis.com/maps/api/js?key={{ API_KEY }}&callback=initMap&libraries=places">
 </script>
 {% endblock content %}
