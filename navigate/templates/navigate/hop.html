@@ -54,12 +54,14 @@
 			center: sydney,
 			zoom: 15
 		});
-		const request = {
-			query: "bar",
-			fields: ["name", "geometry"]
-		};
+		 var request = {
+		    location: sydney ,
+		    radius: '10000',
+		    type: ['museum']
+		  };
+
 		service = new google.maps.places.PlacesService(map);
-		service.findPlaceFromQuery(request, (results, status) => {
+		service.nearbySearch(request, (results, status) => {
 			console.log(results)
 			if (status === google.maps.places.PlacesServiceStatus.OK) {
 				for (let i = 0; i < results.length; i++)
