@@ -1,4 +1,5 @@
 {% extends "navigate/base.html" %}
+{% load static %}
 
 {% block content %}
 <!-- search bar -->
@@ -11,11 +12,11 @@
 					<input type="search" placeholder="Find" aria-describedby="button-addon2"
 						class="form-control bg-none border-0">
 
-					<input type="search" placeholder="Near" aria-describedby="button-addon2"
+					<input id="address" type="search" placeholder="Near" aria-describedby="button-addon2"
 						class="form-control bg-none border-0 ml-1">
 
 					<div class="input-group-append border-0 searchbar-color">
-						<button id="button-addon2" type="button" class="btn btn-link ml-1"><i
+						<button id="button-addon2" type="button" class="btn btn-link ml-1 submit"><i
 								class="fa fa-search"></i></button>
 					</div>
 				</div>
@@ -38,23 +39,13 @@
 
 	<!-- list -->
 	<div class="col-sm-4" id="list-container">
-
+		<div id="panel"></div>
 	</div>
 </div>
 
-<script>
-	// Initialize and add the map
-	function initMap() {
-		// The location of Uluru
-		var uluru = { lat: -25.344, lng: 131.036 };
-		// The map, centered at Uluru
-		var map = new google.maps.Map(
-			document.getElementById('map'), { zoom: 4, center: uluru });
-		// The marker, positioned at Uluru
-		var marker = new google.maps.Marker({ position: uluru, map: map });
-	}
-</script>
+<script src="{% static 'navigate/map.js' %}"></script>
 
-<script defer src="https://maps.googleapis.com/maps/api/js?key={{ API_KEY }}&callback=initMap">
-</script>
+<script async defer
+	src="https://maps.googleapis.com/maps/api/js?key={{ API_KEY }}&callback=initMap&libraries=places&v=weekly">
+	</script>
 {% endblock content %}
