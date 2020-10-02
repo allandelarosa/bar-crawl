@@ -1,4 +1,5 @@
 let service;
+let location_data;
 
 function initMap() {
   // Create the map.
@@ -10,7 +11,7 @@ function initMap() {
   // Create the places service.
   service = new google.maps.places.PlacesService(map);
   let getNextPage;
-  // const moreButton = document.getElementById("more");
+  const moreButton = document.getElementById("more");
 
   moreButton.onclick = function () {
     moreButton.disabled = true;
@@ -23,12 +24,38 @@ function initMap() {
   service.nearbySearch(
     { location: pyrmont, radius: 500, type: "store" },
     (results, status, pagination) => {
-      console.log(results);
       if (status !== "OK") return;
       console.log(results);
       createMarkers(results, map);
+      location_data = []
+      for (let data of results){
+        location_data.push({"name": data.name, "lat": data.geometry.location.lat(), "lng": data.geometry.location.lng()})
+      }
       moreButton.disabled = !pagination.hasNextPage;
+      console.log(location_data)
+      let options = {
+          MAX_DISTANCE: 4
+        }
 
+        let instance = new DjikstraHop(0, 0, options, location_data)
+        let answer = instance.solve()
+        console.log(answer)
+        for(let point of answer.path){
+          let marker = new google.maps.Marker({
+            map: map,
+            position: point
+          });
+        } 
+        let flightPlanCoordinates = answer.path
+        let flightPath = new google.maps.Polyline({
+          path: flightPlanCoordinates,
+          geodesic: true,
+          strokeColor: '#FF0000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+
+        flightPath.setMap(map)
       if (pagination.hasNextPage) {
         getNextPage = pagination.nextPage;
       }
