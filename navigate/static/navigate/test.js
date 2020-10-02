@@ -10,7 +10,7 @@ function initMap() {
   // Create the places service.
   service = new google.maps.places.PlacesService(map);
   let getNextPage;
-  const moreButton = document.getElementById("more");
+  // const moreButton = document.getElementById("more");
 
   moreButton.onclick = function () {
     moreButton.disabled = true;
@@ -23,7 +23,9 @@ function initMap() {
   service.nearbySearch(
     { location: pyrmont, radius: 500, type: "store" },
     (results, status, pagination) => {
+      console.log(results);
       if (status !== "OK") return;
+      console.log(results);
       createMarkers(results, map);
       moreButton.disabled = !pagination.hasNextPage;
 
@@ -63,8 +65,12 @@ function createMarkers(places, map) {
     * the search response, we will hit API rate limits. */
     service.getDetails(request, (placeResult, status) => {
       const li = document.createElement("li");
+      if (placeResult) {
     li.innerHTML = '<div><strong>' + placeResult.name +
             '</strong><br>' + 'Rating: ' + placeResult.rating + '<br>' + placeResult.formatted_address + '</div>';
+      } else {
+        li.innerHTML = ""
+      }
     if (placeResult.photos != null) {
     let firstPhoto = placeResult.photos[0];
     let photo = document.createElement('img');
