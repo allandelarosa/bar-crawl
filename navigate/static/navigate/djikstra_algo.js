@@ -6,8 +6,10 @@ class DjikstraHop {
       this.stations[station.name]["lat"] = station.lat
       this.stations[station.name]["lng"] = station.lng
     }
-    this.firstStation = {"stationName": "Cafe Morso", "stationLocation": {lat: -33.8669667, lng: 151.1958862}}
-    this.destination = {lat: -33.868837, lng: 151.1975361}
+    this.firstStation = {"stationName": "Cafe Morso", "stationLocation": {lat: -33.8636013, lng: 151.1944983}}
+    this.source = {lat: -33.8636013, lng: 151.1944983}
+    this.destination = {lat: -33.8684667, lng: 151.1956278
+    }
     this.options = options
     
     // Add Source and Destination Points to the List of Stations
@@ -60,9 +62,10 @@ class DjikstraHop {
   }
   
   dijkstra () {
-    if(this.nearestStation > this.options.MAX_DISTANCE / 2 ){
-      return this.minDistance = undefined
-    }
+    // if(this.nearestStation > this.options.MAX_DISTANCE / 2 ){
+    //   return this.minDistance = undefined
+    // }
+    console.log(this.graph)
     let unvisited = Object.keys(this.graph)
     let dis = {}
     let current = 'source'
@@ -98,24 +101,27 @@ class DjikstraHop {
     this.constructGraph()
     this.dijkstra()
     console.log('dijkstra ended')
-    if(this.path !== []){
-      this.path.unshift(this.source)
-      this.stationsOnPath.unshift('source')
-    }
+    // if(this.path !== []){
+    //   this.path.unshift(this.source)
+    //   this.stationsOnPath.unshift('source')
+    // }
     this.path.unshift(this.firstStation.stationLocation)
     this.stationsOnPath.unshift(this.firstStation.stationName)
-    this.finalStation = this.findNearestStation(this.destination)
-    if(this.finalStation.minDistance > this.options.MAX_DISTANCE/2){
-      this.minDistance = undefined
-    }
-    this.path.push(this.finalStation.stationLocation)
-    this.stationsOnPath.push(this.finalStation.stationName)
-    if(this.minDistance === undefined){
-      this.path = []
-      this.stationsOnPath = []
-    }
+    console.log(this.path)
+    console.log(this.stationsOnPath)
+    // this.finalStation = {"stationName": "Gelato Messina The Star", "stationLocation": {lat: -33.8684667, lng: 151.1956278
+    // }}
+    // if(this.finalStation.minDistance > this.options.MAX_DISTANCE/2){
+    //   this.minDistance = undefined
+    // }
+    // this.path.push(this.finalStation.stationLocation)
+    // this.stationsOnPath.push(this.finalStation.stationName)
+    // if(this.minDistance === undefined){
+    //   this.path = []
+    //   this.stationsOnPath = []
+    // }
     return {
-      distance: this.minDistance,
+      // distance: this.minDistance,
       path: this.path, //array : locations of stations on path
       stationsOnPath: this.stationsOnPath //array : name of stations
     }
