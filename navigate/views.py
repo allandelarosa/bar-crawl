@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.conf import settings
 
 from django.http import JsonResponse
+import json
 
 def hop(request):
 	context = {
@@ -16,5 +17,6 @@ def home(request):
 	return render(request, 'navigate/home.html')
 
 def test(request):
-	data = {'success': 'potato'}
+	received_json = json.loads(request.body)
+	data = {'success': received_json['title'][::-1]}
 	return JsonResponse(data)
