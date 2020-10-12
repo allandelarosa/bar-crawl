@@ -20,3 +20,9 @@ def test(request):
 	received_json = json.loads(request.body)
 	data = {'success': received_json['title'][::-1]}
 	return JsonResponse(data)
+
+def djikstra(request):
+	location_data = json.loads(request.body)
+
+	data = {'path': location_data}
+	return JsonResponse(data)

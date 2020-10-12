@@ -28,34 +28,53 @@ function initMap() {
       console.log(results);
       createMarkers(results, map);
       location_data = []
-      for (let data of results){
-        location_data.push({"name": data.name, "lat": data.geometry.location.lat(), "lng": data.geometry.location.lng()})
+      for (let data of results) {
+        location_data.push({ "name": data.name, "lat": data.geometry.location.lat(), "lng": data.geometry.location.lng() })
       }
       moreButton.disabled = !pagination.hasNextPage;
+      console.log('location data')
       console.log(location_data)
-      let options = {
-          MAX_DISTANCE: 4
-        }
 
-        let instance = new DjikstraHop(0, 0, options, location_data)
-        let answer = instance.solve()
-        console.log(answer)
-        for(let point of answer.path){
-          let marker = new google.maps.Marker({
-            map: map,
-            position: point
+      // NEW CALL TO DJIKSTRA
+      const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+      const request = new Request(
+        "/djikstra", {
+        method: 'POST',
+        mode: 'same-origin',
+        headers: {
+          'X-CSRFToken': csrftoken,
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify(location_data),
+      }
+      );
+
+      console.log(request)
+
+      fetch(request)
+        .then(response => response.json())
+        .then(function (data) {
+          let answer = data
+          console.log(answer)
+          for (let point of answer.path) {
+            let marker = new google.maps.Marker({
+              map: map,
+              position: point
+            });
+          }
+          let flightPlanCoordinates = answer.path
+          let flightPath = new google.maps.Polyline({
+            path: flightPlanCoordinates,
+            geodesic: true,
+            strokeColor: '#FF0000',
+            strokeOpacity: 1.0,
+            strokeWeight: 2
           });
-        } 
-        let flightPlanCoordinates = answer.path
-        let flightPath = new google.maps.Polyline({
-          path: flightPlanCoordinates,
-          geodesic: true,
-          strokeColor: '#FF0000',
-          strokeOpacity: 1.0,
-          strokeWeight: 2
+
+          flightPath.setMap(map)
         });
 
-        flightPath.setMap(map)
       if (pagination.hasNextPage) {
         getNextPage = pagination.nextPage;
       }
@@ -82,8 +101,8 @@ function createMarkers(places, map) {
       position: place.geometry.location,
     });
     let request = {
-    placeId: place.place_id,
-    fields: ['name', 'formatted_address', 'geometry', 'rating',
+      placeId: place.place_id,
+      fields: ['name', 'formatted_address', 'geometry', 'rating',
         'website', 'photos']
     };
 
@@ -93,21 +112,21 @@ function createMarkers(places, map) {
     service.getDetails(request, (placeResult, status) => {
       const li = document.createElement("li");
       if (placeResult) {
-    li.innerHTML = '<div><strong>' + placeResult.name +
-            '</strong><br>' + 'Rating: ' + placeResult.rating + '<br>' + placeResult.formatted_address + '</div>';
+        li.innerHTML = '<div><strong>' + placeResult.name +
+          '</strong><br>' + 'Rating: ' + placeResult.rating + '<br>' + placeResult.formatted_address + '</div>';
       } else {
         li.innerHTML = ""
       }
-    if (placeResult.photos != null) {
-    let firstPhoto = placeResult.photos[0];
-    let photo = document.createElement('img');
-    photo.classList.add('hero');
-    photo.src = firstPhoto.getUrl();
-    li.appendChild(photo);
-}
-    placesList.appendChild(li);
+      if (placeResult.photos != null) {
+        let firstPhoto = placeResult.photos[0];
+        let photo = document.createElement('img');
+        photo.classList.add('hero');
+        photo.src = firstPhoto.getUrl();
+        li.appendChild(photo);
+      }
+      placesList.appendChild(li);
     });
-    
+
     bounds.extend(place.geometry.location);
   }
   map.fitBounds(bounds);

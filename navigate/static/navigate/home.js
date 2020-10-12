@@ -20,10 +20,10 @@ $("#test").click(() => {
     );
 
     fetch(request)
-        .then(response => response.json())
-        .then(function (data) {
-            console.log(data)
-            document.getElementById("test").innerHTML = data.success;
-            console.log("success")
-        });
+    .then(response => response.json())
+    .then(function (data) {
+        console.log(data)
+        document.getElementById("test").innerHTML = data.success;
+        console.log("success")
+    });
 });
