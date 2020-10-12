@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block content %}
+{% csrf_token %}
 <!-- search bar -->
 <div class="row top" id="top-container">
 	<div class="col-sm-10">
@@ -47,7 +48,6 @@
 </div>
 
 <script src="{% static 'navigate/test.js' %}"></script>
-<script src="{% static 'navigate/djikstra_algo.js' %}"></script>
 
 <script async defer
 	src="https://maps.googleapis.com/maps/api/js?key={{ API_KEY }}&callback=initMap&libraries=places&v=weekly">
