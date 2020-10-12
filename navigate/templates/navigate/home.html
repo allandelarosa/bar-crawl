@@ -1,10 +1,11 @@
 {% extends "navigate/base.html" %}
+{% load static %}
 
 {% block content %}
 {% csrf_token %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-<h1 id="test">test</h1>
+<h1 id="test">potato</h1>
 
 <!-- Search form -->
 <div class="centered">
@@ -37,68 +38,6 @@
 
 </div>
 
-<script>
-	// if ($)
-	// 	console.log('jQuery is loaded')
-	// if ($.ajax)
-	// 	console.log('ajax is loaded')
-
-	const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-
-	const request_data = {'title':'potato'}
-	const request = new Request(
-		"{% url 'navigate-test' %}", {
-		method: 'POST',
-		mode: 'same-origin',
-		headers: { 
-			'X-CSRFToken': csrftoken,
-			'Content-type': 'application/json'
-		},
-		body: JSON.stringify(request_data),}
-	);
-
-	fetch(request)
-	.then(response => response.json())
-	.then(function (data) {
-		$("#test").click(() => {
-			console.log(data)
-			document.getElementById("test").innerHTML = data.success;
-			console.log("success")
-		})
-	});
-
-	// $.ajax({
-	// 	type: "PUT",
-	// 	url: "{% url 'navigate-test' %}",
-	// 	data: {},
-	// 	dataType: "json",
-	// 	success: function (response) {
-	// 		$("#test").click(() => {
-	// 			document.getElementById("test").innerHTML = response.success;
-	// 		})
-
-	// 		console.log("success")
-	// 	},
-	// 	error: function () {
-	// 		console.log("failed")
-	// 	}
-	// });
-
-	// $("#test").click(() => {
-	// 	$.ajax({
-	// 		type: "GET",
-	// 		url: "{% url 'navigate-test' %}",
-	// 		data: {},
-	// 		dataType: "json",
-	// 		success: function () {
-	// 			document.getElementById("test").innerHTML = "success"
-	// 			console.log("success")
-	// 		},
-	// 		error: function () {
-	// 			console.log("failed")
-	// 		}
-	// 	})
-	// });
-</script>
+<script src="{% static 'navigate/home.js' %}"></script>
 
 {% endblock content %}
