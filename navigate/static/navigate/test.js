@@ -10,30 +10,20 @@ function initMap() {
   });
   // Create the places service.
   service = new google.maps.places.PlacesService(map);
-  let getNextPage;
-  const moreButton = document.getElementById("more");
 
-  moreButton.onclick = function () {
-    moreButton.disabled = true;
-
-    if (getNextPage) {
-      getNextPage();
-    }
-  };
   // Perform a nearby search.
   service.nearbySearch(
     { location: pyrmont, radius: 500, type: "store" },
-    (results, status, pagination) => {
+    (results, status) => {
       if (status !== "OK") return;
-      console.log(results);
+      // console.log(results);
       createMarkers(results, map);
       location_data = []
       for (let data of results) {
         location_data.push({ "name": data.name, "lat": data.geometry.location.lat(), "lng": data.geometry.location.lng() })
       }
-      moreButton.disabled = !pagination.hasNextPage;
-      console.log('location data')
-      console.log(location_data)
+    
+      // console.log(location_data)
 
       // NEW CALL TO DJIKSTRA
       const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
@@ -50,13 +40,13 @@ function initMap() {
       }
       );
 
-      console.log(request)
+      // console.log(request)
 
       fetch(request)
         .then(response => response.json())
         .then(function (data) {
           let answer = data
-          console.log(answer)
+          // console.log(answer)
           for (let point of answer.path) {
             let marker = new google.maps.Marker({
               map: map,
@@ -74,10 +64,6 @@ function initMap() {
 
           flightPath.setMap(map)
         });
-
-      if (pagination.hasNextPage) {
-        getNextPage = pagination.nextPage;
-      }
     }
   );
 }
