@@ -16,13 +16,13 @@ function initMap() {
     { location: pyrmont, radius: 500, type: "store" },
     (results, status) => {
       if (status !== "OK") return;
-      // console.log(results);
+      console.log(results);
       createMarkers(results, map);
       location_data = []
       for (let data of results) {
         location_data.push({ "name": data.name, "lat": data.geometry.location.lat(), "lng": data.geometry.location.lng() })
       }
-    
+
       // console.log(location_data)
 
       // NEW CALL TO DJIKSTRA
@@ -42,28 +42,28 @@ function initMap() {
 
       // console.log(request)
 
-      fetch(request)
-        .then(response => response.json())
-        .then(function (data) {
-          let answer = data
-          // console.log(answer)
-          for (let point of answer.path) {
-            let marker = new google.maps.Marker({
-              map: map,
-              position: point
-            });
-          }
-          let flightPlanCoordinates = answer.path
-          let flightPath = new google.maps.Polyline({
-            path: flightPlanCoordinates,
-            geodesic: true,
-            strokeColor: '#FF0000',
-            strokeOpacity: 1.0,
-            strokeWeight: 2
-          });
+      // fetch(request)
+      //   .then(response => response.json())
+      //   .then(function (data) {
+      //     let answer = data
+      //     // console.log(answer)
+      //     for (let point of answer.path) {
+      //       let marker = new google.maps.Marker({
+      //         map: map,
+      //         position: point
+      //       });
+      //     }
+      //     let flightPlanCoordinates = answer.path
+      //     let flightPath = new google.maps.Polyline({
+      //       path: flightPlanCoordinates,
+      //       geodesic: true,
+      //       strokeColor: '#FF0000',
+      //       strokeOpacity: 1.0,
+      //       strokeWeight: 2
+      //     });
 
-          flightPath.setMap(map)
-        });
+      //     flightPath.setMap(map)
+      //   });
     }
   );
 }
@@ -81,35 +81,47 @@ function createMarkers(places, map) {
       scaledSize: new google.maps.Size(25, 25),
     };
     new google.maps.Marker({
-      map,
-      icon: image,
+      map: map,
+      // icon: image,
       title: place.name,
       position: place.geometry.location,
     });
-    let request = {
-      placeId: place.place_id,
-      fields: ['name', 'formatted_address', 'geometry', 'rating',
-        'website', 'photos']
-    };
+    // let request = {
+    //   placeId: place.place_id,
+    //   fields: ['name', 'formatted_address', 'geometry', 'rating',
+    //     'website', 'photos']
+    // };
 
     /* Only fetch the details of a place when the user clicks on a marker.
     * If we fetch the details for all place results as soon as we get
     * the search response, we will hit API rate limits. */
-    service.getDetails(request, (placeResult, status) => {
-      const li = document.createElement("li");
-      if (placeResult) {
-        li.innerHTML = '<div><strong>' + placeResult.name +
-          '</strong><br>' + 'Rating: ' + placeResult.rating + '<br>' + placeResult.formatted_address + '</div>';
-        if (placeResult.photos != null) {
-          let firstPhoto = placeResult.photos[0];
-          let photo = document.createElement('img');
-          photo.classList.add('hero');
-          photo.src = firstPhoto.getUrl();
-          li.appendChild(photo);
-        }
+    // service.getDetails(request, (placeResult, status) => {
+    //   const li = document.createElement("li");
+    //   if (placeResult) {
+    //     li.innerHTML = '<div><strong>' + placeResult.name +
+    //       '</strong><br>' + 'Rating: ' + placeResult.rating + '<br>' + placeResult.formatted_address + '</div>';
+    //     if (placeResult.photos != null) {
+    //       let firstPhoto = placeResult.photos[0];
+    //       let photo = document.createElement('img');
+    //       photo.classList.add('hero');
+    //       photo.src = firstPhoto.getUrl();
+    //       li.appendChild(photo);
+    //     }
+    //   }
+    //   placesList.appendChild(li);
+    // });
+
+    const li = document.createElement("li");
+      li.innerHTML = '<div><strong>' + place.name +
+        '</strong><br>' + 'Rating: ' + (place.rating || 'Unavailable') + '</div>';
+      if (place.photos != null) {
+        let firstPhoto = place.photos[0];
+        let photo = document.createElement('img');
+        photo.classList.add('hero');
+        photo.src = firstPhoto.getUrl();
+        li.appendChild(photo);
       }
-      placesList.appendChild(li);
-    });
+    placesList.appendChild(li);
 
     bounds.extend(place.geometry.location);
   }
