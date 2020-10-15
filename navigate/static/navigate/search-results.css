@@ -1,0 +1,71 @@
+.hero {
+    width: 100%;
+    height: auto;
+    max-height: 166px;
+    display: block;
+}
+
+#search-results {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  height: 75vh;
+  width: 90%;
+  overflow-y: scroll;
+}
+
+/* to hide scrollbar */
+/* #search-results::-webkit-scrollbar {
+    display: none;
+}
+  
+#search-results {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+} */
+
+#search-results li {
+  background-color: #f1f1f1;
+  padding: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+#search-results li:nth-child(odd) {
+  background-color: #fcfcfc;
+}
+
+
+
+
+/* old styling */
+/* #panel {
+    height: 100%;
+    width: null;
+    background-color: white;
+    position: fixed;
+    z-index: 1;
+    overflow-x: hidden;
+    transition: all .2s ease-out;
+}
+
+.open {
+    width: 90%;
+} */
+
+/* .place,
+p {
+    font-family: 'open sans', arial, sans-serif;
+    padding-left: 18px;
+    padding-right: 18px;
+} */
+
+/* .details {
+    color: darkslategrey;
+}
+
+a {
+    text-decoration: none;
+    color: cadetblue;
+} */

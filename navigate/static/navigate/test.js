@@ -70,7 +70,7 @@ function initMap() {
 
 function createMarkers(places, map) {
   const bounds = new google.maps.LatLngBounds();
-  const placesList = document.getElementById("places");
+  const placesList = document.getElementById("search-results");
 
   for (let i = 0, place; (place = places[i]); i++) {
     const image = {
@@ -100,15 +100,13 @@ function createMarkers(places, map) {
       if (placeResult) {
         li.innerHTML = '<div><strong>' + placeResult.name +
           '</strong><br>' + 'Rating: ' + placeResult.rating + '<br>' + placeResult.formatted_address + '</div>';
-      } else {
-        li.innerHTML = ""
-      }
-      if (placeResult.photos != null) {
-        let firstPhoto = placeResult.photos[0];
-        let photo = document.createElement('img');
-        photo.classList.add('hero');
-        photo.src = firstPhoto.getUrl();
-        li.appendChild(photo);
+        if (placeResult.photos != null) {
+          let firstPhoto = placeResult.photos[0];
+          let photo = document.createElement('img');
+          photo.classList.add('hero');
+          photo.src = firstPhoto.getUrl();
+          li.appendChild(photo);
+        }
       }
       placesList.appendChild(li);
     });
