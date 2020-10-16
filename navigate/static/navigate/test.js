@@ -111,19 +111,59 @@ function createMarkers(places, map) {
     //   placesList.appendChild(li);
     // });
 
-    const li = document.createElement("li");
-      li.innerHTML = '<div><strong>' + place.name +
-        '</strong><br>' + 'Rating: ' + (place.rating || 'Unavailable') + '</div>';
-      if (place.photos != null) {
-        let firstPhoto = place.photos[0];
-        let photo = document.createElement('img');
-        photo.classList.add('hero');
-        photo.src = firstPhoto.getUrl();
-        li.appendChild(photo);
-      }
-    placesList.appendChild(li);
+    // const li = document.createElement("li");
+    // li.innerHTML = '<div><strong>' + place.name +
+    //   '</strong><br>' + 'Rating: ' + (place.rating || 'Unavailable') + '</div>';
+    // if (place.photos != null) {
+    //   let firstPhoto = place.photos[0];
+    //   let photo = document.createElement('img');
+    //   photo.classList.add('hero');
+    //   photo.src = firstPhoto.getUrl();
+    //   li.appendChild(photo);
+    // }
+    placesList.appendChild(createSearchResult(place.name, place.rating, place.photos));
 
     bounds.extend(place.geometry.location);
   }
   map.fitBounds(bounds);
+}
+
+function createSearchResult(name, rating, photos) {
+  let li = document.createElement("li");
+  // li.innerHTML = '<div><strong>' + name +
+  //   '</strong><br>' + (rating ? 'Rating: ' + rating : 'Rating unavailable') + '</div>';
+  // if (photos != null) {
+  //   let firstPhoto = photos[0];
+  //   let photo = document.createElement('img');
+  //   photo.classList.add('hero');
+  //   photo.src = firstPhoto.getUrl();
+  //   li.appendChild(photo);
+  // }
+
+  let infoContainer = document.createElement('div');
+  let photoContainer = document.createElement('div');
+
+  photoContainer.classList.add('photo-container');
+  infoContainer.classList.add('info-container');
+
+  let nameInfo = document.createElement('div');
+  nameInfo.innerHTML = '<strong>' + name + '</strong>'
+  let ratingInfo = document.createElement('div');
+  ratingInfo.innerHTML = rating ? 'Rating: ' + rating : 'Rating unavailable'
+  infoContainer.appendChild(nameInfo);
+  infoContainer.appendChild(ratingInfo);
+
+  if (photos != null) {
+    let photo = document.createElement('img');
+    let firstPhoto = photos[0];
+    photo.classList.add('hero');
+    photo.src = firstPhoto.getUrl();
+    photoContainer.appendChild(photo)
+  }
+
+  
+  li.appendChild(photoContainer);
+  li.appendChild(infoContainer);
+
+  return li
 }

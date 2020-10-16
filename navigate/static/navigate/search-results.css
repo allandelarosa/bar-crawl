@@ -1,8 +1,16 @@
+.photo-container {
+    width: 5vw;
+    max-height: 5vw;
+    float: right;
+}
+
+.info-container {
+    float: left;
+}
+
 .hero {
     width: 100%;
-    height: auto;
-    max-height: 166px;
-    display: block;
+    height: 100%;
 }
 
 #search-results {
@@ -27,7 +35,7 @@
 #search-results li {
   background-color: #f1f1f1;
   padding: 10px;
-  text-overflow: ellipsis;
+  /* text-overflow: ellipsis; */
   white-space: nowrap;
   overflow: hidden;
 }
