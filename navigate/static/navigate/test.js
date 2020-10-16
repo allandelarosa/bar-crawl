@@ -111,34 +111,15 @@ function createMarkers(places, map) {
     //   placesList.appendChild(li);
     // });
 
-    // const li = document.createElement("li");
-    // li.innerHTML = '<div><strong>' + place.name +
-    //   '</strong><br>' + 'Rating: ' + (place.rating || 'Unavailable') + '</div>';
-    // if (place.photos != null) {
-    //   let firstPhoto = place.photos[0];
-    //   let photo = document.createElement('img');
-    //   photo.classList.add('hero');
-    //   photo.src = firstPhoto.getUrl();
-    //   li.appendChild(photo);
-    // }
-    placesList.appendChild(createSearchResult(place.name, place.rating, place.photos));
+    placesList.appendChild(createSearchResult(place));
 
     bounds.extend(place.geometry.location);
   }
   map.fitBounds(bounds);
 }
 
-function createSearchResult(name, rating, photos) {
+function createSearchResult(place) {
   let li = document.createElement("li");
-  // li.innerHTML = '<div><strong>' + name +
-  //   '</strong><br>' + (rating ? 'Rating: ' + rating : 'Rating unavailable') + '</div>';
-  // if (photos != null) {
-  //   let firstPhoto = photos[0];
-  //   let photo = document.createElement('img');
-  //   photo.classList.add('hero');
-  //   photo.src = firstPhoto.getUrl();
-  //   li.appendChild(photo);
-  // }
 
   let infoContainer = document.createElement('div');
   let photoContainer = document.createElement('div');
@@ -146,16 +127,25 @@ function createSearchResult(name, rating, photos) {
   photoContainer.classList.add('photo-container');
   infoContainer.classList.add('info-container');
 
-  let nameInfo = document.createElement('div');
-  nameInfo.innerHTML = '<strong>' + name + '</strong>'
-  let ratingInfo = document.createElement('div');
-  ratingInfo.innerHTML = rating ? 'Rating: ' + rating : 'Rating unavailable'
-  infoContainer.appendChild(nameInfo);
-  infoContainer.appendChild(ratingInfo);
+  infoContainer.innerHTML = '<strong>' + place.name + '</strong><br>'
 
-  if (photos != null) {
+  if (place.rating) {
+    infoContainer.innerHTML += 'Rating: ' + place.rating + ' (' + place.user_ratings_total + ')<br>'
+  } 
+
+  infoContainer.innerHTML += place.vicinity + '<br>'
+
+  if (place.opening_hours) {
+    if (place.opening_hours.isOpen()) {
+      infoContainer.innerHTML += 'Open now <br>'
+    } else {
+      infoContainer.innerHTML += 'Closed <br>'
+    }
+  }
+
+  if (place.photos != null) {
     let photo = document.createElement('img');
-    let firstPhoto = photos[0];
+    let firstPhoto = place.photos[0];
     photo.classList.add('hero');
     photo.src = firstPhoto.getUrl();
     photoContainer.appendChild(photo)
