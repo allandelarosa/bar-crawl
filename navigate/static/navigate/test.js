@@ -1,5 +1,6 @@
 let service;
 let location_data;
+let markers = {};
 
 function initMap() {
   // Create the map.
@@ -72,44 +73,25 @@ function createMarkers(places, map) {
   const bounds = new google.maps.LatLngBounds();
   const placesList = document.getElementById("search-results");
 
+  labelIndex = 1;
   for (let i = 0, place; (place = places[i]); i++) {
-    const image = {
-      url: place.icon,
-      size: new google.maps.Size(71, 71),
-      origin: new google.maps.Point(0, 0),
-      anchor: new google.maps.Point(17, 34),
-      scaledSize: new google.maps.Size(25, 25),
+    const defaultMarker = {
+      path: google.maps.SymbolPath.CIRCLE,
+      scale: 15,
+      strokeColor: '#000000',
+      strokeWeight: 2,
+      fillColor: '#FF3333',
+      fillOpacity: 1,
     };
-    new google.maps.Marker({
+    let marker = new google.maps.Marker({
       map: map,
-      // icon: image,
+      icon: defaultMarker,
       title: place.name,
       position: place.geometry.location,
+      label: { text: "" + labelIndex, color: '#FFFFFF' },
+      zIndex: -(labelIndex++),
     });
-    // let request = {
-    //   placeId: place.place_id,
-    //   fields: ['name', 'formatted_address', 'geometry', 'rating',
-    //     'website', 'photos']
-    // };
-
-    /* Only fetch the details of a place when the user clicks on a marker.
-    * If we fetch the details for all place results as soon as we get
-    * the search response, we will hit API rate limits. */
-    // service.getDetails(request, (placeResult, status) => {
-    //   const li = document.createElement("li");
-    //   if (placeResult) {
-    //     li.innerHTML = '<div><strong>' + placeResult.name +
-    //       '</strong><br>' + 'Rating: ' + placeResult.rating + '<br>' + placeResult.formatted_address + '</div>';
-    //     if (placeResult.photos != null) {
-    //       let firstPhoto = placeResult.photos[0];
-    //       let photo = document.createElement('img');
-    //       photo.classList.add('hero');
-    //       photo.src = firstPhoto.getUrl();
-    //       li.appendChild(photo);
-    //     }
-    //   }
-    //   placesList.appendChild(li);
-    // });
+    markers[place.place_id] = marker
 
     placesList.appendChild(createSearchResult(place));
 
@@ -131,7 +113,7 @@ function createSearchResult(place) {
 
   if (place.rating) {
     infoContainer.innerHTML += 'Rating: ' + place.rating + ' (' + place.user_ratings_total + ')<br>'
-  } 
+  }
 
   infoContainer.innerHTML += place.vicinity + '<br>'
 
@@ -151,9 +133,26 @@ function createSearchResult(place) {
     photoContainer.appendChild(photo)
   }
 
-  
   li.appendChild(photoContainer);
   li.appendChild(infoContainer);
+
+  // li.id = place.place_id;
+
+  li.addEventListener("mouseover", () => {
+    let icon = markers[place.place_id].icon;
+    icon.fillColor = '#FFDD33';
+    markers[place.place_id].setIcon(icon);
+    // markers[place.place_id].setZIndex(markers[place.place_id].zIndex + 30);
+    markers[place.place_id].zIndex += 30;
+  });
+
+  li.addEventListener("mouseout", () => {
+    let icon = markers[place.place_id].icon;
+    icon.fillColor = '#FF3333';
+    markers[place.place_id].setIcon(icon);
+    // markers[place.place_id].setZIndex(markers[place.place_id].zIndex - 30);
+    markers[place.place_id].zIndex -= 30;
+  });
 
   return li
 }
