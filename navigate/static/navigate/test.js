@@ -146,7 +146,7 @@ function createSearchResult(place) {
   if (place.photos != null) {
     let photo = document.createElement('img');
     let firstPhoto = place.photos[0];
-    photo.classList.add('hero');
+    photo.classList.add('result-photo');
     photo.src = firstPhoto.getUrl();
     photoContainer.appendChild(photo)
   }
