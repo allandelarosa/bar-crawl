@@ -142,7 +142,6 @@ function createSearchResult(place) {
     let icon = markers[place.place_id].icon;
     icon.fillColor = '#FFDD33';
     markers[place.place_id].setIcon(icon);
-    // markers[place.place_id].setZIndex(markers[place.place_id].zIndex + 30);
     markers[place.place_id].zIndex += 30;
   });
 
@@ -150,7 +149,6 @@ function createSearchResult(place) {
     let icon = markers[place.place_id].icon;
     icon.fillColor = '#FF3333';
     markers[place.place_id].setIcon(icon);
-    // markers[place.place_id].setZIndex(markers[place.place_id].zIndex - 30);
     markers[place.place_id].zIndex -= 30;
   });
 

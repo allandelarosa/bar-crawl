@@ -1,22 +1,20 @@
-/* TODO: Step 2, Geolocate your user
-    * Replace the code from here to the END TODO comment with this code
-    * from codelab instructions. */
 let pos;
 let map;
 let bounds;
 let infoWindow;
 let currentInfoWindow;
 let service;
-let infoPane;
-let markers = [];
+let markers = {};
+
+let placesList;
+let location_data = [];
 
 function initMap() {
     // Initialize variables
     bounds = new google.maps.LatLngBounds();
     infoWindow = new google.maps.InfoWindow;
     currentInfoWindow = infoWindow;
-    /* TODO: Step 4A3: Add a generic sidebar */
-    infoPane = document.getElementById('panel');
+    placesList = document.getElementById("search-results");
 
     // Try HTML5 geolocation
     if (navigator.geolocation) {
@@ -30,13 +28,8 @@ function initMap() {
                 zoom: 15
             });
             bounds.extend(pos);
-
-            // infoWindow.setPosition(pos);
-            // infoWindow.setContent('Location found.');
-            // infoWindow.open(map);
             map.setCenter(pos);
 
-            /* TODO: Step 3B2, Call the Places Nearby Search */
             // Call Places Nearby Search on user's location
             getNearbyPlaces(pos);
 
@@ -47,6 +40,9 @@ function initMap() {
             });
             searchBox.addListener("places_changed", () => {
                 clearMarkers();
+                location_data = [];
+                placesList.innerHTML = "";
+
                 bounds = new google.maps.LatLngBounds();
                 const places = searchBox.getPlaces();
                 let newpos = places[0].geometry.location;
@@ -62,11 +58,6 @@ function initMap() {
         // Browser doesn't support geolocation
         handleLocationError(false, infoWindow);
     }
-
-    // get location frrom search bar
-    // reapply changes
-
-
 }
 
 // Handle a geolocation error
@@ -86,12 +77,10 @@ function handleLocationError(browserHasGeolocation, infoWindow) {
     infoWindow.open(map);
     currentInfoWindow = infoWindow;
 
-    /* TODO: Step 3B3, Call the Places Nearby Search */
     // Call Places Nearby Search on the default location
     getNearbyPlaces(pos);
 }
-/* END TODO: Step 2, Geolocate your user */
-/* TODO: Step 3B1, Call the Places Nearby Search */
+
 // Perform a Places Nearby Search Request
 function getNearbyPlaces(position) {
     let request = {
@@ -106,118 +95,157 @@ function getNearbyPlaces(position) {
 
 // Handle the results (up to 20) of the Nearby Search
 function nearbyCallback(results, status) {
-    if (status == google.maps.places.PlacesServiceStatus.OK) {
-        createMarkers(results);
-    }
-}
-
-/* TODO: Step 3C, Generate markers for search results */
-// Set markers at the location of each place result
-function createMarkers(places) {
-    places.forEach(place => {
-        let marker = new google.maps.Marker({
-            position: place.geometry.location,
-            map: map,
-            title: place.name
-        });
-        markers.push(marker)
-        /* TODO: Step 4B: Add click listeners to the markers */
-        // Add click listener to each marker
-        google.maps.event.addListener(marker, 'click', () => {
-            let request = {
-                placeId: place.place_id,
-                fields: ['name', 'formatted_address', 'geometry', 'rating',
-                    'website', 'photos']
-            };
-
-            /* Only fetch the details of a place when the user clicks on a marker.
-            * If we fetch the details for all place results as soon as we get
-            * the search response, we will hit API rate limits. */
-            service.getDetails(request, (placeResult, status) => {
-                showDetails(placeResult, marker, status)
-            });
-        });
-
-        // Adjust the map bounds to include the location of this marker
-        bounds.extend(place.geometry.location);
-    });
-    /* Once all the markers have been placed, adjust the bounds of the map to
-    * show all the markers within the visible area. */
-    map.fitBounds(bounds);
-}
-
-/* TODO: Step 4C: Show place details in an info window */
-// Builds an InfoWindow to display details above the marker
-function showDetails(placeResult, marker, status) {
-    if (status == google.maps.places.PlacesServiceStatus.OK) {
-        let placeInfowindow = new google.maps.InfoWindow();
-        placeInfowindow.setContent('<div><strong>' + placeResult.name +
-            '</strong><br>' + 'Rating: ' + placeResult.rating + '</div>');
-        placeInfowindow.open(marker.map, marker);
-        currentInfoWindow.close();
-        currentInfoWindow = placeInfowindow;
-        showPanel(placeResult);
-    } else {
-        console.log('showDetails failed: ' + status);
-    }
-}
-
-/* TODO: Step 4D: Load place details in a sidebar */
-// Displays place details in a sidebar
-function showPanel(placeResult) {
-    // If infoPane is already open, close it
-    if (infoPane.classList.contains("open")) {
-        infoPane.classList.remove("open");
+    if (status !== "OK") return;
+    // console.log(results);
+    createMarkers(results);
+    location_data = []
+    for (let data of results) {
+        location_data.push({ "name": data.name, "lat": data.geometry.location.lat(), "lng": data.geometry.location.lng() })
     }
 
-    // Clear the previous details
-    while (infoPane.lastChild) {
-        infoPane.removeChild(infoPane.lastChild);
-    }
+    // console.log(location_data)
 
-    /* TODO: Step 4E: Display a Place Photo with the Place Details */
-    // Add the primary photo, if there is one
-    // if (placeResult.photos != null) {
-    //     let firstPhoto = placeResult.photos[0];
-    //     let photo = document.createElement('img');
-    //     photo.classList.add('hero');
-    //     photo.src = firstPhoto.getUrl();
-    //     infoPane.appendChild(photo);
-    // }
+    // NEW CALL TO DJIKSTRA
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
-    // Add place details with text formatting
-    let name = document.createElement('h1');
-    name.classList.add('place');
-    name.textContent = placeResult.name;
-    infoPane.appendChild(name);
-    if (placeResult.rating != null) {
-        let rating = document.createElement('p');
-        rating.classList.add('details');
-        rating.textContent = `Rating: ${placeResult.rating} \u272e`;
-        infoPane.appendChild(rating);
+    const request = new Request(
+        "/djikstra", {
+        method: 'POST',
+        mode: 'same-origin',
+        headers: {
+            'X-CSRFToken': csrftoken,
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify(location_data),
     }
-    let address = document.createElement('p');
-    address.classList.add('details');
-    address.textContent = placeResult.formatted_address;
-    infoPane.appendChild(address);
-    if (placeResult.website) {
-        let websitePara = document.createElement('p');
-        let websiteLink = document.createElement('a');
-        let websiteUrl = document.createTextNode(placeResult.website);
-        websiteLink.appendChild(websiteUrl);
-        websiteLink.title = placeResult.website;
-        websiteLink.href = placeResult.website;
-        websitePara.appendChild(websiteLink);
-        infoPane.appendChild(websitePara);
-    }
+    );
 
-    // Open the infoPane
-    infoPane.classList.add("open");
+    // console.log(request)
+
+    // fetch(request)
+    //   .then(response => response.json())
+    //   .then(function (data) {
+    //     let answer = data
+    //     // console.log(answer)
+    //     for (let point of answer.path) {
+    //       let marker = new google.maps.Marker({
+    //         map: map,
+    //         position: point
+    //       });
+    //     }
+    //     let flightPlanCoordinates = answer.path
+    //     let flightPath = new google.maps.Polyline({
+    //       path: flightPlanCoordinates,
+    //       geodesic: true,
+    //       strokeColor: '#FF0000',
+    //       strokeOpacity: 1.0,
+    //       strokeWeight: 2
+    //     });
+
+    //     flightPath.setMap(map)
+    //   });
 }
 
 function clearMarkers() {
-    markers.forEach((marker) => {
+    Object.values(markers).forEach((marker) => {
         marker.setMap(null);
     });
-    markers = [];
+    markers = {};
 }
+
+function createMarkers(places) {
+    labelIndex = 1;
+    for (let i = 0, place; (place = places[i]); i++) {
+        const defaultMarker = {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 15,
+            strokeColor: '#000000',
+            strokeWeight: 2,
+            fillColor: '#FF3333',
+            fillOpacity: 1,
+        };
+        let marker = new google.maps.Marker({
+            map: map,
+            icon: defaultMarker,
+            title: place.name,
+            position: place.geometry.location,
+            label: { text: "" + labelIndex, color: '#FFFFFF' },
+            zIndex: -(labelIndex++),
+        });
+        markers[place.place_id] = marker
+
+        placesList.appendChild(createSearchResult(place));
+
+        bounds.extend(place.geometry.location);
+    }
+    map.fitBounds(bounds);
+}
+
+function createSearchResult(place) {
+    let li = document.createElement("li");
+
+    let infoContainer = document.createElement('div');
+    let photoContainer = document.createElement('div');
+
+    photoContainer.classList.add('photo-container');
+    infoContainer.classList.add('info-container');
+
+    infoContainer.innerHTML = '<strong>' + place.name + '</strong><br>'
+
+    if (place.rating) {
+        infoContainer.innerHTML += 'Rating: ' + place.rating + ' (' + place.user_ratings_total + ')<br>'
+    }
+
+    infoContainer.innerHTML += place.vicinity + '<br>'
+
+    if (place.opening_hours) {
+        if (place.opening_hours.isOpen()) {
+            infoContainer.innerHTML += 'Open now <br>'
+        } else {
+            infoContainer.innerHTML += 'Closed <br>'
+        }
+    }
+
+    if (place.photos != null) {
+        let photo = document.createElement('img');
+        let firstPhoto = place.photos[0];
+        photo.classList.add('result-photo');
+        photo.src = firstPhoto.getUrl();
+        photoContainer.appendChild(photo)
+    }
+
+    li.appendChild(photoContainer);
+    li.appendChild(infoContainer);
+
+    // li.id = place.place_id;
+
+    li.addEventListener("mouseover", () => {
+        let icon = markers[place.place_id].icon;
+        icon.fillColor = '#FFDD33';
+        markers[place.place_id].setIcon(icon);
+        markers[place.place_id].zIndex += 30;
+    });
+
+    li.addEventListener("mouseout", () => {
+        let icon = markers[place.place_id].icon;
+        icon.fillColor = '#FF3333';
+        markers[place.place_id].setIcon(icon);
+        markers[place.place_id].zIndex -= 30;
+    });
+
+    return li
+}
+
+// // Builds an InfoWindow to display details above the marker
+// function showDetails(placeResult, marker, status) {
+//     if (status == google.maps.places.PlacesServiceStatus.OK) {
+//         let placeInfowindow = new google.maps.InfoWindow();
+//         placeInfowindow.setContent('<div><strong>' + placeResult.name +
+//             '</strong><br>' + 'Rating: ' + placeResult.rating + '</div>');
+//         placeInfowindow.open(marker.map, marker);
+//         currentInfoWindow.close();
+//         currentInfoWindow = placeInfowindow;
+//     } else {
+//         console.log('showDetails failed: ' + status);
+//     }
+// }

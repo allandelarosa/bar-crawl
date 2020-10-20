@@ -40,8 +40,6 @@
 
 	<!-- list -->
 	<div class="col-sm-4" id="list-container">
-		<div id="panel">
-		</div>
 		<ul class="centered" id="search-results"></ul>
 	</div>
 </div>
@@ -50,5 +48,5 @@
 	src="https://maps.googleapis.com/maps/api/js?key={{ API_KEY }}&callback=initMap&libraries=places&v=weekly">
 	</script>
 
-<script src="{% static 'navigate/test.js' %}"></script>
+<script src="{% static 'navigate/map.js' %}"></script>
 {% endblock content %}
