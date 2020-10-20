@@ -1,3 +1,5 @@
+const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
 let pos;
 let map;
 let bounds;
@@ -8,6 +10,7 @@ let markers = {};
 
 let placesList;
 let location_data = [];
+let toVisit = [];
 
 function initMap() {
     // Initialize variables
@@ -41,6 +44,7 @@ function initMap() {
             searchBox.addListener("places_changed", () => {
                 clearMarkers();
                 location_data = [];
+                toVisit = [];
                 placesList.innerHTML = "";
 
                 bounds = new google.maps.LatLngBounds();
@@ -100,50 +104,14 @@ function nearbyCallback(results, status) {
     createMarkers(results);
     location_data = []
     for (let data of results) {
-        location_data.push({ "name": data.name, "lat": data.geometry.location.lat(), "lng": data.geometry.location.lng() })
+        location_data.push({ 
+            "name": data.name, 
+            "lat": data.geometry.location.lat(), 
+            "lng": data.geometry.location.lng() 
+        })
     }
 
     // console.log(location_data)
-
-    // NEW CALL TO DJIKSTRA
-    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-
-    const request = new Request(
-        "/djikstra", {
-        method: 'POST',
-        mode: 'same-origin',
-        headers: {
-            'X-CSRFToken': csrftoken,
-            'Content-type': 'application/json'
-        },
-        body: JSON.stringify(location_data),
-    }
-    );
-
-    // console.log(request)
-
-    // fetch(request)
-    //   .then(response => response.json())
-    //   .then(function (data) {
-    //     let answer = data
-    //     // console.log(answer)
-    //     for (let point of answer.path) {
-    //       let marker = new google.maps.Marker({
-    //         map: map,
-    //         position: point
-    //       });
-    //     }
-    //     let flightPlanCoordinates = answer.path
-    //     let flightPath = new google.maps.Polyline({
-    //       path: flightPlanCoordinates,
-    //       geodesic: true,
-    //       strokeColor: '#FF0000',
-    //       strokeOpacity: 1.0,
-    //       strokeWeight: 2
-    //     });
-
-    //     flightPath.setMap(map)
-    //   });
 }
 
 function clearMarkers() {
@@ -181,6 +149,10 @@ function createMarkers(places) {
             unhighlightMarker(marker);
         });
 
+        marker.addListener("click", () => {
+            updateToVisit(place);
+        });
+
         markers[place.place_id] = marker
         placesList.appendChild(createSearchResult(place, labelIndex++));
 
@@ -207,7 +179,6 @@ function createSearchResult(place, index) {
     infoContainer.innerHTML += place.vicinity + '<br>'
 
     if (place.opening_hours) {
-        console.log(place.opening_hours.open_now)
         if (place.opening_hours.open_now) {
             infoContainer.innerHTML += 'Open now <br>'
         } else {
@@ -236,6 +207,10 @@ function createSearchResult(place, index) {
         unhighlightMarker(markers[place.place_id]);
     });
 
+    li.addEventListener("click", () => {
+        updateToVisit(place);
+    });
+
     return li
 }
 
@@ -251,6 +226,62 @@ function unhighlightMarker(marker) {
     icon.fillColor = '#FF3333';
     marker.setIcon(icon);
     marker.zIndex -= 30;
+}
+
+function updateToVisit(place) {
+    if (toVisit.length >= 1 && toVisit[0].name === place.name) {
+        toVisit.shift();
+    } else if (toVisit.length == 2 && toVisit[1].name === place.name) {
+        toVisit.pop();
+    } else { 
+        if (toVisit.length == 2) {
+            toVisit.shift();
+        }
+        toVisit.push({
+            "name": place.name, 
+            "lat": place.geometry.location.lat(), 
+            "lng": place.geometry.location.lng()
+        });
+    }
+}
+
+function doDjikstra() {
+    const request = new Request(
+        "/djikstra", {
+        method: 'POST',
+        mode: 'same-origin',
+        headers: {
+            'X-CSRFToken': csrftoken,
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify(location_data),
+    }
+    );
+
+    console.log(request)
+
+    fetch(request)
+    .then(response => response.json())
+    .then(function (data) {
+        let answer = data
+        // console.log(answer)
+        for (let point of answer.path) {
+            let marker = new google.maps.Marker({
+                map: map,
+                position: point
+            });
+        }
+        let flightPlanCoordinates = answer.path
+        let flightPath = new google.maps.Polyline({
+            path: flightPlanCoordinates,
+            geodesic: true,
+            strokeColor: '#FF0000',
+            strokeOpacity: 1.0,
+            strokeWeight: 2
+        });
+
+        flightPath.setMap(map)
+    });
 }
 
 // // Builds an InfoWindow to display details above the marker
