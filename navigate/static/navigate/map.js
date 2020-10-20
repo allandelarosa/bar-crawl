@@ -170,18 +170,26 @@ function createMarkers(places) {
             title: place.name,
             position: place.geometry.location,
             label: { text: "" + labelIndex, color: '#FFFFFF' },
-            zIndex: -(labelIndex++),
+            zIndex: -(labelIndex),
         });
-        markers[place.place_id] = marker
 
-        placesList.appendChild(createSearchResult(place));
+        marker.addListener("mouseover", () => {
+            highlightMarker(marker);
+        });
+
+        marker.addListener("mouseout", () => {
+            unhighlightMarker(marker);
+        });
+
+        markers[place.place_id] = marker
+        placesList.appendChild(createSearchResult(place, labelIndex++));
 
         bounds.extend(place.geometry.location);
     }
     map.fitBounds(bounds);
 }
 
-function createSearchResult(place) {
+function createSearchResult(place, index) {
     let li = document.createElement("li");
 
     let infoContainer = document.createElement('div');
@@ -190,7 +198,7 @@ function createSearchResult(place) {
     photoContainer.classList.add('photo-container');
     infoContainer.classList.add('info-container');
 
-    infoContainer.innerHTML = '<strong>' + place.name + '</strong><br>'
+    infoContainer.innerHTML = '<strong>' + index + '. ' + place.name + '</strong><br>'
 
     if (place.rating) {
         infoContainer.innerHTML += 'Rating: ' + place.rating + ' (' + place.user_ratings_total + ')<br>'
@@ -199,7 +207,8 @@ function createSearchResult(place) {
     infoContainer.innerHTML += place.vicinity + '<br>'
 
     if (place.opening_hours) {
-        if (place.opening_hours.isOpen()) {
+        console.log(place.opening_hours.open_now)
+        if (place.opening_hours.open_now) {
             infoContainer.innerHTML += 'Open now <br>'
         } else {
             infoContainer.innerHTML += 'Closed <br>'
@@ -220,20 +229,28 @@ function createSearchResult(place) {
     // li.id = place.place_id;
 
     li.addEventListener("mouseover", () => {
-        let icon = markers[place.place_id].icon;
-        icon.fillColor = '#FFDD33';
-        markers[place.place_id].setIcon(icon);
-        markers[place.place_id].zIndex += 30;
+        highlightMarker(markers[place.place_id]);
     });
 
     li.addEventListener("mouseout", () => {
-        let icon = markers[place.place_id].icon;
-        icon.fillColor = '#FF3333';
-        markers[place.place_id].setIcon(icon);
-        markers[place.place_id].zIndex -= 30;
+        unhighlightMarker(markers[place.place_id]);
     });
 
     return li
+}
+
+function highlightMarker(marker) {
+    let icon = marker.icon;
+    icon.fillColor = '#FFDD33';
+    marker.setIcon(icon);
+    marker.zIndex += 30;
+}
+
+function unhighlightMarker(marker) {
+    let icon = marker.icon;
+    icon.fillColor = '#FF3333';
+    marker.setIcon(icon);
+    marker.zIndex -= 30;
 }
 
 // // Builds an InfoWindow to display details above the marker
