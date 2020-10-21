@@ -221,6 +221,11 @@ function createSearchResult(place, index) {
 }
 
 function highlightMarker(marker) {
+    for (place of toVisit) {
+        if (place.name === marker.title) {
+            return
+        }
+    }
     let icon = marker.icon;
     icon.fillColor = '#FFDD33';
     marker.setIcon(icon);
@@ -228,6 +233,11 @@ function highlightMarker(marker) {
 }
 
 function unhighlightMarker(marker) {
+    for (place of toVisit) {
+        if (place.name === marker.title) {
+            return
+        }
+    }
     let icon = marker.icon;
     icon.fillColor = '#FF3333';
     marker.setIcon(icon);

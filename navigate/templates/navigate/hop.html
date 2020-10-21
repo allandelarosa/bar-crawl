@@ -23,7 +23,6 @@
 		</div>
 
 		<div class=row id="options-container">
-			<button id="doDjikstra" disabled="true">Create Itinerary</button>
 			<p>dummy options</p>
 		</div>
 	</div>
@@ -38,7 +37,10 @@
 
 	<!-- list -->
 	<div class="col-sm-4" id="list-container">
-		<ul class="centered" id="search-results"></ul>
+		<div class="results-container centered">
+			<ul id="search-results"></ul>
+			<button id="doDjikstra" class="btn btn-dark" disabled="true">Create Itinerary</button>
+		</div>
 	</div>
 </div>
 

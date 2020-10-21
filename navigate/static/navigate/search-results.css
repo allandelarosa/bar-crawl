@@ -1,3 +1,8 @@
+.results-container {
+    height: 95%;
+    width: 95%;
+}
+
 .photo-container {
     width: 20%;
     height: auto;
@@ -19,9 +24,14 @@
   list-style-type: none;
   padding: 0;
   margin: 0;
-  height: 95%;
-  width: 95%;
+  height: 90%;
+  width: 100%;
   overflow-y: scroll;
+}
+
+#doDjikstra {
+    height: 10%;
+    width: 100%;
 }
 
 /* to hide scrollbar */
