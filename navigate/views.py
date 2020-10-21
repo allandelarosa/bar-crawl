@@ -22,7 +22,11 @@ def test(request):
 	return JsonResponse(data)
 
 def djikstra(request):
-	location_data = json.loads(request.body)
+	json_data = json.loads(request.body)
+	location_data = json_data['location_data']
+	start_point = json_data['start_point']
+	end_point = json_data['end_point']
+
 
 	data = {'path': location_data}
 	return JsonResponse(data)

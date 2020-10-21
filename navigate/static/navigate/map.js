@@ -11,6 +11,11 @@ let markers = {};
 let placesList;
 let location_data = [];
 let toVisit = [];
+let djikstraButton = document.getElementById('doDjikstra');
+
+djikstraButton.addEventListener("click", () => {
+    doDjikstra();
+})
 
 function initMap() {
     // Initialize variables
@@ -45,6 +50,7 @@ function initMap() {
                 clearMarkers();
                 location_data = [];
                 toVisit = [];
+                djikstraButton.disabled = true;
                 placesList.innerHTML = "";
 
                 bounds = new google.maps.LatLngBounds();
@@ -231,8 +237,10 @@ function unhighlightMarker(marker) {
 function updateToVisit(place) {
     if (toVisit.length >= 1 && toVisit[0].name === place.name) {
         toVisit.shift();
+        djikstraButton.disabled = true;
     } else if (toVisit.length == 2 && toVisit[1].name === place.name) {
         toVisit.pop();
+        djikstraButton.disabled = true;
     } else { 
         if (toVisit.length == 2) {
             toVisit.shift();
@@ -242,6 +250,9 @@ function updateToVisit(place) {
             "lat": place.geometry.location.lat(), 
             "lng": place.geometry.location.lng()
         });
+        if (toVisit.length == 2) {
+            djikstraButton.disabled = false;
+        }
     }
 }
 
@@ -254,9 +265,13 @@ function doDjikstra() {
             'X-CSRFToken': csrftoken,
             'Content-type': 'application/json'
         },
-        body: JSON.stringify(location_data),
-    }
-    );
+        body: JSON.stringify({
+            'location_data': location_data,
+            'start_point': toVisit[0],
+            'end_point': toVisit[1]
+        }),
+        // body: JSON.stringify(location_data),
+    });
 
     console.log(request)
 
@@ -265,12 +280,12 @@ function doDjikstra() {
     .then(function (data) {
         let answer = data
         // console.log(answer)
-        for (let point of answer.path) {
-            let marker = new google.maps.Marker({
-                map: map,
-                position: point
-            });
-        }
+        // for (let point of answer.path) {
+        //     let marker = new google.maps.Marker({
+        //         map: map,
+        //         position: point
+        //     });
+        // }
         let flightPlanCoordinates = answer.path
         let flightPath = new google.maps.Polyline({
             path: flightPlanCoordinates,
