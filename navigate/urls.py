@@ -6,4 +6,5 @@ urlpatterns = [
     path('', views.home, name='navigate-home'),
     path('test', views.test, name='navigate-test'),
     path('djikstra', views.djikstra, name='navigate-djikstra'),
+    path('graph', views.construct_graph, name='navigate-graph'),
 ]

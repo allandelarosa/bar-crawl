@@ -118,6 +118,7 @@ function nearbyCallback(results, status) {
     }
 
     // console.log(location_data)
+    constructGraph();
 }
 
 function clearMarkers() {
@@ -322,3 +323,34 @@ function doDjikstra() {
 //         console.log('showDetails failed: ' + status);
 //     }
 // }
+
+function constructGraph() {
+    const request = new Request(
+        "/graph", {
+        method: 'POST',
+        mode: 'same-origin',
+        headers: {
+            'X-CSRFToken': csrftoken,
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify(location_data),
+    });
+
+    fetch(request)
+    .then(response => response.json())
+    .then(function (data) {
+        let answer = data
+        
+        for (let pair of answer) {
+            let edge = new google.maps.Polyline({
+                path: pair,
+                geodesic: true,
+                strokeColor: '#FF0000',
+                strokeOpacity: 1.0,
+                strokeWeight: 2
+            });
+
+            edge.setMap(map)
+        }
+    });
+}
