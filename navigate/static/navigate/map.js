@@ -118,7 +118,7 @@ function nearbyCallback(results, status) {
     }
 
     // console.log(location_data)
-    constructGraph();
+    displayGraph();
 }
 
 function clearMarkers() {
@@ -324,7 +324,7 @@ function doDjikstra() {
 //     }
 // }
 
-function constructGraph() {
+function displayGraph() {
     const request = new Request(
         "/graph", {
         method: 'POST',

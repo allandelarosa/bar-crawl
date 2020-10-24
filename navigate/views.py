@@ -6,8 +6,11 @@ from django.conf import settings
 from django.http import JsonResponse
 import json
 
-import math
 import heapq
+from math import (
+	sin, cos, atan2, acos, radians, 
+	degrees, sqrt
+)
 
 from collections import defaultdict
 
@@ -42,92 +45,69 @@ def djikstra(request):
 def construct_graph(request):
 	location_data = json.loads(request.body)
 
+	coords = {loc["name"]:{"lat": loc["lat"], "lng": loc["lng"]} for loc in location_data}
+
 	def distance(a, b):
 		R = 6371  # Radius of the earth in km
-		dLat = math.radians(a["lat"] - b["lat"])
-		dLng = math.radians(a["lng"] - b["lng"])
-		A = math.sin(dLat/2) * math.sin(dLat/2) + math.cos(math.radians(a["lat"])) * math.cos(math.radians(b["lat"])) * math.sin(dLng/2) * math.sin(dLng/2)
-		C = 2 * math.atan2(math.sqrt(A), math.sqrt(1-A))
+		dLat = radians(a["lat"] - b["lat"])
+		dLng = radians(a["lng"] - b["lng"])
+		A = sin(dLat/2) * sin(dLat/2) + cos(radians(a["lat"])) * cos(radians(b["lat"])) * sin(dLng/2) * sin(dLng/2)
+		C = 2 * atan2(sqrt(A), sqrt(1-A))
 		D = R * C # Distance in km
-		return D + 0.001
+		return D + 0.0001 # add small distance to avoid division by 0
 
-	class DSU:
-		def __init__(self, names):
-			self.par = {name:name for name in names}
-		def find(self, x):
-			if x != self.par[x]:
-				self.par[x] = self.find(self.par[x])
-			return self.par[x]
-		def union(self, x, y):
-			if x < y:
-				self.par[self.find(y)] = self.find(x)
-			else:
-				self.par[self.find(x)] = self.find(y)
-
-	dsu = DSU([loc["name"] for loc in location_data])
+	def find_angle(a, b, c):
+		return degrees(acos( (a**2 + b**2 - c**2) / (2 * a * b) ))
 
 	edges = []
+	distances = defaultdict(dict)
+
 	for i, loc1 in enumerate(location_data):
 		for loc2 in location_data[i + 1:]:
-			print(distance(loc1, loc2))
-			heapq.heappush(
-				edges,
-				(distance(loc1, loc2), loc1, loc2)
-			)
+			dist = distance(loc1, loc2)
 
-	seen = set()
-	graph = []
-	rejected = []
+			edges.append((dist, loc1["name"], loc2["name"]))
 
-	min_edges = {}
-	# used_edges = defaultdict(list)
+			distances[loc1["name"]][loc2["name"]] = dist
+			distances[loc2["name"]][loc1["name"]] = dist
+
+	heapq.heapify(edges)
+
+	# to display only
+	to_display = []
+	graph = defaultdict(dict)
+
+	THRESHOLD = 75
 
 	while edges:
 		dist, loc1, loc2 = heapq.heappop(edges)
-		if dsu.find(loc1["name"]) == dsu.find(loc2["name"]):
-			rejected.append((dist, loc1, loc2))
-			continue
-		dsu.union(loc1["name"], loc2["name"])
 
-		graph.append([
-			{"lat": loc1["lat"], "lng": loc1["lng"]},
-			{"lat": loc2["lat"], "lng": loc2["lng"]}
-			])
+		not_needed = False
+		for loc3 in graph[loc1]:
+			angle = find_angle(dist, graph[loc1][loc3], distances[loc2][loc3])
 
-		seen.add(loc1["name"])
-		seen.add(loc2["name"])
-
-		if loc1["name"] not in min_edges:
-			min_edges[loc1["name"]] = dist
-		else:
-			min_edges[loc1["name"]] = min(dist, min_edges[loc1["name"]])
-
-		if loc2["name"] not in min_edges:
-			min_edges[loc2["name"]] = dist
-		else:
-			min_edges[loc2["name"]] = min(dist, min_edges[loc2["name"]])
-
-		# used_edges[loc1["name"]].append(dist)
-		# used_edges[loc2["name"]].append(dist)
-
-		pars = set(par for par in dsu.par.values())
-		if len(pars) == 1:
+			if angle > THRESHOLD * (1 - graph[loc1][loc3]/dist):
+				continue
+			not_needed = True
 			break
 
-	# def median(x):
-	# 	return x[len(x)//2]
+		if not_needed:
+			continue
 
-	WEIGHT = 1.5
+		for loc3 in graph[loc2]:
+			angle = find_angle(dist, graph[loc2][loc3], distances[loc1][loc3])
 
-	for dist, loc1, loc2 in rejected:
-		# if dist <= WEIGHT * (min_edges[loc1["name"]] + min_edges[loc2["name"]]) / 2:
-		if dist <= WEIGHT * min_edges[loc1["name"]] or dist <= WEIGHT * min_edges[loc2["name"]]:
-		# if dist <= WEIGHT * min(median(used_edges[loc1["name"]]), median(used_edges[loc2["name"]])):
-			graph.append([
-				{"lat": loc1["lat"], "lng": loc1["lng"]},
-				{"lat": loc2["lat"], "lng": loc2["lng"]}
-				])
-			# heapq.heappush(used_edges[loc1["name"]], dist)
-			# heapq.heappush(used_edges[loc2["name"]], dist)
+			if angle > THRESHOLD * (1 - graph[loc2][loc3]/dist):
+				continue
+			not_needed = True
+			break
+
+		if not_needed:
+			continue
+
+		to_display.append([coords[loc1], coords[loc2]])
+
+		graph[loc1][loc2] = dist
+		graph[loc2][loc1] = dist
 	
-	return JsonResponse(graph, safe=False)
+	return JsonResponse(to_display, safe=False)
