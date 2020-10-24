@@ -8,10 +8,11 @@ let currentInfoWindow;
 let service;
 let markers = {};
 
-let placesList;
-let location_data = [];
-let toVisit = [];
+let location_data;
+let toVisit;
+
 let djikstraButton = document.getElementById('doDjikstra');
+let placesList = document.getElementById("search-results");
 
 djikstraButton.addEventListener("click", () => {
     doDjikstra();
@@ -19,10 +20,8 @@ djikstraButton.addEventListener("click", () => {
 
 function initMap() {
     // Initialize variables
-    bounds = new google.maps.LatLngBounds();
     infoWindow = new google.maps.InfoWindow;
     currentInfoWindow = infoWindow;
-    placesList = document.getElementById("search-results");
 
     // Try HTML5 geolocation
     if (navigator.geolocation) {
@@ -35,10 +34,8 @@ function initMap() {
                 center: pos,
                 zoom: 15
             });
-            bounds.extend(pos);
-            map.setCenter(pos);
-
-            // Call Places Nearby Search on user's location
+            
+            setMap(pos);
             getNearbyPlaces(pos);
 
             const input = document.getElementById("address");
@@ -47,17 +44,10 @@ function initMap() {
                 searchBox.setBounds(map.getBounds());
             });
             searchBox.addListener("places_changed", () => {
-                clearMarkers();
-                location_data = [];
-                toVisit = [];
-                djikstraButton.disabled = true;
-                placesList.innerHTML = "";
-
-                bounds = new google.maps.LatLngBounds();
                 const places = searchBox.getPlaces();
                 let newpos = places[0].geometry.location;
-                bounds.extend(newpos);
-                map.setCenter(newpos);
+
+                setMap(newpos)
                 getNearbyPlaces(newpos);
             });
         }, () => {
@@ -89,6 +79,19 @@ function handleLocationError(browserHasGeolocation, infoWindow) {
 
     // Call Places Nearby Search on the default location
     getNearbyPlaces(pos);
+}
+
+function setMap(pos) {
+    clearMarkers();
+    location_data = [];
+    toVisit = [];
+    djikstraButton.disabled = true;
+    placesList.innerHTML = "";
+
+    bounds = new google.maps.LatLngBounds();
+    bounds.extend(pos);
+
+    map.setCenter(pos);
 }
 
 // Perform a Places Nearby Search Request
@@ -288,7 +291,7 @@ function doDjikstra() {
 
     fetch(request)
     .then(response => response.json())
-    .then(function (data) {
+    .then((data) => {
         let answer = data
         // console.log(answer)
         // for (let point of answer.path) {
@@ -338,7 +341,7 @@ function displayGraph() {
 
     fetch(request)
     .then(response => response.json())
-    .then(function (data) {
+    .then((data) => {
         let answer = data
         
         for (let pair of answer) {
