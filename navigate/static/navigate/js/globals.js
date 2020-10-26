@@ -19,3 +19,6 @@ let djikstraButton = document.getElementById('doDjikstra');
 djikstraButton.addEventListener("click", () => {
     doDjikstra();
 })
+
+let graph;
+let path;

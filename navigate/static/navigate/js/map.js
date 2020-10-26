@@ -69,6 +69,9 @@ function setMap(pos) {
     toVisit = [];
     djikstraButton.disabled = true;
     placesList.innerHTML = "";
+    graph = {};
+    
+    if (path) path.setMap(null);
 
     bounds = new google.maps.LatLngBounds();
     bounds.extend(pos);

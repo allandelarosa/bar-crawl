@@ -1,4 +1,6 @@
 function doDjikstra() {
+    if (path) path.setMap(null);
+
     const request = new Request(
         "/djikstra/path/", {
         method: 'POST',
@@ -9,6 +11,7 @@ function doDjikstra() {
         },
         body: JSON.stringify({
             'location_data': location_data,
+            'graph': graph,
             'start_point': toVisit[0],
             'end_point': toVisit[1]
         }),
@@ -27,16 +30,15 @@ function doDjikstra() {
         //         position: point
         //     });
         // }
-        let flightPlanCoordinates = answer.path
-        let flightPath = new google.maps.Polyline({
-            path: flightPlanCoordinates,
+        path = new google.maps.Polyline({
+            path: answer,
             geodesic: true,
             strokeColor: '#FF0000',
             strokeOpacity: 1.0,
             strokeWeight: 2
         });
 
-        flightPath.setMap(map)
+        path.setMap(map)
     });
 }
 
@@ -55,19 +57,19 @@ function displayGraph() {
     fetch(request)
     .then(response => response.json())
     .then((data) => {
-        let answer = data
-        
-        for (let pair of answer) {
-            let edge = new google.maps.Polyline({
-                path: pair,
-                geodesic: true,
-                strokeColor: '#FF0000',
-                strokeOpacity: 1.0,
-                strokeWeight: 2
-            });
+        let answer = data.to_display;
+        graph = data.graph;
+        // for (let pair of answer) {
+        //     let edge = new google.maps.Polyline({
+        //         path: pair,
+        //         geodesic: true,
+        //         strokeColor: '#FF0000',
+        //         strokeOpacity: 1.0,
+        //         strokeWeight: 2
+        //     });
 
-            edge.setMap(map)
-        }
+        //     edge.setMap(map)
+        // }
     });
 }
 
