@@ -24,6 +24,8 @@ ALLOWED_HOSTS = ['djikstrahopapp.herokuapp.com', '127.0.0.1', 'localhost']
 
 INSTALLED_APPS = [
     'navigate.apps.NavigateConfig',
+    'djikstra.apps.DjikstraConfig',
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
