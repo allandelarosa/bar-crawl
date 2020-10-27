@@ -7,23 +7,19 @@
 <div class="row top" id="top-container">
 	<div class="col-sm-10">
 		<div class="row" id="search-bar-container">
-			<form action="">
+			<div class="input-group mb-4 p-1">
+				<input id="address" type="search" placeholder="Near" aria-describedby="button-addon2"
+					class="form-control bg-none border-0 ml-1">
 
-				<div class="input-group mb-4 p-1">
-					<input id="address" type="search" placeholder="Near" aria-describedby="button-addon2"
-						class="form-control bg-none border-0 ml-1">
-
-					<div class="input-group-append border-0 searchbar-color">
-						<button id="button-addon2" type="button" class="btn btn-link ml-1 submit"><i
-								class="fa fa-search"></i></button>
-					</div>
+				<div class="input-group-append border-0 searchbar-color">
+					<button id="button-addon2" type="button" class="btn btn-link ml-1 submit"><i
+							class="fa fa-search"></i></button>
 				</div>
-
-			</form>
+			</div>
 		</div>
 
 		<div class=row id="options-container">
-			<p>dummy options</p>
+			<!-- <p>dummy options</p> -->
 		</div>
 	</div>
 </div>
@@ -48,5 +44,9 @@
 	src="https://maps.googleapis.com/maps/api/js?key={{ API_KEY }}&callback=initMap&libraries=places&v=weekly">
 	</script>
 
-<script src="{% static 'navigate/map.js' %}"></script>
+<script src="{% static 'navigate/js/globals.js' %}"></script>
+<script src="{% static 'navigate/js/map.js' %}"></script>
+<script src="{% static 'navigate/js/markers.js' %}"></script>
+<script src="{% static 'navigate/js/searchresults.js' %}"></script>
+<script src="{% static 'navigate/js/djikstra.js' %}"></script>
 {% endblock content %}
