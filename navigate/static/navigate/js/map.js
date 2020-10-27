@@ -100,9 +100,9 @@ function nearbyCallback(results, status) {
     location_data = []
     for (let data of results) {
         location_data.push({ 
-            "name": data.name, 
-            "lat": data.geometry.location.lat(), 
-            "lng": data.geometry.location.lng() 
+            name: data.name, 
+            lat: data.geometry.location.lat(), 
+            lng: data.geometry.location.lng() 
         })
     }
 

@@ -10,14 +10,12 @@ function doDjikstra() {
             'Content-type': 'application/json'
         },
         body: JSON.stringify({
-            'location_data': location_data,
-            'graph': graph,
-            'start_point': toVisit[0],
-            'end_point': toVisit[1]
+            location_data: location_data,
+            graph: graph,
+            start_point: toVisit[0],
+            end_point: toVisit[1]
         }),
     });
-
-    console.log(request)
 
     fetch(request)
     .then(response => response.json())
@@ -85,9 +83,9 @@ function updateToVisit(place) {
             toVisit.shift();
         }
         toVisit.push({
-            "name": place.name, 
-            "lat": place.geometry.location.lat(), 
-            "lng": place.geometry.location.lng()
+            name: place.name, 
+            lat: place.geometry.location.lat(), 
+            lng: place.geometry.location.lng()
         });
         if (toVisit.length == 2) {
             djikstraButton.disabled = false;
