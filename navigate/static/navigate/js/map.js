@@ -6,29 +6,52 @@ function initMap() {
     // Try HTML5 geolocation
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(position => {
-            let pos = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-            };
-            map = new google.maps.Map(document.getElementById('map'), {
-                center: pos,
-                zoom: 15
-            });
-            
-            setMap(pos);
-            getNearbyPlaces(pos);
-
             const input = document.getElementById("address");
-            const searchBox = new google.maps.places.SearchBox(input);
-            map.addListener("bounds_changed", () => {
-                searchBox.setBounds(map.getBounds());
-            });
-            searchBox.addListener("places_changed", () => {
-                const places = searchBox.getPlaces();
-                let newpos = places[0].geometry.location;
+            let geocoder = new google.maps.Geocoder();
 
-                setMap(newpos)
-                getNearbyPlaces(newpos);
+            if (input.value === "") {
+                console.log(position)
+                let pos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                geocoder.geocode({location: pos}, (results, status) => {
+                    if (status === 'OK') {
+                        // console.log(results[0]);
+                        window.location.replace('/hop/' + results[0].formatted_address)
+                    }
+                });
+            }
+
+            geocoder.geocode({address: input.value}, (results, status) => {
+                if (status === 'OK') {
+                    position = results[0].geometry.location;
+                
+                    let pos = {
+                        lat: position.lat(),
+                        lng: position.lng(),
+                    };
+
+                    map = new google.maps.Map(document.getElementById('map'), {
+                        center: pos,
+                        zoom: 15
+                    });
+                    
+                    setMap(pos);
+                    getNearbyPlaces(pos);
+
+                    const searchBox = new google.maps.places.SearchBox(input);
+                    map.addListener("bounds_changed", () => {
+                        searchBox.setBounds(map.getBounds());
+                    });
+                    searchBox.addListener("places_changed", () => {
+                        const places = searchBox.getPlaces();
+                        let newpos = places[0].geometry.location;
+
+                        setMap(newpos)
+                        getNearbyPlaces(newpos);
+                    });
+                }
             });
         }, () => {
             // Browser supports geolocation, but user has denied permission

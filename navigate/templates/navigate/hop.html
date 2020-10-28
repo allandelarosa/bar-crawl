@@ -8,8 +8,13 @@
 	<div class="col-sm-10">
 		<div class="row" id="search-bar-container">
 			<div class="input-group mb-4 p-1">
+				{% if place != "" %}
+				<input id="address" type="search" placeholder="Near" value="{{place}}" aria-describedby="button-addon2"
+					class="form-control bg-none border-0 ml-1">
+				{% else %}
 				<input id="address" type="search" placeholder="Near" aria-describedby="button-addon2"
 					class="form-control bg-none border-0 ml-1">
+				{% endif %}
 
 				<div class="input-group-append border-0 searchbar-color">
 					<button id="button-addon2" type="button" class="btn btn-link ml-1 submit"><i
@@ -39,10 +44,6 @@
 		</div>
 	</div>
 </div>
-
-<script async defer
-	src="https://maps.googleapis.com/maps/api/js?key={{ API_KEY }}&callback=initMap&libraries=places&v=weekly">
-	</script>
 
 <script src="{% static 'navigate/js/globals.js' %}"></script>
 <script src="{% static 'navigate/js/map.js' %}"></script>

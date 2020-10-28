@@ -2,29 +2,21 @@
 {% load static %}
 
 {% block content %}
-{% csrf_token %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
 
 <!-- Search form -->
 <div class="centered">
 	<div class="row">
 		<div class="centered homepage-search">
-			<form action="">
+			<div class="input-group mb-4 p-1">
+				<input id="address" type="search" placeholder="Near" aria-describedby="button-addon2"
+					class="form-control bg-none border-0 ml-1">
 
-				<div class="input-group mb-4 p-1">
-					<input type="search" placeholder="Find" aria-describedby="button-addon2"
-						class="form-control bg-none border-0">
-
-					<input type="search" placeholder="Near" aria-describedby="button-addon2"
-						class="form-control bg-none border-0 ml-1">
-
-					<div class="input-group-append border-0 searchbar-color">
-						<button id="button-addon2" type="button" class="btn btn-link ml-1"><i
-								class="fa fa-search"></i></button>
-					</div>
+				<div class="input-group-append border-0 searchbar-color">
+					<button id="button-addon2" type="button" class="btn btn-link ml-1"><i
+							class="fa fa-search"></i></button>
 				</div>
-
-			</form>
+			</div>
 		</div>
 	</div>
 
@@ -35,5 +27,7 @@
 		</div> -->
 
 </div>
+
+<script src="{% static 'navigate/js/home.js' %}"></script>
 
 {% endblock content %}
