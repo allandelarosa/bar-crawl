@@ -8,17 +8,16 @@
 	<div class="col-sm-10">
 		<div class="row" id="search-bar-container">
 			<div class="input-group mb-4 p-1">
+				
+				<input id="address" type="search" placeholder="Search for bars" aria-describedby="button-addon2" class="form-control bg-none border-0 ml-1"
 				{% if place != "" %}
-				<input id="address" type="search" placeholder="Near" value="{{place}}" aria-describedby="button-addon2"
-					class="form-control bg-none border-0 ml-1">
-				{% else %}
-				<input id="address" type="search" placeholder="Near" aria-describedby="button-addon2"
-					class="form-control bg-none border-0 ml-1">
-				{% endif %}
+					value="{{place}}" 
+				{% endif %}>
 
 				<div class="input-group-append border-0 searchbar-color">
-					<button id="button-addon2" type="button" class="btn btn-link ml-1 submit"><i
-							class="fa fa-search"></i></button>
+					<button id="button-addon2" type="button" class="btn btn-link ml-1 submit">
+						<i class="fa fa-search"></i>
+					</button>
 				</div>
 			</div>
 		</div>
