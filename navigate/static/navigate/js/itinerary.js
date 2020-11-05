@@ -60,8 +60,10 @@ function showItinerary(itinerary) {
 function showItineraryEntry(addingTo, place) {
     let ele = document.getElementById('itinerary-' + addingTo);
 
+    let placeInfo;
+
     if (addingTo === 'start' && !$.isEmptyObject(startPoint)) {
-        let placeInfo = ele.getElementsByTagName('DIV')[0];
+        placeInfo = ele.getElementsByTagName('DIV')[0];
         placeInfo.innerHTML = 'Start: ' + place.name;
 
     } else if (addingTo === 'end' && !$.isEmptyObject(endPoint)) {
@@ -79,7 +81,7 @@ function showItineraryEntry(addingTo, place) {
         });
 
         // add text for place info
-        let placeInfo = document.createElement('div');
+        placeInfo = document.createElement('div');
         if (addingTo === 'start') {
             placeInfo.innerHTML = 'Start: ' + place.name;
         } else {
@@ -89,6 +91,10 @@ function showItineraryEntry(addingTo, place) {
         ele.appendChild(removeButton);
         ele.appendChild(placeInfo);
     }
+
+    placeInfo.addEventListener('click', () => {
+        scrollResults(place);
+    })
     updateToVisit(place, addingTo);
 }
 

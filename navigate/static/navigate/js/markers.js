@@ -62,7 +62,7 @@ function createMarkers(places) {
         placesList.appendChild(createSearchResult(place, labelIndex++));
 
         marker.addListener("click", () => {
-            scrollResults(place.place_id);
+            scrollResults(place);
         });
 
         bounds.extend(place.geometry.location);

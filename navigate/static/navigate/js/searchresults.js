@@ -50,17 +50,16 @@ function createSearchResult(place, index) {
         service.getDetails(request, (place, status) => {
             // console.log(place);
 
-            expandSearchResult(place, li)
-
+            expandSearchResult(place);
         });
-
-        // updateToVisit(place);
     });
 
     return li
 }
 
-function expandSearchResult(place, li) {
+function expandSearchResult(place) {
+    let li = document.getElementById(place.place_id);
+
     if (expanded[place.place_id]) {
         let review = li.getElementsByClassName('review-container')[0];
 
@@ -131,6 +130,7 @@ function showMore(reviewContainer, reviewText) {
     reviewContainer.innerHTML = reviewText;
 }
 
-function scrollResults(place_id) {
-    document.getElementById(place_id).scrollIntoView({ behavior: "smooth" });
+function scrollResults(place) {
+    document.getElementById(place.place_id).scrollIntoView({ behavior: "smooth" });
+    expandSearchResult(place);
 }
