@@ -93,6 +93,10 @@ function setMap(pos) {
     // djikstraButton.disabled = true;
     placesList.innerHTML = "";
     graph = {};
+
+    expanded = {};
+    startPoint = null;
+    endPoint = null;
     
     if (path) path.setMap(null);
 

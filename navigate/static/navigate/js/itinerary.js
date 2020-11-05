@@ -7,11 +7,11 @@ function updateItinerary(place, addingTo) {
     }
 
     if (addingTo === 'start') {
-        showItineraryEntry(addingTo, place.name);
+        showItineraryEntry(addingTo, place);
     }
 
     if (addingTo === 'end') {
-        showItineraryEntry(addingTo, place.name);
+        showItineraryEntry(addingTo, place);
     }
 }
 
@@ -53,30 +53,75 @@ function showItinerary(itinerary) {
     itinerary.appendChild(dijkstraButton);
 }
 
-function showItineraryEntry(addingTo, placeName) {
+function showItineraryEntry(addingTo, place) {
     let ele = document.getElementById('itinerary-' + addingTo);
 
-    // add button to remove entry
-    let removeButton = document.createElement('button');
-    removeButton.classList.add('remove-button');
-    removeButton.innerHTML = 'Remove';
+    if (addingTo === 'start' && !$.isEmptyObject(startPoint)) {
+        let placeInfo = ele.getElementsByTagName('DIV')[0];
+        placeInfo.innerHTML = 'Start: ' + place.name;
 
-    removeButton.addEventListener('click', () => {
-        removeItineraryEntry(ele);
-    });
+    } else if (addingTo === 'end' && !$.isEmptyObject(endPoint)) {
+        let placeInfo = ele.getElementsByTagName('DIV')[0];
+        placeInfo.innerHTML = 'End: ' + place.name;
 
-    // add text for place info
-    let placeInfo = document.createElement('div');
-    if (addingTo === 'start') {
-        placeInfo.innerHTML = 'Start: ' + placeName;
     } else {
-        placeInfo.innerHTML = 'End: ' + placeName;
+        // add button to remove entry
+        let removeButton = document.createElement('button');
+        removeButton.classList.add('remove-button');
+        removeButton.innerHTML = 'Remove';
+
+        removeButton.addEventListener('click', () => {
+            removeItineraryEntry(addingTo);
+        });
+
+        // add text for place info
+        let placeInfo = document.createElement('div');
+        if (addingTo === 'start') {
+            placeInfo.innerHTML = 'Start: ' + place.name;
+        } else {
+            placeInfo.innerHTML = 'End: ' + place.name;
+        }
+
+        ele.appendChild(removeButton);
+        ele.appendChild(placeInfo);
     }
-    
-    ele.appendChild(removeButton);
-    ele.appendChild(placeInfo);
+    updateToVisit(place, addingTo);
 }
 
-function removeItineraryEntry(ele) {
-    return;
+function removeItineraryEntry(addingTo) {
+    let ele = document.getElementById('itinerary-' + addingTo);
+
+    while (ele.lastChild) {
+        ele.removeChild(ele.lastChild);
+    }
+
+    if (addingTo === 'start') {
+        startPoint = {};
+    } else {
+        endPoint = {};
+    }
+
+    if ($.isEmptyObject(startPoint) && $.isEmptyObject(endPoint)) {
+        hideItinerary();
+    }
+
+    if ($.isEmptyObject(startPoint) || $.isEmptyObject(endPoint)) {
+        document.getElementById('do-dijkstra').disabled = true;
+    }
+}
+
+function hideItinerary() {
+    itineraryVisible = false;
+
+    // hide itinerary
+    let itinerary = document.getElementById('itinerary');
+    while (itinerary.lastChild) {
+        itinerary.removeChild(itinerary.lastChild)
+    }
+    itinerary.style.height = 0;
+
+    // resze search results
+    let searchResults = document.getElementById('search-results');
+
+    searchResults.style.height = '100%';
 }
