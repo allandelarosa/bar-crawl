@@ -11,7 +11,7 @@ let currentInfoWindow;
 let markers = {};
 let placesList = document.getElementById("search-results");
 
-let expanded = {};
+let expanded;
 
 // for djikstra
 let location_data;

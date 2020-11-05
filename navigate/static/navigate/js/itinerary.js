@@ -4,6 +4,9 @@ function updateItinerary(place, addingTo) {
     let itinerary = document.getElementById('itinerary');
     if (!itineraryVisible) {
         showItinerary(itinerary);
+
+        // make sure search result is still visible
+        document.getElementById(place.place_id).scrollIntoView();
     }
 
     if (addingTo === 'start') {
@@ -67,7 +70,7 @@ function showItineraryEntry(addingTo, place) {
         placeInfo.innerHTML = 'Start: ' + place.name;
 
     } else if (addingTo === 'end' && !$.isEmptyObject(endPoint)) {
-        let placeInfo = ele.getElementsByTagName('DIV')[0];
+        placeInfo = ele.getElementsByTagName('DIV')[0];
         placeInfo.innerHTML = 'End: ' + place.name;
 
     } else {

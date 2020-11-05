@@ -94,7 +94,7 @@ function setMap(pos) {
     placesList.innerHTML = "";
     graph = {};
 
-    expanded = {};
+    expanded = "";
     startPoint = null;
     endPoint = null;
     

@@ -49,7 +49,7 @@ function createMarkers(places) {
             zIndex: -(labelIndex),
         });
 
-        const contentString = 
+        const contentString =
             "<div><strong>" +
             place.name +
             "</strong><br>" +
@@ -61,14 +61,14 @@ function createMarkers(places) {
             ;
 
         const markerinfowindow = new google.maps.InfoWindow({
-        content: contentString,
+            content: contentString,
         });
 
         // Mouseover
         marker.addListener("mouseover", () => {
             highlightMarker(marker);
             markerinfowindow.open(map, marker);
-      });
+        });
 
 
         // Mouseout
@@ -77,14 +77,11 @@ function createMarkers(places) {
             markerinfowindow.close();
         });
 
-        // Scroll to Place
-        marker.addListener("click", () => {
-            updateToVisit(place);
-        });
 
         markers[place.place_id] = marker
         placesList.appendChild(createSearchResult(place, labelIndex++));
 
+        // Scroll to Place
         marker.addListener("click", () => {
             scrollResults(place);
         });

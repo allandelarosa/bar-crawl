@@ -46,91 +46,106 @@ function createSearchResult(place, index) {
     });
 
     infoContainer.addEventListener("click", () => {
-        let request = { placeId: place.place_id }
-        service.getDetails(request, (place, status) => {
-            // console.log(place);
-
-            expandSearchResult(place);
-        });
+        if (place.place_id === expanded) {
+            unexpandSearchResult();
+        } else {
+            let request = { placeId: place.place_id }
+            service.getDetails(request, (place, status) => {
+                scrollResults(place);
+            });
+        }
     });
 
     return li
 }
 
 function expandSearchResult(place) {
+    // do nothing if already expanded
+    if (place.place_id === expanded) return;
+
+    expanded = place.place_id;
+
     let li = document.getElementById(place.place_id);
 
-    if (expanded[place.place_id]) {
-        let review = li.getElementsByClassName('review-container')[0];
+    // if reviews available, display them
+    if (place.reviews) {
+        let reviewContainer = document.createElement('div');
+        reviewContainer.classList.add('review-container');
 
-        let buttons = li.getElementsByClassName('buttons-container')[0];
+        const maxlen = 100;
+        let reviewText = place.reviews[0].text;
 
-        li.removeChild(review);
-        li.removeChild(buttons);
-        expanded[place.place_id] = false;
-    } else {
-        if (place.reviews) {
-            let reviewContainer = document.createElement('div');
-            reviewContainer.classList.add('review-container');
+        if (reviewText.length > maxlen) {
+            let shorttext = reviewText.substring(0, maxlen);
+            shorttext += '... ';
 
-            const maxlen = 100;
-            let reviewText = place.reviews[0].text;
+            reviewContainer.innerHTML = shorttext;
+            let showmorelink = document.createElement('a');
+            showmorelink.innerHTML = 'Read more';
+            showmorelink.classList.add('show-more-link');
 
-            if (reviewText.length > maxlen) {
-                let shorttext = reviewText.substring(0, maxlen);
-                shorttext += '... ';
+            showmorelink.addEventListener('click', () => { showMore(reviewContainer, reviewText) });
+            reviewContainer.appendChild(showmorelink);
 
-                reviewContainer.innerHTML = shorttext;
-                let showmorelink = document.createElement('a');
-                showmorelink.innerHTML = 'Read more';
-                showmorelink.classList.add('show-more-link');
-
-                showmorelink.addEventListener('click', () => { showMore(reviewContainer, reviewText) });
-                reviewContainer.appendChild(showmorelink);
-
-            } else {
-                reviewContainer.innerHTML = `"` + place.reviews[0].text + `"`;
-            }
-
-            li.appendChild(reviewContainer);
+        } else {
+            reviewContainer.innerHTML = `"` + place.reviews[0].text + `"`;
         }
-        expanded[place.place_id] = true;
 
-        let buttonsContainer = document.createElement('div');
-        buttonsContainer.classList.add('buttons-container');
-
-        let start = document.createElement('button');
-        let end = document.createElement('button');
-
-        start.innerHTML = "Set as start"
-        end.innerHTML = "Set as end"
-
-        start.classList.add('btn', 'btn-dark');
-        end.classList.add('btn', 'btn-dark');
-
-        start.addEventListener("click", () => {
-            updateItinerary(place, 'start');
-        });
-
-        end.addEventListener("click", () => {
-            updateItinerary(place, 'end');
-        });
-
-        buttonsContainer.appendChild(start);
-        buttonsContainer.appendChild(end);
-
-        li.appendChild(buttonsContainer);
+        li.appendChild(reviewContainer);
     }
+
+    // add buttons to add to itinerary
+    let buttonsContainer = document.createElement('div');
+    buttonsContainer.classList.add('buttons-container');
+
+    let start = document.createElement('button');
+    let end = document.createElement('button');
+
+    start.innerHTML = "Set as start"
+    end.innerHTML = "Set as end"
+
+    start.classList.add('btn', 'btn-dark');
+    end.classList.add('btn', 'btn-dark');
+
+    start.addEventListener("click", () => {
+        updateItinerary(place, 'start');
+    });
+
+    end.addEventListener("click", () => {
+        updateItinerary(place, 'end');
+    });
+
+    buttonsContainer.appendChild(start);
+    buttonsContainer.appendChild(end);
+
+    li.appendChild(buttonsContainer);
+}
+
+function unexpandSearchResult() {
+    let li = document.getElementById(expanded);
+
+    let review = li.getElementsByClassName('review-container')[0];
+    let buttons = li.getElementsByClassName('buttons-container')[0];
+
+    if (review) li.removeChild(review);
+    li.removeChild(buttons);
+
+    expanded = "";
 }
 
 function showMore(reviewContainer, reviewText) {
     let link = reviewContainer.getElementsByClassName('show-more-link')[0];
+
     reviewContainer.removeChild(link);
 
     reviewContainer.innerHTML = reviewText;
 }
 
 function scrollResults(place) {
-    document.getElementById(place.place_id).scrollIntoView({ behavior: "smooth" });
+    // if another entry already expanded, unexpand it
+    if (expanded.length > 0) unexpandSearchResult();
+
     expandSearchResult(place);
+
+    document.getElementById(place.place_id).scrollIntoView({ behavior: "smooth" });
 }
