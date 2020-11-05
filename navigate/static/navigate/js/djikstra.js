@@ -12,8 +12,8 @@ function doDjikstra() {
         body: JSON.stringify({
             location_data: location_data,
             graph: graph,
-            start_point: toVisit[0],
-            end_point: toVisit[1]
+            start_point: startPoint,
+            end_point: endPoint,
         }),
     });
 

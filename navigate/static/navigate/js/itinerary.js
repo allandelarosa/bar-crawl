@@ -51,6 +51,10 @@ function showItinerary(itinerary) {
     dijkstraButton.disabled = true;
     dijkstraButton.innerHTML = 'Create Itinerary'
     itinerary.appendChild(dijkstraButton);
+
+    dijkstraButton.addEventListener('click', () => {
+        doDjikstra();
+    })
 }
 
 function showItineraryEntry(addingTo, place) {
@@ -101,12 +105,12 @@ function removeItineraryEntry(addingTo) {
         endPoint = {};
     }
 
-    if ($.isEmptyObject(startPoint) && $.isEmptyObject(endPoint)) {
-        hideItinerary();
-    }
-
     if ($.isEmptyObject(startPoint) || $.isEmptyObject(endPoint)) {
         document.getElementById('do-dijkstra').disabled = true;
+    }
+
+    if ($.isEmptyObject(startPoint) && $.isEmptyObject(endPoint)) {
+        hideItinerary();
     }
 }
 
