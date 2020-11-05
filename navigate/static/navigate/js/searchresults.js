@@ -34,7 +34,8 @@ function createSearchResult(place, index) {
     li.appendChild(photoContainer);
     li.appendChild(infoContainer);
 
-    // li.id = place.place_id;
+    li.id = place.place_id;
+    expanded[place.place_id] = false;
 
     li.addEventListener("mouseover", () => {
         highlightMarker(markers[place.place_id]);
@@ -44,9 +45,92 @@ function createSearchResult(place, index) {
         unhighlightMarker(markers[place.place_id]);
     });
 
-    li.addEventListener("click", () => {
-        updateToVisit(place);
+    infoContainer.addEventListener("click", () => {
+        let request = { placeId: place.place_id }
+        service.getDetails(request, (place, status) => {
+            // console.log(place);
+
+            expandSearchResult(place);
+        });
     });
 
     return li
+}
+
+function expandSearchResult(place) {
+    let li = document.getElementById(place.place_id);
+
+    if (expanded[place.place_id]) {
+        let review = li.getElementsByClassName('review-container')[0];
+
+        let buttons = li.getElementsByClassName('buttons-container')[0];
+
+        li.removeChild(review);
+        li.removeChild(buttons);
+        expanded[place.place_id] = false;
+    } else {
+        if (place.reviews) {
+            let reviewContainer = document.createElement('div');
+            reviewContainer.classList.add('review-container');
+
+            const maxlen = 100;
+            let reviewText = place.reviews[0].text;
+
+            if (reviewText.length > maxlen) {
+                let shorttext = reviewText.substring(0, maxlen);
+                shorttext += '... ';
+
+                reviewContainer.innerHTML = shorttext;
+                let showmorelink = document.createElement('a');
+                showmorelink.innerHTML = 'Read more';
+                showmorelink.classList.add('show-more-link');
+
+                showmorelink.addEventListener('click', () => { showMore(reviewContainer, reviewText) });
+                reviewContainer.appendChild(showmorelink);
+
+            } else {
+                reviewContainer.innerHTML = `"` + place.reviews[0].text + `"`;
+            }
+
+            li.appendChild(reviewContainer);
+        }
+        expanded[place.place_id] = true;
+
+        let buttonsContainer = document.createElement('div');
+        buttonsContainer.classList.add('buttons-container');
+
+        let start = document.createElement('button');
+        let end = document.createElement('button');
+
+        start.innerHTML = "Set as start"
+        end.innerHTML = "Set as end"
+
+        start.classList.add('btn', 'btn-dark');
+        end.classList.add('btn', 'btn-dark');
+
+        start.addEventListener("click", () => {
+            updateItinerary(place, 'start');
+        });
+
+        end.addEventListener("click", () => {
+            updateItinerary(place, 'end');
+        });
+
+        buttonsContainer.appendChild(start);
+        buttonsContainer.appendChild(end);
+
+        li.appendChild(buttonsContainer);
+    }
+}
+
+function showMore(reviewContainer, reviewText) {
+    let link = reviewContainer.getElementsByClassName('show-more-link')[0];
+    reviewContainer.removeChild(link);
+
+    reviewContainer.innerHTML = reviewText;
+}
+
+function scrollResults(place) {
+    document.getElementById(place.place_id).scrollIntoView({ behavior: "smooth" });
+    expandSearchResult(place);
 }

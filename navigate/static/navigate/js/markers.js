@@ -77,15 +77,17 @@ function createMarkers(places) {
             markerinfowindow.close();
         });
 
-
         // Scroll to Place
         marker.addListener("click", () => {
             updateToVisit(place);
         });
 
-
         markers[place.place_id] = marker
         placesList.appendChild(createSearchResult(place, labelIndex++));
+
+        marker.addListener("click", () => {
+            scrollResults(place);
+        });
 
         bounds.extend(place.geometry.location);
     }

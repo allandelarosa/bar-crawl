@@ -11,14 +11,19 @@ let currentInfoWindow;
 let markers = {};
 let placesList = document.getElementById("search-results");
 
+let expanded = {};
+
 // for djikstra
 let location_data;
 let toVisit;
 
-let djikstraButton = document.getElementById('doDjikstra');
-djikstraButton.addEventListener("click", () => {
-    doDjikstra();
-})
+let startPoint;
+let endPoint;
+
+// let djikstraButton = document.getElementById('doDjikstra');
+// djikstraButton.addEventListener("click", () => {
+//     doDjikstra();
+// })
 
 let graph;
 let path;
