@@ -57,12 +57,13 @@ function createMarkers(places) {
             unhighlightMarker(marker);
         });
 
-        marker.addListener("click", () => {
-            updateToVisit(place);
-        });
 
         markers[place.place_id] = marker
         placesList.appendChild(createSearchResult(place, labelIndex++));
+
+        marker.addListener("click", () => {
+            scrollResults(place.place_id);
+        });
 
         bounds.extend(place.geometry.location);
     }

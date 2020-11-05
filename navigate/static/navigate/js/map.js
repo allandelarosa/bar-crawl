@@ -90,7 +90,7 @@ function setMap(pos) {
     clearMarkers();
     location_data = [];
     toVisit = [];
-    djikstraButton.disabled = true;
+    // djikstraButton.disabled = true;
     placesList.innerHTML = "";
     graph = {};
     
@@ -119,6 +119,9 @@ function getNearbyPlaces(position) {
 // Handle the results (up to 20) of the Nearby Search
 function nearbyCallback(results, status) {
     if (status !== "OK") return;
+
+    // console.log(results)
+
     createMarkers(results);
     location_data = []
     for (let data of results) {

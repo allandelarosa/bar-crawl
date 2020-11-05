@@ -1,0 +1,8 @@
+.itinerary-entry {
+    background-color: white;
+    height: 30px;
+}
+
+.remove-button {
+    float: right;
+}
