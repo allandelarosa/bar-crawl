@@ -55,9 +55,9 @@ function showItinerary(itinerary) {
     dijkstraButton.innerHTML = 'Create Itinerary'
     itinerary.appendChild(dijkstraButton);
 
-    dijkstraButton.addEventListener('click', () => {
-        doDjikstra();
-    })
+    $(dijkstraButton).click(() => {
+        doDijkstra();
+    });
 }
 
 function showItineraryEntry(addingTo, place) {
@@ -79,7 +79,7 @@ function showItineraryEntry(addingTo, place) {
         removeButton.classList.add('remove-button');
         removeButton.innerHTML = 'Remove';
 
-        removeButton.addEventListener('click', () => {
+        $(removeButton).click(() => {
             removeItineraryEntry(addingTo);
         });
 
@@ -95,9 +95,10 @@ function showItineraryEntry(addingTo, place) {
         ele.appendChild(placeInfo);
     }
 
-    placeInfo.addEventListener('click', () => {
+    $(placeInfo).click(() => {
         scrollResults(place);
     })
+
     updateToVisit(place, addingTo);
 }
 

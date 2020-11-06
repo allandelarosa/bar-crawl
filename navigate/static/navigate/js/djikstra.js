@@ -1,4 +1,4 @@
-function doDjikstra() {
+function doDijkstra() {
     if (path) path.setMap(null);
 
     const request = new Request(
@@ -57,17 +57,17 @@ function displayGraph() {
     .then((data) => {
         let answer = data.to_display;
         graph = data.graph;
-        // for (let pair of answer) {
-        //     let edge = new google.maps.Polyline({
-        //         path: pair,
-        //         geodesic: true,
-        //         strokeColor: '#FF0000',
-        //         strokeOpacity: 1.0,
-        //         strokeWeight: 2
-        //     });
+        for (let pair of answer) {
+            let edge = new google.maps.Polyline({
+                path: pair,
+                geodesic: true,
+                strokeColor: '#FF0000',
+                strokeOpacity: 1.0,
+                strokeWeight: 2
+            });
 
-        //     edge.setMap(map)
-        // }
+            edge.setMap(map)
+        }
     });
 }
 

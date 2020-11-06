@@ -35,17 +35,13 @@ function createSearchResult(place, index) {
     li.appendChild(infoContainer);
 
     li.id = place.place_id;
-    expanded[place.place_id] = false;
 
-    li.addEventListener("mouseover", () => {
-        highlightMarker(markers[place.place_id]);
-    });
+    $(li).hover(
+        () => { highlightMarker(markers[place.place_id]) },
+        () => { unhighlightMarker(markers[place.place_id]) },
+    );
 
-    li.addEventListener("mouseout", () => {
-        unhighlightMarker(markers[place.place_id]);
-    });
-
-    infoContainer.addEventListener("click", () => {
+    $(infoContainer).click(() => {
         if (place.place_id === expanded) {
             unexpandSearchResult();
         } else {
@@ -76,16 +72,9 @@ function expandSearchResult(place) {
         let reviewText = place.reviews[0].text;
 
         if (reviewText.length > maxlen) {
-            let shorttext = reviewText.substring(0, maxlen);
-            shorttext += '... ';
+            let shortText = `"` + reviewText.substring(0, maxlen) + `..."<br>`;
 
-            reviewContainer.innerHTML = shorttext;
-            let showmorelink = document.createElement('a');
-            showmorelink.innerHTML = 'Read more';
-            showmorelink.classList.add('show-more-link');
-
-            showmorelink.addEventListener('click', () => { showMore(reviewContainer, reviewText) });
-            reviewContainer.appendChild(showmorelink);
+            showLess(reviewContainer, shortText, reviewText);
 
         } else {
             reviewContainer.innerHTML = `"` + place.reviews[0].text + `"`;
@@ -107,11 +96,11 @@ function expandSearchResult(place) {
     start.classList.add('btn', 'btn-dark');
     end.classList.add('btn', 'btn-dark');
 
-    start.addEventListener("click", () => {
+    $(start).click(() => {
         updateItinerary(place, 'start');
     });
 
-    end.addEventListener("click", () => {
+    $(end).click(() => {
         updateItinerary(place, 'end');
     });
 
@@ -133,12 +122,35 @@ function unexpandSearchResult() {
     expanded = "";
 }
 
-function showMore(reviewContainer, reviewText) {
+function showLess(reviewContainer, shortText, reviewText) {
     let link = reviewContainer.getElementsByClassName('show-more-link')[0];
+    if (link) reviewContainer.removeChild(link);
 
+    reviewContainer.innerHTML = shortText;
+    let showmorelink = document.createElement('a');
+    showmorelink.innerHTML = 'Read more';
+    showmorelink.classList.add('show-more-link');
+
+    $(showmorelink).click(() => {
+        showMore(reviewContainer, shortText, reviewText)
+    });
+    reviewContainer.appendChild(showmorelink);
+}
+
+function showMore(reviewContainer, shortText, reviewText) {
+    let link = reviewContainer.getElementsByClassName('show-more-link')[0];
     reviewContainer.removeChild(link);
 
-    reviewContainer.innerHTML = reviewText;
+    reviewContainer.innerHTML = `"` + reviewText + `"<br>`;
+
+    let showlesslink = document.createElement('a');
+    showlesslink.innerHTML = 'Show less';
+    showlesslink.classList.add('show-more-link');
+
+    $(showlesslink).click(() => {
+        showLess(reviewContainer, shortText, reviewText)
+    });
+    reviewContainer.appendChild(showlesslink);
 }
 
 function scrollResults(place) {

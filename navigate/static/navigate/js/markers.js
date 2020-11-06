@@ -70,13 +70,11 @@ function createMarkers(places) {
             markerinfowindow.open(map, marker);
         });
 
-
         // Mouseout
         marker.addListener("mouseout", () => {
             unhighlightMarker(marker);
             markerinfowindow.close();
         });
-
 
         markers[place.place_id] = marker
         placesList.appendChild(createSearchResult(place, labelIndex++));
@@ -90,13 +88,3 @@ function createMarkers(places) {
     }
     map.fitBounds(bounds);
 }
-
-
-
-
-
-
-
-
-
-
