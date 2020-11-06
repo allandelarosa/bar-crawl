@@ -40,7 +40,7 @@ function doDijkstra() {
     });
 }
 
-function displayGraph() {
+function createGraph() {
     const request = new Request(
         "/djikstra/graph/", {
         method: 'POST',
@@ -57,17 +57,20 @@ function displayGraph() {
     .then((data) => {
         let answer = data.to_display;
         graph = data.graph;
-        for (let pair of answer) {
-            let edge = new google.maps.Polyline({
-                path: pair,
-                geodesic: true,
-                strokeColor: '#FF0000',
-                strokeOpacity: 1.0,
-                strokeWeight: 2
-            });
 
-            edge.setMap(map)
-        }
+        // to display graph
+
+        // for (let pair of answer) {
+        //     let edge = new google.maps.Polyline({
+        //         path: pair,
+        //         geodesic: true,
+        //         strokeColor: '#FF0000',
+        //         strokeOpacity: 1.0,
+        //         strokeWeight: 2
+        //     });
+
+        //     edge.setMap(map)
+        // }
     });
 }
 

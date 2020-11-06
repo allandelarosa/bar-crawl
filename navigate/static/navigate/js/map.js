@@ -136,7 +136,7 @@ function nearbyCallback(results, status) {
         })
     }
 
-    // displayGraph();
+    createGraph();
 }
 
 
