@@ -39,6 +39,8 @@ function createMarkers(places) {
             strokeWeight: 2,
             fillColor: '#FF3333',
             fillOpacity: 1,
+
+
         };
         let marker = new google.maps.Marker({
             map: map,
@@ -49,19 +51,48 @@ function createMarkers(places) {
             zIndex: -(labelIndex),
         });
 
-        const contentString =
-            "<div><strong>" +
+
+        const li = document.createElement("div");
+        
+        let photoContainer = document.createElement('div');
+        let infoContainer = document.createElement('div');
+        
+        photoContainer.classList.add('photo-container-2');
+        infoContainer.classList.add('info-container-2');
+
+        infoContainer.innerHTML =   
+        "<div>" +
+        "<div class='nameTitle'>"+
             place.name +
-            "</strong><br>" +
+            "</div>"
+            +
             "rating: " +
-            place.rating +
+            place.rating + 
+            " " +
+            (place.price_level) +
             "<br>" +
             place.vicinity +
-            "</div>"
-            ;
+            "</div>" 
+
+        var node = document.createTextNode("This is a new paragraph.");
+
+        // photoContainer.textContent = place.name;
+
+        if (place.photos != null) {
+        let photo = document.createElement('img');
+        let firstPhoto = place.photos[0];
+        photo.classList.add('result-photo');
+        photo.src = firstPhoto.getUrl();
+        photoContainer.appendChild(photo)
+        // photoContainer.appendChild(node)
+
+    }
+
+        li.appendChild(photoContainer);
+        li.appendChild(infoContainer);
 
         const markerinfowindow = new google.maps.InfoWindow({
-            content: contentString,
+            content: li
         });
 
         // Mouseover

@@ -4,16 +4,37 @@
 }
 
 .photo-container {
-    width: 20%;
-    height: auto;
-    float: right;
+  width:100px;
+  height:100px;
+  background-size:cover;
+  background-position:center;
+  float: right;
+}
+
+.photo-container-2 {
+  width:150px;
+  height:150px;
+  background-size:cover;
+  background-position:center;
+  float: right;
 }
 
 .info-container {
-    width: 80%;
+    width: 70%;
     float: left;
     word-wrap: break-word;
 }
+
+.info-container-2 {
+    width: 40%;
+    float: left;
+    word-wrap: break-word;
+}
+
+.nameTitle {
+  font-size: 14px;
+  font-weight: 700;
+  padding: 5px 0;
 
 .review-container {
     width: 100%;
