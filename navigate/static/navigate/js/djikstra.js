@@ -1,4 +1,4 @@
-function doDjikstra() {
+function doDijkstra() {
     if (path) path.setMap(null);
 
     const request = new Request(
@@ -12,8 +12,8 @@ function doDjikstra() {
         body: JSON.stringify({
             location_data: location_data,
             graph: graph,
-            start_point: toVisit[0],
-            end_point: toVisit[1]
+            start_point: startPoint,
+            end_point: endPoint,
         }),
     });
 
@@ -57,38 +57,53 @@ function displayGraph() {
     .then((data) => {
         let answer = data.to_display;
         graph = data.graph;
-        // for (let pair of answer) {
-        //     let edge = new google.maps.Polyline({
-        //         path: pair,
-        //         geodesic: true,
-        //         strokeColor: '#FF0000',
-        //         strokeOpacity: 1.0,
-        //         strokeWeight: 2
-        //     });
+        for (let pair of answer) {
+            let edge = new google.maps.Polyline({
+                path: pair,
+                geodesic: true,
+                strokeColor: '#FF0000',
+                strokeOpacity: 1.0,
+                strokeWeight: 2
+            });
 
-        //     edge.setMap(map)
-        // }
+            edge.setMap(map)
+        }
     });
 }
 
-function updateToVisit(place) {
-    if (toVisit.length >= 1 && toVisit[0].name === place.name) {
-        toVisit.shift();
-        djikstraButton.disabled = true;
-    } else if (toVisit.length == 2 && toVisit[1].name === place.name) {
-        toVisit.pop();
-        djikstraButton.disabled = true;
-    } else { 
-        if (toVisit.length == 2) {
-            toVisit.shift();
-        }
-        toVisit.push({
+function updateToVisit(place, addingTo) {
+    if (addingTo === 'start') {
+        // update start point
+        startPoint = {
             name: place.name, 
             lat: place.geometry.location.lat(), 
             lng: place.geometry.location.lng()
-        });
-        if (toVisit.length == 2) {
-            djikstraButton.disabled = false;
+        };
+
+        // check if end point is start point
+        if (!$.isEmptyObject(endPoint) && endPoint.name === place.name) {
+            endPoint = {};
+            removeItineraryEntry('end');
+            document.getElementById('do-dijkstra').disabled = true;
         }
+    } else {
+        // update end point
+        endPoint = {
+            name: place.name, 
+            lat: place.geometry.location.lat(), 
+            lng: place.geometry.location.lng()
+        }
+
+        // check if end point is start point
+        if (!$.isEmptyObject(startPoint) && startPoint.name === place.name) {
+            startPoint = {};
+            removeItineraryEntry('start');
+            document.getElementById('do-dijkstra').disabled = true;
+        }
+    };
+
+    // enable button if valid start and end
+    if (!$.isEmptyObject(startPoint) && !$.isEmptyObject(endPoint)) {
+        document.getElementById('do-dijkstra').disabled = false;
     }
 }

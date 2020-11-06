@@ -93,15 +93,13 @@ function createMarkers(places) {
 
         const markerinfowindow = new google.maps.InfoWindow({
             content: li
-
         });
 
         // Mouseover
         marker.addListener("mouseover", () => {
             highlightMarker(marker);
             markerinfowindow.open(map, marker);
-      });
-
+        });
 
         // Mouseout
         marker.addListener("mouseout", () => {
@@ -109,27 +107,15 @@ function createMarkers(places) {
             markerinfowindow.close();
         });
 
+        markers[place.place_id] = marker
+        placesList.appendChild(createSearchResult(place, labelIndex++));
 
         // Scroll to Place
         marker.addListener("click", () => {
-            updateToVisit(place);
+            scrollResults(place);
         });
-
-
-        markers[place.place_id] = marker
-        placesList.appendChild(createSearchResult(place, labelIndex++));
 
         bounds.extend(place.geometry.location);
     }
     map.fitBounds(bounds);
 }
-
-
-
-
-
-
-
-
-
-

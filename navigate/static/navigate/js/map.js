@@ -90,9 +90,13 @@ function setMap(pos) {
     clearMarkers();
     location_data = [];
     toVisit = [];
-    djikstraButton.disabled = true;
+    // djikstraButton.disabled = true;
     placesList.innerHTML = "";
     graph = {};
+
+    expanded = "";
+    startPoint = null;
+    endPoint = null;
     
     if (path) path.setMap(null);
 
@@ -119,6 +123,9 @@ function getNearbyPlaces(position) {
 // Handle the results (up to 20) of the Nearby Search
 function nearbyCallback(results, status) {
     if (status !== "OK") return;
+
+    // console.log(results)
+
     createMarkers(results);
     location_data = []
     for (let data of results) {
@@ -129,7 +136,7 @@ function nearbyCallback(results, status) {
         })
     }
 
-    displayGraph();
+    // displayGraph();
 }
 
 

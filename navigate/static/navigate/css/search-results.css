@@ -4,7 +4,7 @@
 }
 
 .photo-container {
-    width:100px;
+  width:100px;
   height:100px;
   background-size:cover;
   background-position:center;
@@ -35,6 +35,20 @@
   font-size: 14px;
   font-weight: 700;
   padding: 5px 0;
+
+.review-container {
+    width: 100%;
+    float: left;
+    word-wrap: break-word;
+}
+
+.buttons-container {
+    width: 100%;
+    float: left;
+}
+
+.show-more-link {
+    color: blue;
 }
 
 .result-photo {
@@ -46,14 +60,15 @@
   list-style-type: none;
   padding: 0;
   margin: 0;
-  height: 90%;
+  height: 100%;
   width: 100%;
   overflow-y: scroll;
 }
 
-#doDjikstra {
-    height: 10%;
+#do-dijkstra {
+    /* height: 10%; */
     width: 100%;
+    float: bottom;
 }
 
 /* to hide scrollbar */
