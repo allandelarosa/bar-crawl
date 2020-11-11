@@ -98,10 +98,12 @@ function expandSearchResult(place) {
 
     $(start).click(() => {
         updateItinerary(place, 'start');
+        updateToVisit(place, 'start');
     });
 
     $(end).click(() => {
         updateItinerary(place, 'end');
+        updateToVisit(place, 'end');
     });
 
     buttonsContainer.appendChild(start);

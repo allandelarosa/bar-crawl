@@ -66,12 +66,6 @@
   overflow-y: scroll;
 }
 
-#do-dijkstra {
-    /* height: 10%; */
-    width: 100%;
-    float: bottom;
-}
-
 /* to hide scrollbar */
 /* #search-results::-webkit-scrollbar {
     display: none;

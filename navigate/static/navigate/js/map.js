@@ -15,7 +15,7 @@ function initMap() {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
                 };
-                geocoder.geocode({location: pos}, (results, status) => {
+                geocoder.geocode({ location: pos }, (results, status) => {
                     if (status === 'OK') {
                         // console.log(results[0]);
                         window.location.replace('/hop/' + results[0].formatted_address)
@@ -23,11 +23,11 @@ function initMap() {
                 });
             }
 
-            geocoder.geocode({address: input.value}, (results, status) => {
+            geocoder.geocode({ address: input.value }, (results, status) => {
                 if (status !== 'OK') return;
 
                 position = results[0].geometry.location;
-            
+
                 let pos = {
                     lat: position.lat(),
                     lng: position.lng(),
@@ -35,9 +35,20 @@ function initMap() {
 
                 map = new google.maps.Map(document.getElementById('map'), {
                     center: pos,
-                    zoom: 15
+                    zoom: 15,
+                    zoomControlOptions: {
+                        position: google.maps.ControlPosition.LEFT_BOTTOM,
+                    },
+                    streetViewControlOptions: {
+                        position: google.maps.ControlPosition.LEFT_BOTTOM,
+                    },
+                    fullscreenControlOptions: {
+                        position: google.maps.ControlPosition.RIGHT_BOTTOM,
+                    },
                 });
-                
+
+                map.controls[google.maps.ControlPosition.RIGHT_TOP].push(document.getElementById('itinerary-control'));
+
                 setMap(pos);
                 getNearbyPlaces(pos);
 
@@ -101,7 +112,7 @@ function setMap(pos) {
     expanded = "";
     startPoint = null;
     endPoint = null;
-    
+
     if (path) path.setMap(null);
 
     bounds = new google.maps.LatLngBounds();
@@ -133,10 +144,10 @@ function nearbyCallback(results, status) {
     createMarkers(results);
     location_data = []
     for (let data of results) {
-        location_data.push({ 
-            name: data.name, 
-            lat: data.geometry.location.lat(), 
-            lng: data.geometry.location.lng() 
+        location_data.push({
+            name: data.name,
+            lat: data.geometry.location.lat(),
+            lng: data.geometry.location.lng()
         })
     }
 

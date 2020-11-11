@@ -20,10 +20,9 @@ let toVisit;
 let startPoint;
 let endPoint;
 
-// let djikstraButton = document.getElementById('doDjikstra');
-// djikstraButton.addEventListener("click", () => {
-//     doDjikstra();
-// })
+document.getElementById('do-dijkstra').addEventListener("click", () => {
+    doDijkstra();
+});
 
 let graph;
 let path;
