@@ -10,7 +10,7 @@ function initMap() {
             let geocoder = new google.maps.Geocoder();
 
             if (input.value === "") {
-                console.log(position)
+                // console.log(position)
                 let pos = {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
@@ -24,34 +24,38 @@ function initMap() {
             }
 
             geocoder.geocode({address: input.value}, (results, status) => {
-                if (status === 'OK') {
-                    position = results[0].geometry.location;
+                if (status !== 'OK') return;
+
+                position = results[0].geometry.location;
+            
+                let pos = {
+                    lat: position.lat(),
+                    lng: position.lng(),
+                };
+
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: pos,
+                    zoom: 15
+                });
                 
-                    let pos = {
-                        lat: position.lat(),
-                        lng: position.lng(),
-                    };
+                setMap(pos);
+                getNearbyPlaces(pos);
 
-                    map = new google.maps.Map(document.getElementById('map'), {
-                        center: pos,
-                        zoom: 15
-                    });
-                    
-                    setMap(pos);
-                    getNearbyPlaces(pos);
+                const searchBox = new google.maps.places.SearchBox(input);
+                map.addListener("bounds_changed", () => {
+                    searchBox.setBounds(map.getBounds());
+                });
 
-                    const searchBox = new google.maps.places.SearchBox(input);
-                    map.addListener("bounds_changed", () => {
-                        searchBox.setBounds(map.getBounds());
-                    });
-                    searchBox.addListener("places_changed", () => {
-                        const places = searchBox.getPlaces();
-                        let newpos = places[0].geometry.location;
+                searchBox.addListener("places_changed", () => {
+                    // change url of page without redirecting
+                    window.history.replaceState("", "", "/hop/" + input.value);
 
-                        setMap(newpos)
-                        getNearbyPlaces(newpos);
-                    });
-                }
+                    const places = searchBox.getPlaces();
+                    let newpos = places[0].geometry.location;
+
+                    setMap(newpos)
+                    getNearbyPlaces(newpos);
+                });
             });
         }, () => {
             // Browser supports geolocation, but user has denied permission
@@ -82,6 +86,7 @@ function handleLocationError(browserHasGeolocation, infoWindow) {
     currentInfoWindow = infoWindow;
 
     // Call Places Nearby Search on the default location
+    setMap(pos);
     getNearbyPlaces(pos);
 }
 
@@ -89,8 +94,7 @@ function handleLocationError(browserHasGeolocation, infoWindow) {
 function setMap(pos) {
     clearMarkers();
     location_data = [];
-    toVisit = [];
-    // djikstraButton.disabled = true;
+
     placesList.innerHTML = "";
     graph = {};
 
@@ -138,18 +142,3 @@ function nearbyCallback(results, status) {
 
     createGraph();
 }
-
-
-// // Builds an InfoWindow to display details above the marker
-// function showDetails(placeResult, marker, status) {
-//     if (status == google.maps.places.PlacesServiceStatus.OK) {
-//         let placeInfowindow = new google.maps.InfoWindow();
-//         placeInfowindow.setContent('<div><strong>' + placeResult.name +
-//             '</strong><br>' + 'Rating: ' + placeResult.rating + '</div>');
-//         placeInfowindow.open(marker.map, marker);
-//         currentInfoWindow.close();
-//         currentInfoWindow = placeInfowindow;
-//     } else {
-//         console.log('showDetails failed: ' + status);
-//     }
-// }
