@@ -109,9 +109,15 @@ function setMap(pos) {
     placesList.innerHTML = "";
     graph = {};
 
+    // hide itinerary control on new search
+    $('#do-dijkstra').hide();
+    $('#itinerary-control').hide();
+    clearItinerary();
+    itineraryVisible = false;
+
     expanded = "";
-    startPoint = null;
-    endPoint = null;
+    startPoint = {};
+    endPoint = {};
 
     if (path) path.setMap(null);
 

@@ -97,12 +97,10 @@ function expandSearchResult(place) {
     end.classList.add('btn', 'btn-dark');
 
     $(start).click(() => {
-        updateItinerary(place, 'start');
         updateToVisit(place, 'start');
     });
 
     $(end).click(() => {
-        updateItinerary(place, 'end');
         updateToVisit(place, 'end');
     });
 
