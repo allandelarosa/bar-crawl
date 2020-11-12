@@ -33,7 +33,12 @@ function showItineraryEntry(addingTo, place) {
         $('<button>').addClass('remove-button').click(() => {
             removeItineraryEntry(addingTo);
         }).append('Remove'),
-        '<div>' + (addingTo === 'start' ? 'Start: ' : 'End: ') + place.name + '</div>',
+        $('<div>').append((addingTo === 'start' ? 'Start: ' : 'End: ') + place.name).click(() => {
+            scrollResults(place)
+        }).hover(
+            () => { highlightMarker(markers[place.place_id]) },
+            () => { unhighlightMarker(markers[place.place_id]) },
+        )
     ).fadeIn();
 }
 
@@ -59,6 +64,11 @@ function replaceItineraryEntry(first, second, place) {
         $('<button>').addClass('remove-button').click(() => {
             removeItineraryEntry(second);
         }).append('Remove'),
-        '<div>' + (second === 'start' ? 'Start: ' : 'End: ') + place.name + '</div>',
+        $('<div>').append((second === 'start' ? 'Start: ' : 'End: ') + place.name).click(() => {
+            scrollResults(place)
+        }).hover(
+            () => { highlightMarker(markers[place.place_id]) },
+            () => { unhighlightMarker(markers[place.place_id]) },
+        )
     ).show();
 }

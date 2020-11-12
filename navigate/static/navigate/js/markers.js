@@ -81,7 +81,9 @@ function createMarkers(places) {
         li.appendChild(infoContainer);
 
         const markerinfowindow = new google.maps.InfoWindow({
-            content: li
+            content: li,
+            // prevents map from moving
+            // disableAutoPan: true, 
         });
 
         // Mouseover
