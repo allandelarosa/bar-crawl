@@ -6,8 +6,22 @@ function createItineraryControl() {
         ),
 
         // start and end entries
-        $('<div>').attr('id','itinerary-start').addClass('itinerary-control-entry'),
-        $('<div>').attr('id','itinerary-end').addClass('itinerary-control-entry'),
+        $('<div>').attr('id','itinerary-start').addClass('itinerary-control-entry').append(
+            $('<button>').addClass('btn btn-danger remove-button').append(
+                $('<i>').addClass('fa fa-minus'),
+            ).click(() => {
+                removeItineraryEntry('start');
+            }),
+            $('<div>'),
+        ),
+        $('<div>').attr('id','itinerary-end').addClass('itinerary-control-entry').append(
+            $('<button>').addClass('btn btn-danger remove-button').append(
+                $('<i>').addClass('fa fa-minus'),
+            ).click(() => {
+                removeItineraryEntry('end');
+            }),
+            $('<div>'),
+        ),
 
         // dijkstra button
         $('<button>').attr('id','do-dijkstra').text('Create Itinerary').click(() => {
@@ -47,21 +61,20 @@ function clearItinerary() {
 }
 
 function showItineraryEntry(addingTo, place) {
-    $('#itinerary-' + addingTo).empty().append(
-        $('<button>').addClass('remove-button').click(() => {
-            removeItineraryEntry(addingTo);
-        }).append('Remove'),
-        $('<div>').append((addingTo === 'start' ? 'Start: ' : 'End: ') + place.name).click(() => {
-            scrollResults(place)
-        }).hover(
-            () => { highlightMarker(markers[place.place_id]) },
-            () => { unhighlightMarker(markers[place.place_id]) },
-        )
-    ).fadeIn();
+    $(`#itinerary-${addingTo} div`).text(
+        (addingTo === 'start' ? 'Start: ' : 'End: ') + place.name
+    ).click(() => {
+        scrollResults(place)
+    }).hover(
+        () => { highlightMarker(markers[place.place_id]) },
+        () => { unhighlightMarker(markers[place.place_id]) },
+    );
+
+    $(`#itinerary-${addingTo}`).fadeIn();
 }
 
 function removeItineraryEntry(addingTo) {
-    $('#itinerary-' + addingTo).empty().fadeOut();
+    $(`#itinerary-${addingTo}`).fadeOut();
 
     if (addingTo === 'start') {
         startPoint = {};
@@ -77,16 +90,15 @@ function removeItineraryEntry(addingTo) {
 }
 
 function replaceItineraryEntry(first, second, place) {
-    $('#itinerary-' + first).empty().hide();
-    $('#itinerary-' + second).empty().append(
-        $('<button>').addClass('remove-button').click(() => {
-            removeItineraryEntry(second);
-        }).append('Remove'),
-        $('<div>').append((second === 'start' ? 'Start: ' : 'End: ') + place.name).click(() => {
-            scrollResults(place)
-        }).hover(
-            () => { highlightMarker(markers[place.place_id]) },
-            () => { unhighlightMarker(markers[place.place_id]) },
-        )
-    ).show();
+    $(`#itinerary-${first}`).hide();
+
+    $(`#itinerary-${second} div`).text(
+        (second === 'start' ? 'Start: ' : 'End: ') + place.name
+    ).click(() => {
+        scrollResults(place)
+    }).hover(
+        () => { highlightMarker(markers[place.place_id]) },
+        () => { unhighlightMarker(markers[place.place_id]) },
+    );
+    $(`#itinerary-${second}`).show();
 }
