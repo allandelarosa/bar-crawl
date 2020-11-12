@@ -1,6 +1,6 @@
 #itinerary-control {
     display: none;
-    max-height: 30%;
+    max-height: 40%;
     width: 30%;
     margin: 10px;
     padding: 10px;
@@ -9,13 +9,23 @@
 }
 
 .itinerary-control-entry {
-    height: 30px;
+    height: 25px;
     display: none;
     margin-top: 7px;
 }
 
+.itinerary-control-title {
+    height: 25px;
+}
+
 .remove-button {
-    padding: 1% 3% 1% 3%;
+    padding: 2% 3% 2% 3%;
+    font-size: 100%;
+    float: right;
+}
+
+#minimize-button {
+    padding: 2% 3% 2% 3%;
     font-size: 100%;
     float: right;
 }
@@ -23,6 +33,7 @@
 #do-dijkstra {
     display: none;
     /* height: 10%; */
+    margin-top: 7px;
     width: 100%;
     float: bottom;
 }

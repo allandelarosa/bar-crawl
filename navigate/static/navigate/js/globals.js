@@ -21,6 +21,7 @@ let startPoint;
 let endPoint;
 
 let itineraryVisible = false;
+let itineraryMinimized = false;
 
 let graph;
 let path;

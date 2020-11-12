@@ -111,4 +111,6 @@ function updateToVisit(place, addingTo) {
     if (!$.isEmptyObject(startPoint) && !$.isEmptyObject(endPoint)) {
         $('#do-dijkstra').fadeIn();
     }
+
+    if (itineraryMinimized) minimizeItineraryControl();
 }

@@ -1,7 +1,12 @@
 function createItineraryControl() {
     return $('#itinerary-control').append(
         // title bar
-        $('<div>').append(
+        $('<div>').addClass('itinerary-control-title').append(
+            $('<button>').addClass('btn btn-outline-light').attr('id', 'minimize-button').append(
+                $('<i>').addClass('fa fa-compress'),
+            ).click(() => {
+                minimizeItineraryControl();
+            }),
             $('<strong>').text('Selected Bars'),
         ),
 
@@ -14,6 +19,7 @@ function createItineraryControl() {
             }),
             $('<div>'),
         ),
+
         $('<div>').attr('id','itinerary-end').addClass('itinerary-control-entry').append(
             $('<button>').addClass('btn btn-danger remove-button').append(
                 $('<i>').addClass('fa fa-minus'),
@@ -61,7 +67,7 @@ function clearItinerary() {
 }
 
 function showItineraryEntry(addingTo, place) {
-    $(`#itinerary-${addingTo} div`).text(
+    $(`#itinerary-${addingTo} div`).off().text(
         (addingTo === 'start' ? 'Start: ' : 'End: ') + place.name
     ).click(() => {
         scrollResults(place)
@@ -101,4 +107,30 @@ function replaceItineraryEntry(first, second, place) {
         () => { unhighlightMarker(markers[place.place_id]) },
     );
     $(`#itinerary-${second}`).show();
+}
+
+function minimizeItineraryControl() {
+    if (itineraryMinimized) {
+        // maximize itinerary control
+        $('#minimize-button i').removeClass('fa-expand');
+        $('#minimize-button i').addClass('fa-compress');
+    } else {
+        // minimize itinerary control
+        $('#minimize-button i').toggleClass('fa-compress');
+        $('#minimize-button i').toggleClass('fa-expand');
+    }
+
+    if (!$.isEmptyObject(startPoint)) {
+        itineraryMinimized ? $('#itinerary-start').slideDown() : $('#itinerary-start').slideUp();
+    }
+
+    if (!$.isEmptyObject(endPoint)) {
+        itineraryMinimized ? $('#itinerary-end').slideDown() : $('#itinerary-end').slideUp();
+    }
+
+    if (!$.isEmptyObject(startPoint) && !$.isEmptyObject(endPoint)) {
+        itineraryMinimized ? $('#do-dijkstra').slideDown() : $('#do-dijkstra').slideUp();
+    }
+
+    itineraryMinimized = !itineraryMinimized;
 }

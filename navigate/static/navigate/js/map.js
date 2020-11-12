@@ -114,6 +114,7 @@ function setMap(pos) {
     $('#itinerary-control').hide();
     clearItinerary();
     itineraryVisible = false;
+    if (itineraryMinimized) minimizeItineraryControl();
 
     expanded = "";
     startPoint = {};
