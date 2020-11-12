@@ -47,7 +47,7 @@ function initMap() {
                     },
                 });
 
-                map.controls[google.maps.ControlPosition.RIGHT_TOP].push(document.getElementById('itinerary-control'));
+                map.controls[google.maps.ControlPosition.RIGHT_TOP].push(createItineraryControl());
 
                 setMap(pos);
                 getNearbyPlaces(pos);

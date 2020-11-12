@@ -22,9 +22,5 @@ let endPoint;
 
 let itineraryVisible = false;
 
-document.getElementById('do-dijkstra').addEventListener("click", () => {
-    doDijkstra();
-});
-
 let graph;
 let path;

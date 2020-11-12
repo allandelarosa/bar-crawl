@@ -1,3 +1,21 @@
+function createItineraryControl() {
+    return $('#itinerary-control').append(
+        // title bar
+        $('<div>').append(
+            $('<strong>').text('Selected Bars'),
+        ),
+
+        // start and end entries
+        $('<div>').attr('id','itinerary-start').addClass('itinerary-control-entry'),
+        $('<div>').attr('id','itinerary-end').addClass('itinerary-control-entry'),
+
+        // dijkstra button
+        $('<button>').attr('id','do-dijkstra').text('Create Itinerary').click(() => {
+            doDijkstra();
+        }),
+    )[0];
+}
+
 function updateItinerary(place, addingTo) {
     let itinerary = document.getElementById('itinerary');
     if (!itineraryVisible) {
