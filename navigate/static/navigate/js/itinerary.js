@@ -39,7 +39,8 @@ function createItineraryControl() {
 function updateItinerary(place, addingTo) {
     let itinerary = document.getElementById('itinerary');
     if (!itineraryVisible) {
-        showItinerary(itinerary);
+        itineraryVisible = true;
+        $('#itinerary-control').fadeIn();
     }
 
     if (addingTo === 'start') {
@@ -49,16 +50,6 @@ function updateItinerary(place, addingTo) {
     if (addingTo === 'end') {
         showItineraryEntry(addingTo, place);
     }
-}
-
-function showItinerary(itinerary) {
-    itineraryVisible = true;
-    $('#itinerary-control').fadeIn();
-}
-
-function hideItinerary() {
-    itineraryVisible = false;
-    $('#itinerary-control').fadeOut();
 }
 
 function clearItinerary() {
@@ -91,7 +82,8 @@ function removeItineraryEntry(addingTo) {
     $('#do-dijkstra').fadeOut();
 
     if ($.isEmptyObject(startPoint) && $.isEmptyObject(endPoint)) {
-        hideItinerary();
+        itineraryVisible = false;
+        $('#itinerary-control').fadeOut();
     }
 }
 
@@ -110,15 +102,7 @@ function replaceItineraryEntry(first, second, place) {
 }
 
 function minimizeItineraryControl() {
-    if (itineraryMinimized) {
-        // maximize itinerary control
-        $('#minimize-button i').removeClass('fa-expand');
-        $('#minimize-button i').addClass('fa-compress');
-    } else {
-        // minimize itinerary control
-        $('#minimize-button i').toggleClass('fa-compress');
-        $('#minimize-button i').toggleClass('fa-expand');
-    }
+    $('#minimize-button i').toggleClass('fa-compress fa-expand');
 
     if (!$.isEmptyObject(startPoint)) {
         itineraryMinimized ? $('#itinerary-start').slideDown() : $('#itinerary-start').slideUp();

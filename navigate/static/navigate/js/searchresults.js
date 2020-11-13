@@ -1,163 +1,81 @@
 function createSearchResult(place, index) {
-    let li = document.createElement("li");
+    let li =  $('<li>').attr('id', place.place_id)[0];
 
-    let infoContainer = document.createElement('div');
-    let photoContainer = document.createElement('div');
+    // name of place
+    $(li).append(
+        $('<div>').addClass('search-result-title-bar').append(
+            $('<strong>').text(`${index}. `),
+            $('<strong>').text(`${place.name}`).addClass('search-result-title'),
+        ),
+    ).click(() => {
+        scrollResults(place);
+    });
 
-    photoContainer.classList.add('photo-container');
-    infoContainer.classList.add('info-container');
-
-    infoContainer.innerHTML = '<strong>' + index + '. ' + place.name + '</strong><br>'
-
-    if (place.rating) {
-        infoContainer.innerHTML += 'Rating: ' + place.rating + ' (' + place.user_ratings_total + ')<br>'
-    }
-
-    infoContainer.innerHTML += place.vicinity + '<br>'
-
-    if (place.opening_hours) {
-        if (place.opening_hours.open_now) {
-            infoContainer.innerHTML += 'Open now <br>'
-        } else {
-            infoContainer.innerHTML += 'Closed <br>'
-        }
-    }
-
+    // picture of place
     if (place.photos != null) {
-        let photo = document.createElement('img');
-        let firstPhoto = place.photos[0];
-        photo.classList.add('result-photo');
-        photo.src = firstPhoto.getUrl();
-        photoContainer.appendChild(photo)
+        $(li).append(
+            $('<div>').addClass('photo-container').append( 
+                $('<img>').addClass('result-photo').attr('src', place.photos[0].getUrl())
+            )
+        );
     }
 
-    li.appendChild(photoContainer);
-    li.appendChild(infoContainer);
+    // rating
+    if (place.rating) {
+        $(li).append(
+            $('<div>').text(
+                `Rating: ${place.rating} (${place.user_ratings_total})`
+            )
+        );
+    }
 
-    li.id = place.place_id;
+    //address
+    $(li).append(place.vicinity.split(',')[0]);
 
-    $(li).hover(
-        () => { highlightMarker(markers[place.place_id]) },
-        () => { unhighlightMarker(markers[place.place_id]) },
+    // opening hours
+    if (place.opening_hours) {
+        $(li).append(
+            $('<div>').text(
+                place.opening_hours.open_now ? 'Open now' : 'Closed'
+            )
+        );
+    }
+
+    // buttons to set as start and end
+    $(li).append(
+        $('<div>').addClass('buttons-container').append(
+            $('<button>').addClass('btn btn-dark start-end-btn').text('Set as start').click(() => {
+                updateToVisit(place, 'start');
+            }),
+            $('<button>').addClass('btn btn-dark start-end-btn').text('Set as end').click(() => {
+                updateToVisit(place, 'end');
+            }),
+        )
     );
 
-    $(infoContainer).click(() => {
-        if (place.place_id === expanded) {
-            unexpandSearchResult();
-        } else {
-            let request = { placeId: place.place_id }
-            service.getDetails(request, (place, status) => {
-                scrollResults(place);
-            });
-        }
-    });
-
-    return li
-}
-
-function expandSearchResult(place) {
-    // do nothing if already expanded
-    if (place.place_id === expanded) return;
-
-    expanded = place.place_id;
-
-    let li = document.getElementById(place.place_id);
-
-    // if reviews available, display them
-    if (place.reviews) {
-        let reviewContainer = document.createElement('div');
-        reviewContainer.classList.add('review-container');
-
-        const maxlen = 100;
-        let reviewText = place.reviews[0].text;
-
-        if (reviewText.length > maxlen) {
-            let shortText = `"` + reviewText.substring(0, maxlen) + `..."<br>`;
-
-            showLess(reviewContainer, shortText, reviewText);
-
-        } else {
-            reviewContainer.innerHTML = `"` + place.reviews[0].text + `"`;
-        }
-
-        li.appendChild(reviewContainer);
-    }
-
-    // add buttons to add to itinerary
-    let buttonsContainer = document.createElement('div');
-    buttonsContainer.classList.add('buttons-container');
-
-    let start = document.createElement('button');
-    let end = document.createElement('button');
-
-    start.innerHTML = "Set as start"
-    end.innerHTML = "Set as end"
-
-    start.classList.add('btn', 'btn-dark');
-    end.classList.add('btn', 'btn-dark');
-
-    $(start).click(() => {
-        updateToVisit(place, 'start');
-    });
-
-    $(end).click(() => {
-        updateToVisit(place, 'end');
-    });
-
-    buttonsContainer.appendChild(start);
-    buttonsContainer.appendChild(end);
-
-    li.appendChild(buttonsContainer);
-}
-
-function unexpandSearchResult() {
-    let li = document.getElementById(expanded);
-
-    let review = li.getElementsByClassName('review-container')[0];
-    let buttons = li.getElementsByClassName('buttons-container')[0];
-
-    if (review) li.removeChild(review);
-    li.removeChild(buttons);
-
-    expanded = "";
-}
-
-function showLess(reviewContainer, shortText, reviewText) {
-    let link = reviewContainer.getElementsByClassName('show-more-link')[0];
-    if (link) reviewContainer.removeChild(link);
-
-    reviewContainer.innerHTML = shortText;
-    let showmorelink = document.createElement('a');
-    showmorelink.innerHTML = 'Read more';
-    showmorelink.classList.add('show-more-link');
-
-    $(showmorelink).click(() => {
-        showMore(reviewContainer, shortText, reviewText)
-    });
-    reviewContainer.appendChild(showmorelink);
-}
-
-function showMore(reviewContainer, shortText, reviewText) {
-    let link = reviewContainer.getElementsByClassName('show-more-link')[0];
-    reviewContainer.removeChild(link);
-
-    reviewContainer.innerHTML = `"` + reviewText + `"<br>`;
-
-    let showlesslink = document.createElement('a');
-    showlesslink.innerHTML = 'Show less';
-    showlesslink.classList.add('show-more-link');
-
-    $(showlesslink).click(() => {
-        showLess(reviewContainer, shortText, reviewText)
-    });
-    reviewContainer.appendChild(showlesslink);
+    // highlight corresponding marker when hovering
+    $(li).hover(
+        () => {highlightMarker(markers[place.place_id])},
+        () => {unhighlightMarker(markers[place.place_id])},
+    );
+    
+    return li;
 }
 
 function scrollResults(place) {
+    // if this is already expanded, do nothing
+    if (expanded === place.place_id) return;
+
     // if another entry already expanded, unexpand it
-    if (expanded.length > 0) unexpandSearchResult();
+    if (expanded.length > 0) {
+        $(`#${expanded} .buttons-container`).slideUp();
+        expanded = "";
+    }
 
-    expandSearchResult(place);
+    // make search result visible
+    $(`#${place.place_id}`)[0].scrollIntoView({ behavior: "smooth", block: "center" });
 
-    document.getElementById(place.place_id).scrollIntoView({ behavior: "smooth" });
+    // show buttons
+    expanded = place.place_id;
+    $(`#${expanded} .buttons-container`).slideDown();
 }

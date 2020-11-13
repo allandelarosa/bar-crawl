@@ -5,14 +5,14 @@ function clearMarkers() {
     markers = {};
 }
 
-function highlightMarker(marker) {
+async function highlightMarker(marker) {
     let icon = marker.icon;
     icon.fillColor = '#FFDD33';
     marker.setIcon(icon);
     marker.zIndex += 30;
 }
 
-function unhighlightMarker(marker) {
+async function unhighlightMarker(marker) {
     let icon = marker.icon;
     icon.fillColor = '#FF3333';
     marker.setIcon(icon);
