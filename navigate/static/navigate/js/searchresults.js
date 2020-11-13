@@ -20,34 +20,56 @@ function createSearchResult(place, index) {
         );
     }
 
-    // rating
+    // rating container
     if (place.rating) {
         $(li).append(
-            $('<div>').text(
-                `Rating: ${place.rating} (${place.user_ratings_total})`
-            )
+            $('<div>').addClass('ratings-container').append(
+                // rating number
+                $('<div>').text(`${place.rating} `).css('color', ' #fb0'),
+                // star rating
+                $('<div>').addClass('Stars').css('--rating', `${place.rating}`),
+                // number of ratings
+                $('<div>').text(`(${place.user_ratings_total})`).css('color', ' #ccc'),
+            ),
+            $('<br>')
         );
     }
 
-    //address
-    $(li).append(place.vicinity.split(',')[0]);
+    // price level and address
+    $(li).append(
+        $('<div>').html(() => {
+            let info = ''
+            // get price level
+            if (place.price_level) {
+                let price_level = place.price_level;
+                while (price_level-- > 0) info += '$';
+
+                info += ' &#183; ';
+            }
+
+            // get address
+            info += place.vicinity.split(',')[0];
+
+            return info;
+        }).css('color', '#555')
+    );
 
     // opening hours
     if (place.opening_hours) {
         $(li).append(
-            $('<div>').text(
-                place.opening_hours.open_now ? 'Open now' : 'Closed'
-            )
+            place.opening_hours.open_now ? 
+            $('<div>').text('Open now').css('color', 'green') : 
+            $('<div>').text('Closed').css('color', 'red')
         );
     }
 
     // buttons to set as start and end
     $(li).append(
         $('<div>').addClass('buttons-container').append(
-            $('<button>').addClass('btn btn-dark start-end-btn').text('Set as start').click(() => {
+            $('<button>').addClass('btn btn-dark btn-sm start-end-btn').text('Set as start').click(() => {
                 updateToVisit(place, 'start');
             }),
-            $('<button>').addClass('btn btn-dark start-end-btn').text('Set as end').click(() => {
+            $('<button>').addClass('btn btn-dark btn-sm start-end-btn').text('Set as end').click(() => {
                 updateToVisit(place, 'end');
             }),
         )
