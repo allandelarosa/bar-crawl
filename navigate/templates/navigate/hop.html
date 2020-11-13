@@ -5,28 +5,29 @@
 {% csrf_token %}
 <!-- search bar -->
 <div class="row top" id="top-container">
+
 	<div class="col-sm-10">
 		<div class="row" id="search-bar-container">
-			<div class="input-group mb-4 p-1">
-				
-				<input id="address" type="search" placeholder="Search for bars" aria-describedby="button-addon2" class="form-control bg-none border-0 ml-1"
-				{% if place != "" %}
+
+				  <input id="address" type="text" placeholder="Search.." name="search" {% if place != "" %}
 					value="{{place}}" 
 				{% endif %}>
+				  <button class="button_class"><i class="fa fa-search"></i></button>
 
-				<div class="input-group-append border-0 searchbar-color">
-					<button id="button-addon2" type="button" class="btn btn-link ml-1 submit">
-						<i class="fa fa-search"></i>
-					</button>
-				</div>
+		
+		</div>
+					
 			</div>
-		</div>
 
-		<div class=row id="options-container">
-			<!-- <p>dummy options</p> -->
-		</div>
-	</div>
+					<div class="logo_nav">
+					    <img src='/static/navigate/images/bar_crawl_logo.png'>
+					</div>
 </div>
+
+
+
+<!-- 	</div>
+</div> -->
 
 <!-- map and list -->
 <div class="row bottom">
@@ -37,7 +38,14 @@
 
 	<!-- list -->
 	<div class="col-sm-4" id="list-container">
+
+
 		<div class="results-container centered">
+			<div class="searchTitle">
+
+				<img src='/static/navigate/images/searchTitle.png'>
+	       </div>
+	       
 			<div id="itinerary"></div>
 			<ul id="search-results"></ul>
 			<!-- <button id="doDjikstra" class="btn btn-dark" disabled="true">Create Itinerary</button> -->

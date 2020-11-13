@@ -31,9 +31,36 @@ function unhighlightMarker(marker) {
 
 function createMarkers(places) {
     labelIndex = 1;
+    var pinColor = '#FF3333';
+    var pinLabel = "A";
+
+    // Pick your pin (hole or no hole)
+    var pinSVGHole = "M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z";
+    var labelOriginHole = new google.maps.Point(12,15);
+    var pinSVGFilled = "M 12,2 C 8.1340068,2 5,5.1340068 5,9 c 0,5.25 7,13 7,13 0,0 7,-7.75 7,-13 0,-3.8659932 -3.134007,-7 -7,-7 z";
+    var labelOriginFilled =  new google.maps.Point(12,9);
+
+
+    var markerImage = {  // https://developers.google.com/maps/documentation/javascript/reference/marker#MarkerLabel
+        path: pinSVGFilled,
+        anchor: new google.maps.Point(12,17),
+        fillOpacity: 1,
+        fillColor: pinColor,
+        strokeWeight: 2,
+        strokeColor: "white",
+        scale: 2,
+        labelOrigin: labelOriginFilled
+    };
+    var label = {
+        text: pinLabel,
+        color: "white",
+        fontSize: "12px",
+    }; // https://developers.google.com/maps/documentation/javascript/reference/marker#Symbol
+
+                    
     for (let i = 0, place; (place = places[i]); i++) {
         const defaultMarker = {
-            path: google.maps.SymbolPath.CIRCLE,
+            // path: ,
             scale: 15,
             strokeColor: '#000000',
             strokeWeight: 2,
@@ -44,7 +71,7 @@ function createMarkers(places) {
         };
         let marker = new google.maps.Marker({
             map: map,
-            icon: defaultMarker,
+            icon: markerImage,
             title: place.name,
             position: place.geometry.location,
             label: { text: "" + labelIndex, color: '#FFFFFF' },
