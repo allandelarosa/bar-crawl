@@ -10,12 +10,12 @@ function initMap() {
             let geocoder = new google.maps.Geocoder();
 
             if (input.value === "") {
-                console.log(position)
+                // console.log(position)
                 let pos = {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
                 };
-                geocoder.geocode({location: pos}, (results, status) => {
+                geocoder.geocode({ location: pos }, (results, status) => {
                     if (status === 'OK') {
                         // console.log(results[0]);
                         window.location.replace('/hop/' + results[0].formatted_address)
@@ -23,35 +23,50 @@ function initMap() {
                 });
             }
 
-            geocoder.geocode({address: input.value}, (results, status) => {
-                if (status === 'OK') {
-                    position = results[0].geometry.location;
-                
-                    let pos = {
-                        lat: position.lat(),
-                        lng: position.lng(),
-                    };
+            geocoder.geocode({ address: input.value }, (results, status) => {
+                if (status !== 'OK') return;
 
-                    map = new google.maps.Map(document.getElementById('map'), {
-                        center: pos,
-                        zoom: 15
-                    });
-                    
-                    setMap(pos);
-                    getNearbyPlaces(pos);
+                position = results[0].geometry.location;
 
-                    const searchBox = new google.maps.places.SearchBox(input);
-                    map.addListener("bounds_changed", () => {
-                        searchBox.setBounds(map.getBounds());
-                    });
-                    searchBox.addListener("places_changed", () => {
-                        const places = searchBox.getPlaces();
-                        let newpos = places[0].geometry.location;
+                let pos = {
+                    lat: position.lat(),
+                    lng: position.lng(),
+                };
 
-                        setMap(newpos)
-                        getNearbyPlaces(newpos);
-                    });
-                }
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: pos,
+                    zoom: 15,
+                    zoomControlOptions: {
+                        position: google.maps.ControlPosition.LEFT_BOTTOM,
+                    },
+                    streetViewControlOptions: {
+                        position: google.maps.ControlPosition.LEFT_BOTTOM,
+                    },
+                    fullscreenControlOptions: {
+                        position: google.maps.ControlPosition.RIGHT_BOTTOM,
+                    },
+                });
+
+                map.controls[google.maps.ControlPosition.RIGHT_TOP].push(createItineraryControl());
+
+                setMap(pos);
+                getNearbyPlaces(pos);
+
+                const searchBox = new google.maps.places.SearchBox(input);
+                map.addListener("bounds_changed", () => {
+                    searchBox.setBounds(map.getBounds());
+                });
+
+                searchBox.addListener("places_changed", () => {
+                    // change url of page without redirecting
+                    window.history.replaceState("", "", "/hop/" + input.value);
+
+                    const places = searchBox.getPlaces();
+                    let newpos = places[0].geometry.location;
+
+                    setMap(newpos)
+                    getNearbyPlaces(newpos);
+                });
             });
         }, () => {
             // Browser supports geolocation, but user has denied permission
@@ -82,6 +97,7 @@ function handleLocationError(browserHasGeolocation, infoWindow) {
     currentInfoWindow = infoWindow;
 
     // Call Places Nearby Search on the default location
+    setMap(pos);
     getNearbyPlaces(pos);
 }
 
@@ -89,15 +105,21 @@ function handleLocationError(browserHasGeolocation, infoWindow) {
 function setMap(pos) {
     clearMarkers();
     location_data = [];
-    toVisit = [];
-    // djikstraButton.disabled = true;
+
     placesList.innerHTML = "";
     graph = {};
 
+    // hide itinerary control on new search
+    $('#do-dijkstra').hide();
+    $('#itinerary-control').hide();
+    clearItinerary();
+    itineraryVisible = false;
+    if (itineraryMinimized) minimizeItineraryControl();
+
     expanded = "";
-    startPoint = null;
-    endPoint = null;
-    
+    startPoint = {};
+    endPoint = {};
+
     if (path) path.setMap(null);
 
     bounds = new google.maps.LatLngBounds();
@@ -129,27 +151,12 @@ function nearbyCallback(results, status) {
     createMarkers(results);
     location_data = []
     for (let data of results) {
-        location_data.push({ 
-            name: data.name, 
-            lat: data.geometry.location.lat(), 
-            lng: data.geometry.location.lng() 
+        location_data.push({
+            name: data.name,
+            lat: data.geometry.location.lat(),
+            lng: data.geometry.location.lng()
         })
     }
 
     createGraph();
 }
-
-
-// // Builds an InfoWindow to display details above the marker
-// function showDetails(placeResult, marker, status) {
-//     if (status == google.maps.places.PlacesServiceStatus.OK) {
-//         let placeInfowindow = new google.maps.InfoWindow();
-//         placeInfowindow.setContent('<div><strong>' + placeResult.name +
-//             '</strong><br>' + 'Rating: ' + placeResult.rating + '</div>');
-//         placeInfowindow.open(marker.map, marker);
-//         currentInfoWindow.close();
-//         currentInfoWindow = placeInfowindow;
-//     } else {
-//         console.log('showDetails failed: ' + status);
-//     }
-// }

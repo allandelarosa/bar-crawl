@@ -86,8 +86,9 @@ function updateToVisit(place, addingTo) {
         // check if end point is start point
         if (!$.isEmptyObject(endPoint) && endPoint.name === place.name) {
             endPoint = {};
-            removeItineraryEntry('end');
-            document.getElementById('do-dijkstra').disabled = true;
+            replaceItineraryEntry('end', 'start', place);
+        } else {
+            updateItinerary(place, 'start');
         }
     } else {
         // update end point
@@ -100,13 +101,16 @@ function updateToVisit(place, addingTo) {
         // check if end point is start point
         if (!$.isEmptyObject(startPoint) && startPoint.name === place.name) {
             startPoint = {};
-            removeItineraryEntry('start');
-            document.getElementById('do-dijkstra').disabled = true;
+            replaceItineraryEntry('start', 'end', place);
+        } else {
+            updateItinerary(place, 'end');
         }
     };
 
     // enable button if valid start and end
     if (!$.isEmptyObject(startPoint) && !$.isEmptyObject(endPoint)) {
-        document.getElementById('do-dijkstra').disabled = false;
+        $('#do-dijkstra').fadeIn();
     }
+
+    if (itineraryMinimized) minimizeItineraryControl();
 }

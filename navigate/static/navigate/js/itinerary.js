@@ -1,12 +1,46 @@
-let itineraryVisible = false;
+function createItineraryControl() {
+    return $('#itinerary-control').append(
+        // title bar
+        $('<div>').addClass('itinerary-control-title').append(
+            $('<button>').addClass('btn btn-outline-light').attr('id', 'minimize-button').append(
+                $('<i>').addClass('fa fa-compress'),
+            ).click(() => {
+                minimizeItineraryControl();
+            }),
+            $('<strong>').text('Selected Bars'),
+        ),
+
+        // start and end entries
+        $('<div>').attr('id','itinerary-start').addClass('itinerary-control-entry').append(
+            $('<button>').addClass('btn btn-danger remove-button').append(
+                $('<i>').addClass('fa fa-minus'),
+            ).click(() => {
+                removeItineraryEntry('start');
+            }),
+            $('<div>'),
+        ),
+
+        $('<div>').attr('id','itinerary-end').addClass('itinerary-control-entry').append(
+            $('<button>').addClass('btn btn-danger remove-button').append(
+                $('<i>').addClass('fa fa-minus'),
+            ).click(() => {
+                removeItineraryEntry('end');
+            }),
+            $('<div>'),
+        ),
+
+        // dijkstra button
+        $('<button>').attr('id','do-dijkstra').text('Create Itinerary').click(() => {
+            doDijkstra();
+        }),
+    )[0];
+}
 
 function updateItinerary(place, addingTo) {
     let itinerary = document.getElementById('itinerary');
     if (!itineraryVisible) {
-        showItinerary(itinerary);
-
-        // make sure search result is still visible
-        document.getElementById(place.place_id).scrollIntoView();
+        itineraryVisible = true;
+        $('#itinerary-control').fadeIn();
     }
 
     if (addingTo === 'start') {
@@ -18,96 +52,26 @@ function updateItinerary(place, addingTo) {
     }
 }
 
-function showItinerary(itinerary) {
-    itineraryVisible = true;
-
-    // make div visible
-    let searchResults = document.getElementById('search-results');
-
-    const itinHeight = 30;
-
-    itinerary.style.height = '' + itinHeight + '%';
-    searchResults.style.height = '' + (100 - itinHeight) + '%';
-
-    // add title
-    let itinTitle = document.createElement('div');
-    itinTitle.innerHTML = 'Itinerary';
-    itinerary.appendChild(itinTitle);
-
-    // add start and end sections
-    let start = document.createElement('div');
-    let end = document.createElement('div');
-
-    start.classList.add('itinerary-entry');
-    end.classList.add('itinerary-entry');
-
-    start.id = 'itinerary-start';
-    end.id = 'itinerary-end';
-
-    itinerary.appendChild(start);
-    itinerary.appendChild(end);
-
-    // make djikstra button
-    let dijkstraButton = document.createElement('button');
-    dijkstraButton.id = 'do-dijkstra';
-    dijkstraButton.classList.add('btn', 'btn-dark');
-    dijkstraButton.disabled = true;
-    dijkstraButton.innerHTML = 'Create Itinerary'
-    itinerary.appendChild(dijkstraButton);
-
-    $(dijkstraButton).click(() => {
-        doDijkstra();
-    });
+function clearItinerary() {
+    removeItineraryEntry('start');
+    removeItineraryEntry('end');
 }
 
 function showItineraryEntry(addingTo, place) {
-    let ele = document.getElementById('itinerary-' + addingTo);
+    $(`#itinerary-${addingTo} div`).off().text(
+        (addingTo === 'start' ? 'Start: ' : 'End: ') + place.name
+    ).click(() => {
+        scrollResults(place)
+    }).hover(
+        () => { highlightMarker(markers[place.place_id]) },
+        () => { unhighlightMarker(markers[place.place_id]) },
+    );
 
-    let placeInfo;
-
-    if (addingTo === 'start' && !$.isEmptyObject(startPoint)) {
-        placeInfo = ele.getElementsByTagName('DIV')[0];
-        placeInfo.innerHTML = 'Start: ' + place.name;
-
-    } else if (addingTo === 'end' && !$.isEmptyObject(endPoint)) {
-        placeInfo = ele.getElementsByTagName('DIV')[0];
-        placeInfo.innerHTML = 'End: ' + place.name;
-
-    } else {
-        // add button to remove entry
-        let removeButton = document.createElement('button');
-        removeButton.classList.add('remove-button');
-        removeButton.innerHTML = 'Remove';
-
-        $(removeButton).click(() => {
-            removeItineraryEntry(addingTo);
-        });
-
-        // add text for place info
-        placeInfo = document.createElement('div');
-        if (addingTo === 'start') {
-            placeInfo.innerHTML = 'Start: ' + place.name;
-        } else {
-            placeInfo.innerHTML = 'End: ' + place.name;
-        }
-
-        ele.appendChild(removeButton);
-        ele.appendChild(placeInfo);
-    }
-
-    $(placeInfo).click(() => {
-        scrollResults(place);
-    })
-
-    updateToVisit(place, addingTo);
+    $(`#itinerary-${addingTo}`).fadeIn();
 }
 
 function removeItineraryEntry(addingTo) {
-    let ele = document.getElementById('itinerary-' + addingTo);
-
-    while (ele.lastChild) {
-        ele.removeChild(ele.lastChild);
-    }
+    $(`#itinerary-${addingTo}`).fadeOut();
 
     if (addingTo === 'start') {
         startPoint = {};
@@ -115,27 +79,42 @@ function removeItineraryEntry(addingTo) {
         endPoint = {};
     }
 
-    if ($.isEmptyObject(startPoint) || $.isEmptyObject(endPoint)) {
-        document.getElementById('do-dijkstra').disabled = true;
-    }
+    $('#do-dijkstra').fadeOut();
 
     if ($.isEmptyObject(startPoint) && $.isEmptyObject(endPoint)) {
-        hideItinerary();
+        itineraryVisible = false;
+        $('#itinerary-control').fadeOut();
     }
 }
 
-function hideItinerary() {
-    itineraryVisible = false;
+function replaceItineraryEntry(first, second, place) {
+    $(`#itinerary-${first}`).hide();
 
-    // hide itinerary
-    let itinerary = document.getElementById('itinerary');
-    while (itinerary.lastChild) {
-        itinerary.removeChild(itinerary.lastChild)
+    $(`#itinerary-${second} div`).text(
+        (second === 'start' ? 'Start: ' : 'End: ') + place.name
+    ).click(() => {
+        scrollResults(place)
+    }).hover(
+        () => { highlightMarker(markers[place.place_id]) },
+        () => { unhighlightMarker(markers[place.place_id]) },
+    );
+    $(`#itinerary-${second}`).show();
+}
+
+function minimizeItineraryControl() {
+    $('#minimize-button i').toggleClass('fa-compress fa-expand');
+
+    if (!$.isEmptyObject(startPoint)) {
+        itineraryMinimized ? $('#itinerary-start').slideDown() : $('#itinerary-start').slideUp();
     }
-    itinerary.style.height = 0;
 
-    // resze search results
-    let searchResults = document.getElementById('search-results');
+    if (!$.isEmptyObject(endPoint)) {
+        itineraryMinimized ? $('#itinerary-end').slideDown() : $('#itinerary-end').slideUp();
+    }
 
-    searchResults.style.height = '100%';
+    if (!$.isEmptyObject(startPoint) && !$.isEmptyObject(endPoint)) {
+        itineraryMinimized ? $('#do-dijkstra').slideDown() : $('#do-dijkstra').slideUp();
+    }
+
+    itineraryMinimized = !itineraryMinimized;
 }

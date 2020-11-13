@@ -8,7 +8,7 @@ def hop(request, place=''):
         'place': place,
     }
 
-    print(place)
+    # print(place)
 
     return render(request, 'navigate/hop.html', context)
 

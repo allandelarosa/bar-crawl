@@ -1,8 +1,39 @@
-.itinerary-entry {
-    background-color: white;
-    height: 30px;
+#itinerary-control {
+    display: none;
+    max-height: 40%;
+    width: 30%;
+    margin: 10px;
+    padding: 10px;
+    background-color: #303030;
+    color: white;
+}
+
+.itinerary-control-entry {
+    height: 25px;
+    display: none;
+    margin-top: 7px;
+}
+
+.itinerary-control-title {
+    height: 25px;
 }
 
 .remove-button {
+    padding: 2% 3% 2% 3%;
+    font-size: 100%;
     float: right;
+}
+
+#minimize-button {
+    padding: 2% 3% 2% 3%;
+    font-size: 100%;
+    float: right;
+}
+
+#do-dijkstra {
+    display: none;
+    /* height: 10%; */
+    margin-top: 7px;
+    width: 100%;
+    float: bottom;
 }

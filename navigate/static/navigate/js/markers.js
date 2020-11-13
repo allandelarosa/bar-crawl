@@ -5,24 +5,14 @@ function clearMarkers() {
     markers = {};
 }
 
-function highlightMarker(marker) {
-    for (place of toVisit) {
-        if (place.name === marker.title) {
-            return
-        }
-    }
+async function highlightMarker(marker) {
     let icon = marker.icon;
     icon.fillColor = '#FFDD33';
     marker.setIcon(icon);
     marker.zIndex += 30;
 }
 
-function unhighlightMarker(marker) {
-    for (place of toVisit) {
-        if (place.name === marker.title) {
-            return
-        }
-    }
+async function unhighlightMarker(marker) {
     let icon = marker.icon;
     icon.fillColor = '#FF3333';
     marker.setIcon(icon);
@@ -66,9 +56,8 @@ function createMarkers(places) {
             strokeWeight: 2,
             fillColor: '#FF3333',
             fillOpacity: 1,
-
-
         };
+        
         let marker = new google.maps.Marker({
             map: map,
             icon: markerImage,
@@ -119,7 +108,9 @@ function createMarkers(places) {
         li.appendChild(infoContainer);
 
         const markerinfowindow = new google.maps.InfoWindow({
-            content: li
+            content: li,
+            // prevents map from moving
+            // disableAutoPan: true, 
         });
 
         // Mouseover
