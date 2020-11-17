@@ -5,7 +5,7 @@ function createSearchResult(place, index) {
     $(li).append(
         $('<div>').addClass('search-result-title-bar').append(
             $('<strong>').text(`${index}. `),
-            $('<strong>').text(`${place.name}`).addClass('search-result-title'),
+            $('<strong>').text(place.name).addClass('place-name'),
         ),
     ).click(() => {
         scrollResults(place);

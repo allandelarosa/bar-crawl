@@ -11,26 +11,24 @@ function createItineraryControl() {
         ),
 
         // start and end entries
-        $('<div>').attr('id','itinerary-start').addClass('itinerary-control-entry').append(
+        $('<div>').attr('id', 'itinerary-start').addClass('itinerary-control-entry').append(
             $('<button>').addClass('btn btn-danger remove-button').append(
                 $('<i>').addClass('fa fa-minus'),
             ).click(() => {
                 removeItineraryEntry('start');
             }),
-            $('<div>'),
         ),
 
-        $('<div>').attr('id','itinerary-end').addClass('itinerary-control-entry').append(
+        $('<div>').attr('id', 'itinerary-end').addClass('itinerary-control-entry').append(
             $('<button>').addClass('btn btn-danger remove-button').append(
                 $('<i>').addClass('fa fa-minus'),
             ).click(() => {
                 removeItineraryEntry('end');
             }),
-            $('<div>'),
         ),
 
         // dijkstra button
-        $('<button>').attr('id','do-dijkstra').text('Create Itinerary').click(() => {
+        $('<button>').attr('id', 'do-dijkstra').text('Create Itinerary').click(() => {
             doDijkstra();
         }),
     )[0];
@@ -58,13 +56,17 @@ function clearItinerary() {
 }
 
 function showItineraryEntry(addingTo, place) {
-    $(`#itinerary-${addingTo} div`).off().text(
-        (addingTo === 'start' ? 'Start: ' : 'End: ') + place.name
-    ).click(() => {
-        scrollResults(place)
-    }).hover(
-        () => { highlightMarker(markers[place.place_id]) },
-        () => { unhighlightMarker(markers[place.place_id]) },
+    $(`#itinerary-${addingTo}`).off().find('div').remove();
+
+    $(`#itinerary-${addingTo}`).append(
+        $('<div>').text(
+            `${addingTo === 'start' ? 'Start' : 'End'}: ${place.name}`
+        ).addClass('place-name').click(() => {
+            scrollResults(place)
+        }).hover(
+            () => { highlightMarker(markers[place.place_id]) },
+            () => { unhighlightMarker(markers[place.place_id]) },
+        ),
     );
 
     $(`#itinerary-${addingTo}`).fadeIn();

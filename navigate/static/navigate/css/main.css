@@ -1,10 +1,14 @@
-/*  body {
-     background: url("/static/navigate/images/barpic.jpeg") 50% 0 no-repeat fixed;
-     color: grey;
-     height: 100%;
-     padding: 100px 0 0 0;   
-     }
-*/
+/* get rid of horizontal margins on bootstrap row */
+.row {
+  margin-right: 0px;
+  margin-left: 0px;
+}
+
+.logo {
+  height: 200px;
+  width: 200px;
+}
+
 body, html {
   height: 100%;
   margin: 0;
@@ -43,20 +47,19 @@ body, html {
 }
 
 .logo img {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 20%;
-  height: auto;
+  max-width: 100%;
+  max-height: 100%;
 }
 
-.logo_nav img {
-/*  display: block;
-  margin-left: auto;
-  margin-right: auto;*/
-  float: right;
-  width: 60%;
-  height: auto;
+.logo-nav {
+  height: 70px;
+  width: 70px;
+  margin: 15px 30px 15px 30px;
+}
+
+.logo-nav img {
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .steps-Title{
@@ -70,13 +73,12 @@ body, html {
 }
 
 .searchbar-color {
-    color: black;
+  color: black;
 }
 
 .form-control:focus {
   box-shadow: none;
 }
-
 
 .form-control::placeholder {
   font-size: 0.95rem;
@@ -85,84 +87,83 @@ body, html {
 }
 
 .centered {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.middle {
+  position: relative;
+  margin: auto;
 }
 
 .my-container {
-    padding: 0 50px 0 50px;
-    height: 100vh;
+  padding: 0 50px 0 50px;
+  height: 100vh;
 }
 
 .top {
-    height: 20%;
+  display: flex;
+  height: 100px;
+  background: #2f2626;
 }
 
 .bottom {
-    height: 80%;
+  height: calc(100vh - 100px);
+  background: #404040;
 }
 
-
-#top-container {
-    background: #2f2626;
+#search-bar {
+  height: 50px;
+  min-width: 300px;
+  width: calc(60% - 130px - 20px);
+  margin: 25px 10px 25px 10px;
 }
 
-#search-bar-container {
-    height: 40%;
+#search-bar * {
+  border: 0px;
+  outline: none;
 }
 
-#options-container {
-    height: 50%;
+#search-bar button {
+  width: 40px;
+  background-color: white;
+  color: #ccc;
+  border-radius: 0 8px 8px 0;
 }
 
-#map-container {
-    background: #404040;
-}
-
-#list-container {
-    background: #404040;
+#search-bar input {
+  padding-left: 15px;
+  width: calc(100% - 40px);
+  border-radius: 8px 0 0 8px;
 }
 
 #map {
-    height: 80%;
-    width: 80%;
-    
-}
-
-/* #right-panel {
-  font-family: "Roboto", "sans-serif";
-  line-height: 30px;
-  padding-left: 10px;
-}
-
-#right-panel select,
-#right-panel input {
-  font-size: 15px;
-}
-
-#right-panel select {
+  height: 100%;
   width: 100%;
 }
 
-#right-panel i {
-  font-size: 12px;
+.homepage-search {
+  height: 100px;
+  width: 90vw;
 }
 
-/* Sidebar Results */
-/*
-#right-panel {
-  font-family: Arial, Helvetica, sans-serif;
+.homepage {
   position: absolute;
-  right: 5px;
-  top: 60%;
-  margin-top: -195px;
-  height: 330px;
-  width: 200px;
-  padding: 5px;
-  z-index: 5;
-  border: 1px solid #999;
-  background: #fff;
-} */
+  height: 100%;
+  width: 100%;
+
+  background-image: url('/static/navigate/images/barpic.jpeg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+.homepage-elements {
+  display: flex;
+  flex-direction: column;
+  transform: translate(-50%, -80%);
+  max-height: 100%;
+  max-width: 100%;
+}
