@@ -27,22 +27,22 @@ body, html {
 }
 
 .bgimg-2 {
-  color: white;
+  background-color: #F0F0F0;
   height: 100vh;
 }
 
 
 .gallery {
-  margin: 10px;
-  border: 3px solid black;
+  margin: 20px;
+/*  border: 3px solid black;*/
   float: left;
-  width: 30%;
+  width: 40%;
 }
 
 .gallery img {
-  margin-left: 50px;
+/*  margin-left: 50px;*/
   margin-right: auto;
-  width: 70%;
+  width: 250px;
   height: auto;
 }
 
@@ -64,7 +64,9 @@ body, html {
 
 .steps-Title{
   font-size: 50px;
-  color: black;
+  color: #606C78;
+  font-family: "Arial Black", Gadget, sans-serif;
+  font-weight: 20;
 }
 
 .desc {
@@ -73,17 +75,7 @@ body, html {
 }
 
 .searchbar-color {
-  color: black;
-}
-
-.form-control:focus {
-  box-shadow: none;
-}
-
-.form-control::placeholder {
-  font-size: 0.95rem;
-  color: black;
-  font-style: italic;
+  color: #697988;
 }
 
 .centered {
