@@ -7,10 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-
     <!-- bootstrap tag -->
-    <!-- <meta charset="utf-8"> -->
-    <!-- <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
         integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
 
@@ -18,15 +15,16 @@
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 
     <!-- custom stylesheets -->
+    {% block css %}{% endblock %}
     <link rel="stylesheet" type="text/css" href="{% static 'navigate/css/main.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'navigate/css/search-results.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'navigate/css/itinerary.css' %}">
 
 
     {% if title %}
-    <title>Djikstra Hop - {{ title }}</title>
+    <title>Bar Crawl - {{ title }}</title>
     {% else %}
-    <title>Djikstra Hop</title>
+    <title>Bar Crawl</title>
     {% endif %}
 </head>
 

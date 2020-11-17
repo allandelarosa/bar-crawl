@@ -75,6 +75,9 @@ function createGraph() {
 }
 
 function updateToVisit(place, addingTo) {
+    // clear current path if updating
+    if (path) path.setMap(null);
+
     if (addingTo === 'start') {
         // update start point
         startPoint = {

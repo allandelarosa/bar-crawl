@@ -11,7 +11,7 @@ function createItineraryControl() {
         ),
 
         // start and end entries
-        $('<div>').attr('id','itinerary-start').addClass('itinerary-control-entry').append(
+        $('<div>').attr('id', 'itinerary-start').addClass('itinerary-control-entry').append(
             $('<button>').addClass('btn btn-danger remove-button').append(
                 $('<i>').addClass('fa fa-minus'),
             ).click(() => {
@@ -19,7 +19,7 @@ function createItineraryControl() {
             }),
         ),
 
-        $('<div>').attr('id','itinerary-end').addClass('itinerary-control-entry').append(
+        $('<div>').attr('id', 'itinerary-end').addClass('itinerary-control-entry').append(
             $('<button>').addClass('btn btn-danger remove-button').append(
                 $('<i>').addClass('fa fa-minus'),
             ).click(() => {
@@ -28,7 +28,7 @@ function createItineraryControl() {
         ),
 
         // dijkstra button
-        $('<button>').attr('id','do-dijkstra').text('Create Itinerary').click(() => {
+        $('<button>').attr('id', 'do-dijkstra').text('Create Itinerary').click(() => {
             doDijkstra();
         }),
     )[0];
