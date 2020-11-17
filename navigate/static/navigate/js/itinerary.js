@@ -17,7 +17,6 @@ function createItineraryControl() {
             ).click(() => {
                 removeItineraryEntry('start');
             }),
-            $('<div>'),
         ),
 
         $('<div>').attr('id','itinerary-end').addClass('itinerary-control-entry').append(
@@ -26,7 +25,6 @@ function createItineraryControl() {
             ).click(() => {
                 removeItineraryEntry('end');
             }),
-            $('<div>'),
         ),
 
         // dijkstra button
@@ -58,13 +56,17 @@ function clearItinerary() {
 }
 
 function showItineraryEntry(addingTo, place) {
-    $(`#itinerary-${addingTo} div`).off().text(
-        (addingTo === 'start' ? 'Start: ' : 'End: ') + place.name
-    ).click(() => {
-        scrollResults(place)
-    }).hover(
-        () => { highlightMarker(markers[place.place_id]) },
-        () => { unhighlightMarker(markers[place.place_id]) },
+    $(`#itinerary-${addingTo}`).off().find('div').remove();
+
+    $(`#itinerary-${addingTo}`).append(
+        $('<div>').text(
+            `${addingTo === 'start' ? 'Start' : 'End'}: ${place.name}`
+        ).addClass('place-name').click(() => {
+            scrollResults(place)
+        }).hover(
+            () => { highlightMarker(markers[place.place_id]) },
+            () => { unhighlightMarker(markers[place.place_id]) },
+        ),
     );
 
     $(`#itinerary-${addingTo}`).fadeIn();

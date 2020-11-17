@@ -20,7 +20,7 @@
     font-size: max(1.5vw, 1.5vh, 15px);
 }
 
-.search-result-title:hover {
+.place-name:hover {
     text-decoration: underline;
 }
 

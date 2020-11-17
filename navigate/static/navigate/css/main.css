@@ -11,16 +11,14 @@ body {
   margin-left: 0px;
 }
 
-/* * {
-  box-sizing: border-box;
-} */
+.logo {
+  height: 200px;
+  width: 200px;
+}
 
 .logo img {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 20%;
-  height: 80%;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .logo-nav {
@@ -66,6 +64,11 @@ body {
   transform: translate(-50%, -50%);
 }
 
+.middle {
+  position: relative;
+  margin: auto;
+}
+
 .my-container {
   padding: 0 50px 0 50px;
   height: 100vh;
@@ -82,36 +85,56 @@ body {
   background: #404040;
 }
 
-#search-bar-container {
+#search-bar {
   height: 50px;
+  min-width: 300px;
   width: calc(60% - 130px - 20px);
   margin: 25px 10px 25px 10px;
 }
 
-#search-bar-container * {
+#search-bar * {
   border: 0px;
   outline: none;
 }
 
-#search-bar-container button {
+#search-bar button {
   width: 40px;
   background-color: white;
   color: #ccc;
-  /* height: calc(100% - 3px);
-  margin-top: 2px; */
   border-radius: 0 8px 8px 0;
 }
 
-#search-bar-container input {
+#search-bar input {
   padding-left: 15px;
   width: calc(100% - 40px);
   border-radius: 8px 0 0 8px;
 }
 
 #map {
-  /* height: calc(100% - 20px);
-  width: calc(100% - 20px); */
   height: 100%;
   width: 100%;
-  /* margin: 10px; */
+}
+
+.homepage-search {
+  height: 100px;
+  width: 90vw;
+}
+
+.homepage {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+
+  background-image: url('/static/navigate/images/barpic.jpeg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+.homepage-elements {
+  display: flex;
+  flex-direction: column;
+  transform: translate(-50%, -80%);
+  max-height: 100%;
+  max-width: 100%;
 }
