@@ -17,7 +17,7 @@ API_KEY = os.environ.get('API_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['djikstrahopapp.herokuapp.com', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['barcrawlapp.herokuapp.com', '127.0.0.1', 'localhost']
 
 
 # Application definition
