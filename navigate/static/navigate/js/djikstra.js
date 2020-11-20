@@ -23,11 +23,13 @@ function doDijkstra(places) {
         // console.log(response.path);
         // console.log(response.ids);
 
+        searchResetControl();
+
         // update markers and result list to itinerary
         bounds = new google.maps.LatLngBounds();
         hideMarkers();
         filterMarkers(response.ids);
-        createItinerary(response.ids);
+        createItinerary(places, response.ids);
 
         path = new google.maps.Polyline({
             path: response.path,

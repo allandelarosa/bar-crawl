@@ -66,7 +66,7 @@ async function createMarker(place, index) {
         icon: markerImage,
         title: place.name,
         position: place.geometry.location,
-        label: { text: "" + index, color: '#FFFFFF' },
+        label: { text: `${index}`, color: '#FFFFFF' },
         zIndex: -index,
     });
 
@@ -119,8 +119,11 @@ async function createInfoWindow(place) {
 }
 
 async function filterMarkers(ids) {
+    let index = 1;
+
     for (let id of ids) {
         markers[id].setMap(map);
+        markers[id].label = { text: `${index++}`, color: '#FFFFFF' };
 
         // extend bounds to include marker on map
         bounds.extend(markers[id].position);

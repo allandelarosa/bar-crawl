@@ -1,5 +1,5 @@
-function createItineraryControl() {
-    return $('#itinerary-control').append(
+function dijkstraItineraryControl() {
+    return $('#itinerary-control').empty().append(
         // title bar
         $('<div>').addClass('itinerary-control-title').append(
             $('<button>').addClass('btn btn-outline-light').attr('id', 'minimize-button').append(
@@ -47,7 +47,7 @@ function updateItineraryControl(place, addingTo) {
     }
 }
 
-function clearItineraryControl() {
+async function clearItineraryControl() {
     removeItineraryControlEntry('start');
     removeItineraryControlEntry('end');
 }
@@ -116,4 +116,12 @@ function minimizeItineraryControl() {
     }
 
     itineraryControlMinimized = !itineraryControlMinimized;
+}
+
+function searchResetControl() {
+    $('#itinerary-control').empty().append(
+        $('<button>').addClass('btn btn-dark').click(() => {
+
+        }).text('Back to Search')
+    );
 }

@@ -47,7 +47,7 @@ function initMap() {
                     },
                 });
 
-                map.controls[google.maps.ControlPosition.RIGHT_TOP].push(createItineraryControl());
+                map.controls[google.maps.ControlPosition.RIGHT_TOP].push($('#itinerary-control')[0]);
 
                 resetMap(pos);
                 getNearbyPlaces(pos, true);
@@ -106,10 +106,10 @@ function resetMap(pos) {
     location_data = [];
     graph = {};
 
-    // hide itinerary control on new search
+    // reset itinerary control on new search
     $('#do-dijkstra').hide();
     $('#itinerary-control').hide();
-    clearItineraryControl();
+    
     itineraryControlVisible = false;
     if (itineraryControlMinimized) minimizeItineraryControl();
 
@@ -175,9 +175,11 @@ function nearbyCallback(results, status) {
         })
     }
 
+    dijkstraItineraryControl();
     createSearchResults(results);
     createMarkers(results);
     createGraph();
+    clearItineraryControl();
 
     $('#do-dijkstra').off().click(() => {
         doDijkstra(results);
