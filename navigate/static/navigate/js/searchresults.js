@@ -12,9 +12,9 @@ async function createSearchResults(places) {
         $('#search-results').append(result);
         
         // save result for later reference
-        searchResults[place.place_id] = result;
+        searchResults.push(result);
     }
-
+    
     $('#search-results').fadeIn();
 }
 

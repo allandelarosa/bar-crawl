@@ -20,8 +20,8 @@ let toVisit;
 let startPoint;
 let endPoint;
 
-let itineraryVisible = false;
-let itineraryMinimized = false;
+let itineraryControlVisible = false;
+let itineraryControlMinimized = false;
 
 let graph;
 let path;

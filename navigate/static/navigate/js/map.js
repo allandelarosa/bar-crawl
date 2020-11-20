@@ -109,9 +109,9 @@ function resetMap(pos) {
     // hide itinerary control on new search
     $('#do-dijkstra').hide();
     $('#itinerary-control').hide();
-    clearItinerary();
-    itineraryVisible = false;
-    if (itineraryMinimized) minimizeItineraryControl();
+    clearItineraryControl();
+    itineraryControlVisible = false;
+    if (itineraryControlMinimized) minimizeItineraryControl();
 
     expanded = "";
     startPoint = {};
@@ -119,7 +119,7 @@ function resetMap(pos) {
 
     hideMarkers();
     markers = {};
-    searchResults = {};
+    searchResults = [];
 
     if (path) path.setMap(null);
 
