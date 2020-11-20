@@ -1,4 +1,9 @@
 async function createSearchResults(places, pathCreated) {
+    // set search title
+    $('#search-title').text(
+        `Top ${places.length} Bars in the Area`
+    )
+
     // reset search list
     $('#search-results')[0].scrollTop = 0;
     $('#search-results').hide().empty();

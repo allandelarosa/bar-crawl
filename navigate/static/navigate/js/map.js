@@ -129,9 +129,20 @@ function setMap(pos) {
 
 // Perform a Places Nearby Search Request
 function getNearbyPlaces(position) {
+    /* 
+        rank by prominence gives more relevant results,
+        but hard to define corresponding radius (very 
+        small for cities, larger for suburban)
+
+        rank by distance gives 20 nearest results which
+        may not necessarily be 'bars', but radius is not
+        mandatory
+    */
     let request = {
         location: position,
-        rankBy: google.maps.places.RankBy.DISTANCE,
+        radius: '500',
+        rankBy: google.maps.places.RankBy.PROMINENCE,
+        // rankBy: google.maps.places.RankBy.DISTANCE,
         type: ['bar'],
     };
 
