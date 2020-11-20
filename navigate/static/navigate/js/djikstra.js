@@ -19,28 +19,21 @@ function doDijkstra() {
 
     fetch(request)
     .then(response => response.json())
-    .then((data) => {
-        let answer = data
-        // console.log(answer)
-        // for (let point of answer.path) {
-        //     let marker = new google.maps.Marker({
-        //         map: map,
-        //         position: point
-        //     });
-        // }
+    .then((response) => {
+        console.log(response.path);
         path = new google.maps.Polyline({
-            path: answer,
+            path: response.path,
             geodesic: true,
             strokeColor: '#FF0000',
             strokeOpacity: 1.0,
             strokeWeight: 2
         });
 
-        path.setMap(map)
+        path.setMap(map);
     });
 }
 
-function createGraph() {
+async function createGraph() {
     const request = new Request(
         "/djikstra/graph/", {
         method: 'POST',
@@ -54,13 +47,12 @@ function createGraph() {
 
     fetch(request)
     .then(response => response.json())
-    .then((data) => {
-        let answer = data.to_display;
-        graph = data.graph;
+    .then((response) => {
+        graph = response.graph;
 
         // to display graph
 
-        // for (let pair of answer) {
+        // for (let pair of response.to_display) {
         //     let edge = new google.maps.Polyline({
         //         path: pair,
         //         geodesic: true,
@@ -68,16 +60,13 @@ function createGraph() {
         //         strokeOpacity: 1.0,
         //         strokeWeight: 2
         //     });
-
         //     edge.setMap(map)
         // }
     });
 }
 
+// set start and end points
 function updateToVisit(place, addingTo) {
-    // clear current path if updating
-    if (path) path.setMap(null);
-
     if (addingTo === 'start') {
         // update start point
         startPoint = {

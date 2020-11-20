@@ -35,18 +35,15 @@
 }
 
 .Stars {
-    margin-top: max(0.2vw, 0.2vh);
-    margin-left: 5px;
+    margin: 0 3px 0 5px;
     --percent: calc(var(--rating) / 5 * 100%);
     display: inline-block;
     font-size: var(--star-size);
-    font-family: Times;
-    line-height: 1;
+    line-height: 1.25;
 }
 
 .Stars::before {
     content: '★★★★★';
-    letter-spacing: 3px;
     background: linear-gradient(90deg, var(--star-background) var(--percent), var(--star-color) var(--percent));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -66,6 +63,7 @@
     background-size: cover;
     background-position: center;
     float: right;
+    margin-left: 10px;
 }
 
 /* .info-container {
@@ -75,9 +73,8 @@
 } */
 
 .info-container-2 {
-    width: 40%;
+    max-width: 150px;
     float: left;
-    word-wrap: break-word;
 }
 
 .buttons-container {

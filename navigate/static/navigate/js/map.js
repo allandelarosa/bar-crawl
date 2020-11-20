@@ -106,7 +106,6 @@ function setMap(pos) {
     clearMarkers();
     location_data = [];
 
-    placesList.innerHTML = "";
     graph = {};
 
     // hide itinerary control on new search
@@ -148,7 +147,9 @@ function nearbyCallback(results, status) {
 
     // console.log(results)
 
+    createSearchResults(results);
     createMarkers(results);
+
     location_data = []
     for (let data of results) {
         location_data.push({

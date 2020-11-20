@@ -1,42 +1,40 @@
-function createSearchResult(place, index) {
-    let li =  $('<li>').attr('id', place.place_id)[0];
+async function createSearchResults(places) {
+    // empty search list
+    $('#search-results').empty();
 
-    // name of place
-    $(li).append(
+    for (let i = 0, place; (place = places[i]); i++) {
+        $('#search-results').append(
+            // add new search result
+            await createSearchResult(place, i + 1)
+        );
+    }
+}
+
+async function createSearchResult(place, index) {
+    return $('<li>').attr('id', place.place_id).append(
+        // name
         $('<div>').addClass('search-result-title-bar').append(
             $('<strong>').text(`${index}. `),
             $('<strong>').text(place.name).addClass('place-name'),
         ),
-    ).click(() => {
-        scrollResults(place);
-    });
 
-    // picture of place
-    if (place.photos != null) {
-        $(li).append(
-            $('<div>').addClass('photo-container').append( 
-                $('<img>').addClass('result-photo').attr('src', place.photos[0].getUrl())
-            )
-        );
-    }
+        // picture
+        place.photos ? $('<div>').append( 
+            $('<img>').addClass('result-photo').attr('src', place.photos[0].getUrl())
+        ).addClass('photo-container') : $(),
 
-    // rating container
-    if (place.rating) {
-        $(li).append(
-            $('<div>').addClass('ratings-container').append(
-                // rating number
-                $('<div>').text(`${place.rating} `).css('color', ' #fb0'),
-                // star rating
-                $('<div>').addClass('Stars').css('--rating', `${place.rating}`),
-                // number of ratings
-                $('<div>').text(`(${place.user_ratings_total})`).css('color', ' #ccc'),
-            ),
-            $('<br>')
-        );
-    }
+        // ratings
+        place.rating ? $('<div>').append(
+            // rating number
+            $('<div>').text(`${place.rating} `).css('color', ' #fb0'),
+            // star rating
+            $('<div>').addClass('Stars').css('--rating', `${place.rating}`),
+            // number of ratings
+            $('<div>').text(`(${place.user_ratings_total})`).css('color', ' #ccc'),
+        ).addClass('ratings-container'): $(),
+        place.rating ? $('<br>') : $(),
 
-    // price level and address
-    $(li).append(
+        // price level and address
         $('<div>').html(() => {
             let info = ''
             // get price level
@@ -51,20 +49,16 @@ function createSearchResult(place, index) {
             info += place.vicinity.split(',')[0];
 
             return info;
-        }).css('color', '#555')
-    );
+        }).css('color', '#555'), 
 
-    // opening hours
-    if (place.opening_hours) {
-        $(li).append(
+        // opening hours
+        place.opening_hours ? (
             place.opening_hours.open_now ? 
             $('<div>').text('Open now').css('color', 'green') : 
             $('<div>').text('Closed').css('color', 'red')
-        );
-    }
+        ) : $(),
 
-    // buttons to set as start and end
-    $(li).append(
+        // buttons to set as start and end
         $('<div>').addClass('buttons-container').append(
             $('<button>').addClass('btn btn-dark btn-sm start-end-btn').text('Set as start').click(() => {
                 updateToVisit(place, 'start');
@@ -72,20 +66,22 @@ function createSearchResult(place, index) {
             $('<button>').addClass('btn btn-dark btn-sm start-end-btn').text('Set as end').click(() => {
                 updateToVisit(place, 'end');
             }),
-        )
-    );
-
-    // highlight corresponding marker when hovering
-    $(li).hover(
+        ),
+    ).click(() => {
+        // center and expand result when clicked
+        scrollResults(place);
+    }).hover(
+        // highlight corresponding markers when hovering
         () => {highlightMarker(markers[place.place_id])},
         () => {unhighlightMarker(markers[place.place_id])},
     );
-    
-    return li;
 }
 
 function scrollResults(place) {
-    // if this is already expanded, do nothing
+    // make search result visible
+    $(`#${place.place_id}`)[0].scrollIntoView({ behavior: "smooth", block: "center" });
+
+    // if result already expanded, do nothing else
     if (expanded === place.place_id) return;
 
     // if another entry already expanded, unexpand it
@@ -93,9 +89,6 @@ function scrollResults(place) {
         $(`#${expanded} .buttons-container`).slideUp();
         expanded = "";
     }
-
-    // make search result visible
-    $(`#${place.place_id}`)[0].scrollIntoView({ behavior: "smooth", block: "center" });
 
     // show buttons
     expanded = place.place_id;

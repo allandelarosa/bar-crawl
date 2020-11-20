@@ -22,7 +22,8 @@ def path(request):
     stop = json_data['end_point']['name']
     location_data = json_data['location_data']
 
-    coords = {loc["name"]: {"lat": loc["lat"], "lng": loc["lng"]} for loc in location_data}
+    coords = {loc["name"]: {"lat": loc["lat"], "lng": loc["lng"]}
+              for loc in location_data}
 
     costs = {}
     parents = {}
@@ -75,13 +76,16 @@ def path(request):
         # print(f"The shortest path is {path[::-1]}")
 
     # data = {'path': [coord[loc] for loc in path[::-1]]}
-    return JsonResponse([coords[loc] for loc in path[::-1]], safe=False)
+    return JsonResponse({
+        'path': [coords[loc] for loc in path[::-1]],
+    }, safe=False)
 
 
 def graph(request):
     location_data = json.loads(request.body)
 
-    coords = {loc["name"]: {"lat": loc["lat"], "lng": loc["lng"]} for loc in location_data}
+    coords = {loc["name"]: {"lat": loc["lat"], "lng": loc["lng"]}
+              for loc in location_data}
 
     def distance(a, b):
         R = 6371  # Radius of the earth in km
@@ -148,4 +152,7 @@ def graph(request):
         graph[loc1][loc2] = dist
         graph[loc2][loc1] = dist
 
-    return JsonResponse({'to_display': to_display, 'graph': graph}, safe=False)
+    return JsonResponse({
+        'to_display': to_display,
+        'graph': graph,
+    }, safe=False)
