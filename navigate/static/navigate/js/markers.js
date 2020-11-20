@@ -86,7 +86,7 @@ async function createMarker(place, index) {
 
     // Scroll to Place
     marker.addListener("click", () => {
-        scrollResults(place);
+        scrollResults(place.place_id);
     });
 
     // save marker for later reference

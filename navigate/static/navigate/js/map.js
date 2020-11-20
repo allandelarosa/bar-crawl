@@ -50,7 +50,7 @@ function initMap() {
                 map.controls[google.maps.ControlPosition.RIGHT_TOP].push(createItineraryControl());
 
                 resetMap(pos);
-                getNearbyPlaces(pos);
+                getNearbyPlaces(pos, true);
 
                 const searchBox = new google.maps.places.SearchBox(input);
                 map.addListener("bounds_changed", () => {
@@ -65,7 +65,7 @@ function initMap() {
                     let newpos = places[0].geometry.location;
 
                     resetMap(newpos)
-                    getNearbyPlaces(newpos);
+                    getNearbyPlaces(newpos, true);
                 });
             });
         }, () => {
@@ -98,7 +98,7 @@ function handleLocationError(browserHasGeolocation, infoWindow) {
 
     // Call Places Nearby Search on the default location
     resetMap(pos);
-    getNearbyPlaces(pos);
+    getNearbyPlaces(pos, true);
 }
 
 
@@ -131,7 +131,7 @@ function resetMap(pos) {
 
 
 // Perform a Places Nearby Search Request
-function getNearbyPlaces(position) {
+function getNearbyPlaces(position, busy) {
     /* 
         rank by prominence gives more relevant results,
         but hard to define corresponding radius (very 
@@ -141,24 +141,30 @@ function getNearbyPlaces(position) {
         may not necessarily be 'bars', but radius is not
         mandatory
     */
+
+    // if 'busy' area, use shorter radius
     let request = {
         location: position,
-        radius: '500',
+        radius: busy ? '500' : '1000',
         rankBy: google.maps.places.RankBy.PROMINENCE,
         // rankBy: google.maps.places.RankBy.DISTANCE,
         type: ['bar'],
     };
 
     service = new google.maps.places.PlacesService(map);
-    service.nearbySearch(request, nearbyCallback);
+    service.nearbySearch(request, (results, status) => {
+        if (busy && results.length < 10) {
+            getNearbyPlaces(position, false);
+        } else {
+            nearbyCallback(results, status);
+        }
+    });
 }
 
 
 // Handle the results (up to 20) of the Nearby Search
 function nearbyCallback(results, status) {
     if (status !== "OK") return;
-
-    // console.log(results)
 
     location_data = []
     for (let place of results) {
@@ -176,4 +182,5 @@ function nearbyCallback(results, status) {
     $('#do-dijkstra').off().click(() => {
         doDijkstra(results);
     })
+
 }
