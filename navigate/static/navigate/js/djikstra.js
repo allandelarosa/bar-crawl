@@ -23,21 +23,11 @@ function doDijkstra(places) {
         // console.log(response.path);
         // console.log(response.ids);
 
-        let newPlaces = [];
-        for (let id of response.ids) {
-            for (let place of places) {
-                if (place.place_id === id) {
-                    newPlaces.push(place);
-                    break;
-                }
-            }
-        }
-
         // update markers and result list to itinerary
         bounds = new google.maps.LatLngBounds();
-        clearMarkers();
-        createMarkers(newPlaces);
-        createSearchResults(newPlaces, true);
+        hideMarkers();
+        filterMarkers(response.ids);
+        filterSearchResults(response.ids);
 
         path = new google.maps.Polyline({
             path: response.path,

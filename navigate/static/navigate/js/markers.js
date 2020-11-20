@@ -1,10 +1,12 @@
 let topZ = 20;
 
-function clearMarkers() {
+function hideMarkers() {
+    if (!markers) return;
+
     Object.values(markers).forEach((marker) => {
         marker.setMap(null);
     });
-    markers = {};
+
     topZ = 20;
 }
 
@@ -114,4 +116,15 @@ async function createInfoWindow(place) {
         // prevents map from moving
         // disableAutoPan: true, 
     });
+}
+
+async function filterMarkers(ids) {
+    for (let id of ids) {
+        markers[id].setMap(map);
+
+        // extend bounds to include marker on map
+        bounds.extend(markers[id].position);
+    }
+    // show map with all markers visible
+    map.fitBounds(bounds);
 }

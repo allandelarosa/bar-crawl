@@ -49,7 +49,7 @@ function initMap() {
 
                 map.controls[google.maps.ControlPosition.RIGHT_TOP].push(createItineraryControl());
 
-                setMap(pos);
+                resetMap(pos);
                 getNearbyPlaces(pos);
 
                 const searchBox = new google.maps.places.SearchBox(input);
@@ -64,7 +64,7 @@ function initMap() {
                     const places = searchBox.getPlaces();
                     let newpos = places[0].geometry.location;
 
-                    setMap(newpos)
+                    resetMap(newpos)
                     getNearbyPlaces(newpos);
                 });
             });
@@ -97,12 +97,12 @@ function handleLocationError(browserHasGeolocation, infoWindow) {
     currentInfoWindow = infoWindow;
 
     // Call Places Nearby Search on the default location
-    setMap(pos);
+    resetMap(pos);
     getNearbyPlaces(pos);
 }
 
 
-function setMap(pos) {
+function resetMap(pos) {
     location_data = [];
     graph = {};
 
@@ -116,7 +116,10 @@ function setMap(pos) {
     expanded = "";
     startPoint = {};
     endPoint = {};
-    clearMarkers();
+
+    hideMarkers();
+    markers = {};
+    searchResults = {};
 
     if (path) path.setMap(null);
 

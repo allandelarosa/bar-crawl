@@ -28,7 +28,7 @@ function createItineraryControl() {
         ),
 
         // dijkstra button
-        $('<button>').attr('id', 'do-dijkstra').text('Create Itinerary'),
+        $('<button>').addClass('btn btn-primary').attr('id', 'do-dijkstra').text('Create Itinerary'),
     )[0];
 }
 

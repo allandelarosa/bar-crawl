@@ -13,7 +13,7 @@
     font-size: max(2.5vw, 2.5vh, 20px);
 
     padding: 10px 20px 10px 20px;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .search-result-title-bar {

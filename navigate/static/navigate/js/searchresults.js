@@ -1,28 +1,28 @@
-async function createSearchResults(places, pathCreated) {
+async function createSearchResults(places) {
     // set search title
-    $('#search-title').text(
-        `Top ${places.length} Bars in the Area`
-    )
+    $('#search-title').text(`Top ${places.length} Bars in the Area`);
 
     // reset search list
     $('#search-results')[0].scrollTop = 0;
     $('#search-results').hide().empty();
 
     for (let i = 0, place; (place = places[i]); i++) {
-        $('#search-results').append(
-            // add new search result
-            await createSearchResult(place, i + 1, pathCreated)
-        );
+        // add new search result
+        let result = await createSearchResult(place, i + 1);
+        $('#search-results').append(result);
+        
+        // save result for later reference
+        searchResults[place.place_id] = result;
     }
 
     $('#search-results').fadeIn();
 }
 
-async function createSearchResult(place, index, pathCreated) {
+async function createSearchResult(place, index) {
     return $('<li>').attr('id', place.place_id).append(
         // name
         $('<div>').addClass('search-result-title-bar').append(
-            pathCreated ? $() : $('<strong>').text(`${index}. `),
+            $('<strong>').addClass('place-index').text(`${index}. `),
             $('<strong>').text(place.name).addClass('place-name'),
         ),
 
@@ -77,7 +77,7 @@ async function createSearchResult(place, index, pathCreated) {
         ),
     ).click(() => {
         // center and expand result when clicked
-        scrollResults(place);
+        scrollResults(place.place_id);
     }).hover(
         // highlight corresponding markers when hovering
         () => {highlightMarker(markers[place.place_id])},
@@ -85,12 +85,12 @@ async function createSearchResult(place, index, pathCreated) {
     );
 }
 
-function scrollResults(place) {
+function scrollResults(id) {
     // make search result visible
-    $(`#${place.place_id}`)[0].scrollIntoView({ behavior: "smooth", block: "center" });
+    $(`#${id}`)[0].scrollIntoView({ behavior: "smooth", block: "center" });
 
     // if result already expanded, do nothing else
-    if (expanded === place.place_id) return;
+    if (expanded === id) return;
 
     // if another entry already expanded, unexpand it
     if (expanded.length > 0) {
@@ -99,6 +99,35 @@ function scrollResults(place) {
     }
 
     // show buttons
-    expanded = place.place_id;
+    expanded = id;
     $(`#${expanded} .buttons-container`).slideDown();
+}
+
+async function filterSearchResults(ids) {
+    // set search title
+    $('#search-title').text('Your Itinerary');
+
+    // reset search list
+    $('#search-results')[0].scrollTop = 0;
+    $('#search-results').hide().empty();
+
+    for (let id of ids) {
+        // order search results
+        $('#search-results').append(searchResults[id]);
+
+        // hide index, number not useful anymore
+        $(`#${id} .place-index`).hide();
+
+        // reapply listeners (they go away for some reason)
+        searchResults[id].click(() => {
+            // center and expand result when clicked
+            scrollResults(id);
+        }).hover(
+            // highlight corresponding markers when hovering
+            () => {highlightMarker(markers[id])},
+            () => {unhighlightMarker(markers[id])},
+        );
+    }
+
+    $('#search-results').fadeIn();
 }

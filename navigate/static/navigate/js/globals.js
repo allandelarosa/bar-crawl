@@ -8,7 +8,8 @@ let infoWindow;
 let currentInfoWindow;
 
 // for markers and search results
-let markers = {};
+let markers;
+let searchResults;
 
 let expanded;
 
