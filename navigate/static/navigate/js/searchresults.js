@@ -1,20 +1,23 @@
-async function createSearchResults(places) {
-    // empty search list
-    $('#search-results').empty();
+async function createSearchResults(places, pathCreated) {
+    // reset search list
+    $('#search-results')[0].scrollTop = 0;
+    $('#search-results').hide().empty();
 
     for (let i = 0, place; (place = places[i]); i++) {
         $('#search-results').append(
             // add new search result
-            await createSearchResult(place, i + 1)
+            await createSearchResult(place, i + 1, pathCreated)
         );
     }
+
+    $('#search-results').fadeIn();
 }
 
-async function createSearchResult(place, index) {
+async function createSearchResult(place, index, pathCreated) {
     return $('<li>').attr('id', place.place_id).append(
         // name
         $('<div>').addClass('search-result-title-bar').append(
-            $('<strong>').text(`${index}. `),
+            pathCreated ? $() : $('<strong>').text(`${index}. `),
             $('<strong>').text(place.name).addClass('place-name'),
         ),
 

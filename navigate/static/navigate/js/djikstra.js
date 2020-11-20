@@ -1,4 +1,4 @@
-function doDijkstra() {
+function doDijkstra(places) {
     if (path) path.setMap(null);
 
     const request = new Request(
@@ -20,7 +20,25 @@ function doDijkstra() {
     fetch(request)
     .then(response => response.json())
     .then((response) => {
-        console.log(response.path);
+        // console.log(response.path);
+        // console.log(response.ids);
+
+        let newPlaces = [];
+        for (let id of response.ids) {
+            for (let place of places) {
+                if (place.place_id === id) {
+                    newPlaces.push(place);
+                    break;
+                }
+            }
+        }
+
+        // update markers and result list to itinerary
+        bounds = new google.maps.LatLngBounds();
+        clearMarkers();
+        createMarkers(newPlaces);
+        createSearchResults(newPlaces, true);
+
         path = new google.maps.Polyline({
             path: response.path,
             geodesic: true,
@@ -70,7 +88,7 @@ function updateToVisit(place, addingTo) {
     if (addingTo === 'start') {
         // update start point
         startPoint = {
-            name: place.name, 
+            id: place.place_id,
             lat: place.geometry.location.lat(), 
             lng: place.geometry.location.lng()
         };
@@ -85,7 +103,7 @@ function updateToVisit(place, addingTo) {
     } else {
         // update end point
         endPoint = {
-            name: place.name, 
+            id: place.place_id,
             lat: place.geometry.location.lat(), 
             lng: place.geometry.location.lng()
         }

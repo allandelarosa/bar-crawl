@@ -103,9 +103,7 @@ function handleLocationError(browserHasGeolocation, infoWindow) {
 
 
 function setMap(pos) {
-    clearMarkers();
     location_data = [];
-
     graph = {};
 
     // hide itinerary control on new search
@@ -118,6 +116,7 @@ function setMap(pos) {
     expanded = "";
     startPoint = {};
     endPoint = {};
+    clearMarkers();
 
     if (path) path.setMap(null);
 
@@ -147,17 +146,20 @@ function nearbyCallback(results, status) {
 
     // console.log(results)
 
-    createSearchResults(results);
-    createMarkers(results);
-
     location_data = []
-    for (let data of results) {
+    for (let place of results) {
         location_data.push({
-            name: data.name,
-            lat: data.geometry.location.lat(),
-            lng: data.geometry.location.lng()
+            id: place.place_id,
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lng()
         })
     }
 
+    createSearchResults(results);
+    createMarkers(results);
     createGraph();
+
+    $('#do-dijkstra').off().click(() => {
+        doDijkstra(results);
+    })
 }
