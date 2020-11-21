@@ -1,5 +1,4 @@
 #itinerary-control {
-    display: none;
     max-height: 40%;
     width: 30%;
     margin: 10px;
@@ -30,7 +29,6 @@
 }
 
 #do-dijkstra {
-    display: none;
     /* height: 10%; */
     margin-top: 7px;
     width: 100%;

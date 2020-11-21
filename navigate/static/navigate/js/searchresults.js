@@ -10,11 +10,11 @@ async function createSearchResults(places) {
         // add new search result
         let result = await createSearchResult(place, i + 1);
         $('#search-results').append(result);
-        
+
         // save result for later reference
         searchResults.push(result);
     }
-    
+
     $('#search-results').fadeIn();
 }
 
@@ -27,7 +27,7 @@ async function createSearchResult(place, index) {
         ),
 
         // picture
-        place.photos ? $('<div>').append( 
+        place.photos ? $('<div>').append(
             $('<img>').addClass('result-photo').attr('src', place.photos[0].getUrl())
         ).addClass('photo-container') : $(),
 
@@ -39,7 +39,7 @@ async function createSearchResult(place, index) {
             $('<div>').addClass('Stars').css('--rating', `${place.rating}`),
             // number of ratings
             $('<div>').text(`(${place.user_ratings_total})`).css('color', ' #ccc'),
-        ).addClass('ratings-container'): $(),
+        ).addClass('ratings-container') : $(),
         place.rating ? $('<br>') : $(),
 
         // price level and address
@@ -57,17 +57,17 @@ async function createSearchResult(place, index) {
             info += place.vicinity.split(',')[0];
 
             return info;
-        }).css('color', '#555'), 
+        }).css('color', '#555'),
 
         // opening hours
         place.opening_hours ? (
-            place.opening_hours.open_now ? 
-            $('<div>').text('Open now').css('color', 'green') : 
-            $('<div>').text('Closed').css('color', 'red')
+            place.opening_hours.open_now ?
+                $('<div>').text('Open now').css('color', 'green') :
+                $('<div>').text('Closed').css('color', 'red')
         ) : $(),
 
         // buttons to set as start and end
-        $('<div>').addClass('buttons-container').append(
+        $('<div>').addClass('hidden-container').append(
             $('<button>').addClass('btn btn-dark btn-sm start-end-btn').text('Set as start').click(() => {
                 updateToVisit(place, 'start');
             }),
@@ -75,32 +75,49 @@ async function createSearchResult(place, index) {
                 updateToVisit(place, 'end');
             }),
         ),
-    ).click(() => {
+    ).click((event) => {
         // center and expand result when clicked
-        scrollResults(place.place_id);
+        expandResult(event.target, place.place_id);
     }).hover(
         // highlight corresponding markers when hovering
-        () => {highlightMarker(markers[place.place_id])},
-        () => {unhighlightMarker(markers[place.place_id])},
+        () => { highlightMarker(markers[place.place_id]) },
+        () => { unhighlightMarker(markers[place.place_id]) },
     );
 }
 
-function scrollResults(id) {
-    // make search result visible
-    $(`#${id}`)[0].scrollIntoView({ behavior: "smooth", block: "center" });
+async function scrollResults(id) {
+    // expand result
+    expandResult(null, id);
 
-    // if result already expanded, do nothing else
-    if (expanded === id) return;
+    // make search result visible
+    $(`#${id}`)[0].scrollIntoView({ behavior: "smooth"});
+}
+
+function expandResult(target, id) {
+    // don't unexpand if result was not clicked
+    if (!target && expanded === id) return;
+
+    // if button or link was clicked, do nothing
+    if (target) {
+        if (target.tagName === 'BUTTON') return;
+        if (target.tagName === 'A') return;
+    }
+
+    // if result was clicked and already expanded, unexpand
+    if (expanded === id) {
+        $(`#${expanded} .hidden-container`).slideUp();
+        expanded = "";
+        return;
+    }
 
     // if another entry already expanded, unexpand it
     if (expanded.length > 0) {
-        $(`#${expanded} .buttons-container`).slideUp();
-        expanded = "";
+        $(`#${expanded} .hidden-container`).hide();
     }
 
-    // show buttons
+    // show hidden elements
     expanded = id;
-    $(`#${expanded} .buttons-container`).slideDown();
+    $(`#${expanded} .hidden-container`).slideDown();
 }
 
 async function filterSearchResults(ids) {
@@ -124,8 +141,8 @@ async function filterSearchResults(ids) {
             scrollResults(id);
         }).hover(
             // highlight corresponding markers when hovering
-            () => {highlightMarker(markers[id])},
-            () => {unhighlightMarker(markers[id])},
+            () => { highlightMarker(markers[id]) },
+            () => { unhighlightMarker(markers[id]) },
         );
     }
 

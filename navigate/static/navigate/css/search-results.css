@@ -77,12 +77,12 @@
     float: left;
 }
 
-.buttons-container {
-    margin-top: 5px;
+.hidden-container {
     display: none;
 }
 
 .start-end-btn {
+    margin-top: 5px;
     font-size: max(1vw, 1vh, 10px);
     margin-right: 5px;
 }

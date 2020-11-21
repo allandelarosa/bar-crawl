@@ -53,13 +53,13 @@ async function clearItineraryControl() {
 }
 
 function showItineraryControlEntry(addingTo, place) {
-    $(`#itinerary-${addingTo}`).off().find('div').remove();
+    $(`#itinerary-${addingTo} div`).remove();
 
-    $(`#itinerary-${addingTo}`).append(
+    $(`#itinerary-${addingTo}`).off().append(
         $('<div>').text(
             `${addingTo === 'start' ? 'Start' : 'End'}: ${place.name}`
         ).addClass('place-name').click(() => {
-            scrollResults(place)
+            scrollResults(place.place_id);
         }).hover(
             () => { highlightMarker(markers[place.place_id]) },
             () => { unhighlightMarker(markers[place.place_id]) },
@@ -89,15 +89,21 @@ function removeItineraryControlEntry(addingTo) {
 function replaceItineraryControlEntry(first, second, place) {
     $(`#itinerary-${first}`).hide();
 
-    $(`#itinerary-${second} div`).text(
-        (second === 'start' ? 'Start: ' : 'End: ') + place.name
-    ).click(() => {
-        scrollResults(place)
-    }).hover(
-        () => { highlightMarker(markers[place.place_id]) },
-        () => { unhighlightMarker(markers[place.place_id]) },
+    $(`#itinerary-${second} div`).remove();
+
+    $(`#itinerary-${second}`).off().append(
+        $('<div>').text(
+            `${second === 'start' ? 'Start' : 'End'}: ${place.name}`
+        ).addClass('place-name').click(() => {
+            scrollResults(place.place_id);
+        }).hover(
+            () => { highlightMarker(markers[place.place_id]) },
+            () => { unhighlightMarker(markers[place.place_id]) },
+        ),
     );
     $(`#itinerary-${second}`).show();
+
+    $('#do-dijkstra').fadeOut();
 }
 
 function minimizeItineraryControl() {

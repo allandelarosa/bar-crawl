@@ -176,6 +176,7 @@ function nearbyCallback(results, status) {
     }
 
     dijkstraItineraryControl();
+    
     createSearchResults(results);
     createMarkers(results);
     createGraph();

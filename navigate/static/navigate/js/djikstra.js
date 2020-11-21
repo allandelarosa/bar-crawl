@@ -29,6 +29,7 @@ function doDijkstra(places) {
         bounds = new google.maps.LatLngBounds();
         hideMarkers();
         filterMarkers(response.ids);
+        expanded = "";
         createItinerary(places, response.ids);
 
         path = new google.maps.Polyline({
@@ -86,7 +87,7 @@ function updateToVisit(place, addingTo) {
         };
 
         // check if end point is start point
-        if (!$.isEmptyObject(endPoint) && endPoint.name === place.name) {
+        if (!$.isEmptyObject(endPoint) && endPoint.id === place.place_id) {
             endPoint = {};
             replaceItineraryControlEntry('end', 'start', place);
         } else {
@@ -101,7 +102,7 @@ function updateToVisit(place, addingTo) {
         }
 
         // check if end point is start point
-        if (!$.isEmptyObject(startPoint) && startPoint.name === place.name) {
+        if (!$.isEmptyObject(startPoint) && startPoint.id === place.place_id) {
             startPoint = {};
             replaceItineraryControlEntry('start', 'end', place);
         } else {
