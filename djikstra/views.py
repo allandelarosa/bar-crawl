@@ -75,10 +75,16 @@ def path(request):
 
         # print(f"The shortest path is {path[::-1]}")
 
+    # return edge weights, for animation
+    distances = []
+    for i in range(len(path) - 1):
+        distances.append(graph[path[i]][path[i + 1]])
+
     # data = {'path': [coord[loc] for loc in path[::-1]]}
     return JsonResponse({
         'path': [coords[loc] for loc in path[::-1]],
-        'ids': [place_id for place_id in path[::-1]],
+        'ids': path[::-1],
+        'distances': distances[::-1],
     }, safe=False)
 
 

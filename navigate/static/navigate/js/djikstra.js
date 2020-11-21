@@ -33,14 +33,18 @@ function doDijkstra(places) {
         createItinerary(places, response.ids);
 
         path = new google.maps.Polyline({
-            path: response.path,
             geodesic: true,
             strokeColor: '#FF0000',
             strokeOpacity: 1.0,
-            strokeWeight: 2
+            strokeWeight: 2,
+            map: map,
         });
 
-        path.setMap(map);
+
+        let storedPath = [response.path[0]];
+        let totalDist = response.distances.reduce((a, b) => a + b, 0);
+
+        drawPath(0, response.distances, totalDist, response.path, storedPath);
     });
 }
 
@@ -116,4 +120,63 @@ function updateToVisit(place, addingTo) {
     }
 
     if (itineraryControlMinimized) minimizeItineraryControl();
+}
+
+// animation for path
+function drawPath(i, dists, totalDist, bars, storedPath) {
+    // stop animation after all section drawn
+    if (i == dists.length) return;
+
+    // speed of animation
+    const step = 5;
+    // time for animation of entire path
+    const totalTime = 1000; 
+
+    let start = bars[i];
+    let end = bars[i + 1];
+
+    // calculate fraction of time for this section
+    let animTime = (dists[i] / totalDist) * totalTime;
+
+    // temp line that will be animated but replaces
+    let line = new google.maps.Polyline({
+        path: [start, start],
+        geodesic: true,
+        strokeColor: '#FF0000',
+        strokeOpacity: 1.0,
+        strokeWeight: 2,
+        map: map,
+    });
+
+    let currTime = 0;
+
+    let interval = setInterval(() => {
+        currTime += step;
+        if (currTime > animTime) {
+            clearInterval(interval);
+
+            // update actual line
+            storedPath.push(end);
+            path.setPath(storedPath);
+
+            // remove temp line
+            line.setMap(null);
+
+            // draw next section
+            drawPath(i + 1, dists, totalDist, bars, storedPath)
+        } else {
+            // update current section of temp line
+            line.setPath([start, nextPoint(start, end, currTime, animTime)]);
+        }
+    }, step);
+}
+
+// calculate point between start and end to draw to
+function nextPoint(a, b, curr, total) {
+    let ratio = curr / total;
+
+    let lat = a.lat + (b.lat - a.lat) * ratio;
+    let lng = a.lng + (b.lng - a.lng) * ratio;
+
+    return {lat:lat, lng:lng};
 }

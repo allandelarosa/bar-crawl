@@ -111,7 +111,7 @@ async function createInfoWindow(place) {
         )[0],
 
         // prevents map from moving
-        // disableAutoPan: true, 
+        disableAutoPan: true, 
     });
 }
 

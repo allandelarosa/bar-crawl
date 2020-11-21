@@ -61,11 +61,11 @@ async function createItineraryEntry(place, index) {
             }).css('color', '#555'),
 
             // opening hours (deprecated)
-            // place.opening_hours ? (
-            //     place.opening_hours.open_now ?
-            //         $('<div>').text('Open now').css('color', 'green') :
-            //         $('<div>').text('Closed').css('color', 'red')
-            // ) : $(),
+            place.opening_hours ? (
+                place.opening_hours.open_now ?
+                    $('<div>').text('Open now').css('color', 'green') :
+                    $('<div>').text('Closed').css('color', 'red')
+            ) : $(),
         ),
     ).click((event) => {
         // center and expand result when clicked

@@ -28,7 +28,7 @@ function dijkstraItineraryControl() {
         ),
 
         // dijkstra button
-        $('<button>').addClass('btn btn-primary').attr('id', 'do-dijkstra').text('Create Itinerary'),
+        $('<button>').addClass('btn btn-primary btn-sm').attr('id', 'do-dijkstra').text('Create Itinerary'),
     );
 }
 
@@ -126,7 +126,7 @@ async function minimizeItineraryControl() {
 
 async function searchResetControl(places) {
     $('#itinerary-control').empty().off().append(
-        $('<button>').addClass('btn btn-dark reset-btn').click(() => {
+        $('<button>').addClass('btn btn-dark btn-sm reset-btn').click(() => {
             path.setMap(null);
             
             $('#itinerary-control').hide();

@@ -17,14 +17,14 @@
 }
 
 .remove-button {
-    padding: 2% 3% 2% 3%;
-    font-size: 100%;
+    padding: 3px 4px 3px 4px;
+    font-size: 10px;
     float: right;
 }
 
 #minimize-button {
-    padding: 2% 3% 2% 3%;
-    font-size: 100%;
+    padding: 3px 4px 3px 4px;
+    font-size: 10px;
     float: right;
 }
 
