@@ -1,5 +1,5 @@
 function dijkstraItineraryControl() {
-    return $('#itinerary-control').empty().append(
+    $('#itinerary-control').empty().off().append(
         // title bar
         $('<div>').addClass('itinerary-control-title').append(
             $('<button>').addClass('btn btn-outline-light').attr('id', 'minimize-button').append(
@@ -29,10 +29,10 @@ function dijkstraItineraryControl() {
 
         // dijkstra button
         $('<button>').addClass('btn btn-primary').attr('id', 'do-dijkstra').text('Create Itinerary'),
-    )[0];
+    );
 }
 
-function updateItineraryControl(place, addingTo) {
+async function updateItineraryControl(place, addingTo) {
     if (!itineraryControlVisible) {
         itineraryControlVisible = true;
         $('#itinerary-control').fadeIn();
@@ -52,7 +52,7 @@ async function clearItineraryControl() {
     removeItineraryControlEntry('end');
 }
 
-function showItineraryControlEntry(addingTo, place) {
+async function showItineraryControlEntry(addingTo, place) {
     $(`#itinerary-${addingTo} div`).remove();
 
     $(`#itinerary-${addingTo}`).off().append(
@@ -69,7 +69,7 @@ function showItineraryControlEntry(addingTo, place) {
     $(`#itinerary-${addingTo}`).fadeIn();
 }
 
-function removeItineraryControlEntry(addingTo) {
+async function removeItineraryControlEntry(addingTo) {
     $(`#itinerary-${addingTo}`).fadeOut();
 
     if (addingTo === 'start') {
@@ -86,7 +86,7 @@ function removeItineraryControlEntry(addingTo) {
     }
 }
 
-function replaceItineraryControlEntry(first, second, place) {
+async function replaceItineraryControlEntry(first, second, place) {
     $(`#itinerary-${first}`).hide();
 
     $(`#itinerary-${second} div`).remove();
@@ -106,7 +106,7 @@ function replaceItineraryControlEntry(first, second, place) {
     $('#do-dijkstra').fadeOut();
 }
 
-function minimizeItineraryControl() {
+async function minimizeItineraryControl() {
     $('#minimize-button i').toggleClass('fa-compress fa-expand');
 
     if (!$.isEmptyObject(startPoint)) {
@@ -124,10 +124,28 @@ function minimizeItineraryControl() {
     itineraryControlMinimized = !itineraryControlMinimized;
 }
 
-function searchResetControl() {
-    $('#itinerary-control').empty().append(
-        $('<button>').addClass('btn btn-dark').click(() => {
+async function searchResetControl(places) {
+    $('#itinerary-control').empty().off().append(
+        $('<button>').addClass('btn btn-dark reset-btn').click(() => {
+            path.setMap(null);
+            
+            $('#itinerary-control').hide();
 
+            dijkstraItineraryControl();
+            $('#do-dijkstra').off().click(() => {
+                doDijkstra(places);
+            });
+            clearItineraryControl();
+
+            startPoint = {};
+            endPoint = {};
+
+            hideMarkers();
+
+            resetMarkers(places);
+            createSearchResults(places);
+
+            expanded = "";
         }).text('Back to Search')
     );
 }

@@ -123,11 +123,21 @@ async function filterMarkers(ids) {
 
     for (let id of ids) {
         markers[id].setMap(map);
-        markers[id].label = { text: `${index++}`, color: '#FFFFFF' };
+        markers[id].zIndex = -index;
+        markers[id].label.text = index++;
 
         // extend bounds to include marker on map
         bounds.extend(markers[id].position);
     }
     // show map with all markers visible
     map.fitBounds(bounds);
+}
+
+async function resetMarkers(places) {
+    let index = 1;
+    for (let place of places) {
+        markers[place.place_id].setMap(map);
+        markers[place.place_id].zIndex = -index;
+        markers[place.place_id].label.text = index++;
+    }
 }

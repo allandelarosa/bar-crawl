@@ -9,7 +9,6 @@ let currentInfoWindow;
 
 // for markers and search results
 let markers;
-let searchResults;
 
 let expanded;
 

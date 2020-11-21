@@ -23,7 +23,7 @@ function doDijkstra(places) {
         // console.log(response.path);
         // console.log(response.ids);
 
-        searchResetControl();
+        searchResetControl(places);
 
         // update markers and result list to itinerary
         bounds = new google.maps.LatLngBounds();

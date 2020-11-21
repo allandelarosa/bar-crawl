@@ -10,9 +10,6 @@ async function createSearchResults(places) {
         // add new search result
         let result = await createSearchResult(place, i + 1);
         $('#search-results').append(result);
-
-        // save result for later reference
-        searchResults.push(result);
     }
 
     $('#search-results').fadeIn();
@@ -59,12 +56,12 @@ async function createSearchResult(place, index) {
             return info;
         }).css('color', '#555'),
 
-        // opening hours
-        place.opening_hours ? (
-            place.opening_hours.open_now ?
-                $('<div>').text('Open now').css('color', 'green') :
-                $('<div>').text('Closed').css('color', 'red')
-        ) : $(),
+        // opening hours (deprecated)
+        // place.opening_hours ? (
+        //     place.opening_hours.open_now ?
+        //         $('<div>').text('Open now').css('color', 'green') :
+        //         $('<div>').text('Closed').css('color', 'red')
+        // ) : $(),
 
         // buttons to set as start and end
         $('<div>').addClass('hidden-container').append(
@@ -76,7 +73,6 @@ async function createSearchResult(place, index) {
             }),
         ),
     ).click((event) => {
-        // center and expand result when clicked
         expandResult(event.target, place.place_id);
     }).hover(
         // highlight corresponding markers when hovering
@@ -118,33 +114,4 @@ function expandResult(target, id) {
     // show hidden elements
     expanded = id;
     $(`#${expanded} .hidden-container`).slideDown();
-}
-
-async function filterSearchResults(ids) {
-    // set search title
-    $('#search-title').text('Your Itinerary');
-
-    // reset search list
-    $('#search-results')[0].scrollTop = 0;
-    $('#search-results').hide().empty();
-
-    for (let id of ids) {
-        // order search results
-        $('#search-results').append(searchResults[id]);
-
-        // hide index, number not useful anymore
-        $(`#${id} .place-index`).hide();
-
-        // reapply listeners (they go away for some reason)
-        searchResults[id].click(() => {
-            // center and expand result when clicked
-            scrollResults(id);
-        }).hover(
-            // highlight corresponding markers when hovering
-            () => { highlightMarker(markers[id]) },
-            () => { unhighlightMarker(markers[id]) },
-        );
-    }
-
-    $('#search-results').fadeIn();
 }

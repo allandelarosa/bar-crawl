@@ -107,7 +107,7 @@ function resetMap(pos) {
     graph = {};
 
     // reset itinerary control on new search
-    $('#do-dijkstra').hide();
+    // $('#do-dijkstra').hide();
     $('#itinerary-control').hide();
     
     itineraryControlVisible = false;
@@ -119,7 +119,6 @@ function resetMap(pos) {
 
     hideMarkers();
     markers = {};
-    searchResults = [];
 
     if (path) path.setMap(null);
 
@@ -184,6 +183,5 @@ function nearbyCallback(results, status) {
 
     $('#do-dijkstra').off().click(() => {
         doDijkstra(results);
-    })
-
+    });
 }
