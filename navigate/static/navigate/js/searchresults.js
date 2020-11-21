@@ -108,7 +108,11 @@ function expandResult(target, id) {
 
     // if another entry already expanded, unexpand it
     if (expanded.length > 0) {
-        $(`#${expanded} .hidden-container`).hide();
+        if (target) {
+            $(`#${expanded} .hidden-container`).slideUp();
+        } else {
+            $(`#${expanded} .hidden-container`).hide();
+        }
     }
 
     // show hidden elements

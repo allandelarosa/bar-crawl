@@ -163,6 +163,13 @@ function getNearbyPlaces(position, busy) {
 
 // Handle the results (up to 20) of the Nearby Search
 function nearbyCallback(results, status) {
+    // handle zero results
+    if (status === 'ZERO_RESULTS') {
+        $('#search-title').text('No Bars in Your Area!');
+        $('#search-results').hide().empty();
+    }
+
+    // any other error, not sure how to handle
     if (status !== "OK") return;
 
     location_data = []

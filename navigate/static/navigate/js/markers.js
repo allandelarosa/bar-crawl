@@ -13,11 +13,7 @@ function hideMarkers() {
 async function highlightMarker(marker) {
     // move map position to include marker if not visible
     if (!map.getBounds().contains(marker.position)) {
-        let newCenter = {
-            lat: .9 * marker.position.lat() + .1 * map.getCenter().lat(),
-            lng: .9 * marker.position.lng() + .1 * map.getCenter().lng(),
-        };
-        map.panTo(newCenter);
+        map.panTo(marker.position);
     }
 
     let icon = marker.icon;
@@ -113,6 +109,7 @@ async function createInfoWindow(place) {
                 $('<div>').text(place.vicinity.split(',')[0]),
             ),
         )[0],
+
         // prevents map from moving
         // disableAutoPan: true, 
     });
