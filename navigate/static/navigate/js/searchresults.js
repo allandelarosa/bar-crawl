@@ -37,7 +37,6 @@ async function createSearchResult(place, index) {
             // number of ratings
             $('<div>').text(`(${place.user_ratings_total})`).css('color', ' #ccc'),
         ).addClass('ratings-container') : $(),
-        place.rating ? $('<br>') : $(),
 
         // price level and address
         $('<div>').html(() => {

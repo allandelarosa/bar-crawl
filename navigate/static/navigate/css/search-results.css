@@ -7,6 +7,39 @@
     border-left: 1px solid  #aaa;
 }
 
+#search-results {
+    list-style-type: none;
+    padding: 0;
+    height: calc(100% - max(2.5vw, 2.5vh, 20px) - 45px);
+    overflow-y: scroll;
+}
+
+/* to hide scrollbar */
+
+/* #search-results::-webkit-scrollbar {
+    display: none;
+}
+
+#search-results {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+} */
+
+#search-results li {
+    display: flex;
+    flex-direction: column;
+
+    border: 1px solid #e0e0e0;
+    border-radius: 3px;
+    margin: 10px 20px 10px 20px;
+    padding: 20px;
+    font-size: max(1vw, 1vh, 10px);
+}
+
+#search-results li:hover {
+    box-shadow: 0 0 10px #bbb;
+}
+
 #search-title {
     /* font-family: "Calisto MT", "Bookman Old Style", Bookman, "Goudy Old Style", Garamond, "Hoefler Text", "Bitstream Charter", Georgia, serif; */
     font-weight: bold;
@@ -20,7 +53,7 @@
     font-size: max(1.5vw, 1.5vh, 15px);
 }
 
-.place-name:hover {
+.search-results li .place-name:hover {
     text-decoration: underline;
 }
 
@@ -49,46 +82,21 @@
     -webkit-text-fill-color: transparent;
 }
 
-.photo-container {
-    width: max(15vw, 15vh, 150px);
-    height: max(15vw, 15vh, 150px);
-    background-size: cover;
-    background-position: center;
-    margin: 5px 0 5px 0;
-}
-
-.photo-container-2 {
-    width: 150px;
-    height: 150px;
-    background-size: cover;
-    background-position: center;
-    float: right;
-    margin-left: 10px;
-}
-
-/* .info-container {
-    width: 70%;
-    float: left;
-    word-wrap: break-word;
-} */
-
-.info-container-2 {
-    max-width: 150px;
-    float: left;
-}
-
 .hidden-container {
     display: none;
 }
 
 .start-end-btn {
-    margin-top: 5px;
     font-size: max(1vw, 1vh, 10px);
-    margin-right: 5px;
+    margin: 5px 5px 0 0;
 }
 
-.show-more-link {
-    color: blue;
+.photo-container {
+    margin: 5px 0 5px 0;
+    width: max(15vw, 15vh, 150px);
+    height: max(15vw, 15vh, 150px);
+    background-size: cover;
+    background-position: center;
 }
 
 .result-photo {
@@ -97,32 +105,33 @@
     height: 100%;
 }
 
-#search-results {
-    list-style-type: none;
-    padding: 0;
-    height: calc(100% - max(2.5vw, 2.5vh, 20px) - 45px);
-    overflow-y: scroll;
+/* info window styling */
+
+.info-window {
+    max-width: 160px;
+    padding: 5px;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
 }
 
-/* to hide scrollbar */
-
-/* #search-results::-webkit-scrollbar {
-    display: none;
+/* info window divs not spaces same as search results */
+.info-window > :not(:first-child) {
+    margin-top: 3px;
 }
 
-#search-results {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-} */
+.info-window .place-name {
+    font-size: 15px;
+    font-weight: bold;
 
-#search-results li {
-    border: 1px solid #e0e0e0;
-    border-radius: 3px;
-    margin: 10px 20px 10px 20px;
-    padding: 20px;
-    font-size: max(1vw, 1vh, 10px);
+    word-wrap: normal;
 }
 
-#search-results li:hover {
-    box-shadow: 0 0 10px #bbb;
+.info-window .photo-container {
+    width: 150px;
+    height: 150px;
+}
+
+.info-window .Stars {
+    line-height: .9;
 }

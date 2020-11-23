@@ -91,27 +91,47 @@ async function createMarker(place, index) {
 
 async function createInfoWindow(place) {
     return new google.maps.InfoWindow({
-        content: $('<div>').append(
+        content: $('<div>').addClass('info-window').append(
             // picture
             place.photos ? $('<div>').append(
                 $('<img>').addClass('result-photo').attr('src', place.photos[0].getUrl())
-            ).addClass('photo-container-2') : $(),
+            ).addClass('photo-container') : $(),
 
-            // place info
-            $('<div>').addClass('info-container-2').append(
-                // name
-                $('<strong>').text(place.name),
-                // rating
-
-                place.rating ? $('<div>').text(`rating: ${place.rating}`) : $(),
-
-                // address
-                $('<div>').text(place.vicinity.split(',')[0]),
+            // name
+            $('<div>').append(
+                $('<strong>').text(place.name).addClass('place-name'),
             ),
+
+            // ratings
+            place.rating ? $('<div>').append(
+                // rating number
+                $('<div>').text(`${place.rating} `).css('color', ' #fb0'),
+                // star rating
+                $('<div>').addClass('Stars').css('--rating', `${place.rating}`),
+                // number of ratings
+                $('<div>').text(`(${place.user_ratings_total})`).css('color', ' #ccc'),
+            ).addClass('ratings-container') : $(),
+
+            // price level and address
+            $('<div>').html(() => {
+                let info = ''
+                // get price level
+                if (place.price_level) {
+                    let price_level = place.price_level;
+                    while (price_level-- > 0) info += '$';
+
+                    info += ' &#183; ';
+                }
+
+                // get address
+                info += place.vicinity.split(',')[0];
+
+                return info;
+            }).css('color', '#555'),
         )[0],
 
         // prevents map from moving
-        disableAutoPan: true, 
+        disableAutoPan: true,
     });
 }
 
