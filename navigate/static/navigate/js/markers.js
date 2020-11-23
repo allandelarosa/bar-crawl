@@ -1,4 +1,5 @@
 let topZ = 20;
+const markerColor = '#ff3333';
 
 function hideMarkers() {
     if (!markers) return;
@@ -17,14 +18,19 @@ async function highlightMarker(marker) {
     }
 
     let icon = marker.icon;
-    icon.fillColor = '#FFDD33';
+    icon.fillColor = '#ffffff';
+    icon.strokeColor = markerColor;
     marker.setIcon(icon);
+    marker.label.color = markerColor;
     marker.zIndex = ++topZ;
 }
 
 async function unhighlightMarker(marker) {
     let icon = marker.icon;
-    icon.fillColor = '#FF3333';
+    icon.fillColor = markerColor;
+    icon.strokeColor = '#ffffff';
+    marker.setIcon(icon);
+    marker.label.color = '#ffffff';
     marker.setIcon(icon);
 }
 
@@ -50,7 +56,7 @@ async function createMarker(place, index) {
         path: pinSVGFilled,
         anchor: new google.maps.Point(12, 22),
         fillOpacity: 1,
-        fillColor: '#FF3333',
+        fillColor: markerColor,
         strokeWeight: 2,
         strokeColor: '#FFFFFF',
         scale: 2,
@@ -66,18 +72,25 @@ async function createMarker(place, index) {
         zIndex: -index,
     });
 
-    const markerinfowindow = await createInfoWindow(place);
+    // const markerinfowindow = await createInfoWindow(place);
+    const markerinfowindow = await createInfoWindow(marker.position, place);
+    
+    markerinfowindow.setMap(map);
+    markerinfowindow.hide()
+
+    // store info window so it can be cleared
+    infoWindows.push(markerinfowindow);
 
     // Mouseover
     marker.addListener("mouseover", () => {
         highlightMarker(marker);
-        markerinfowindow.open(map, marker);
+        markerinfowindow.show();
     });
 
     // Mouseout
     marker.addListener("mouseout", () => {
         unhighlightMarker(marker);
-        markerinfowindow.close();
+        markerinfowindow.hide();
     });
 
     // Scroll to Place
@@ -87,52 +100,6 @@ async function createMarker(place, index) {
 
     // save marker for later reference
     markers[place.place_id] = marker;
-}
-
-async function createInfoWindow(place) {
-    return new google.maps.InfoWindow({
-        content: $('<div>').addClass('info-window').append(
-            // picture
-            place.photos ? $('<div>').append(
-                $('<img>').addClass('result-photo').attr('src', place.photos[0].getUrl())
-            ).addClass('photo-container') : $(),
-
-            // name
-            $('<div>').append(
-                $('<strong>').text(place.name).addClass('place-name'),
-            ),
-
-            // ratings
-            place.rating ? $('<div>').append(
-                // rating number
-                $('<div>').text(`${place.rating} `).css('color', ' #fb0'),
-                // star rating
-                $('<div>').addClass('Stars').css('--rating', `${place.rating}`),
-                // number of ratings
-                $('<div>').text(`(${place.user_ratings_total})`).css('color', ' #ccc'),
-            ).addClass('ratings-container') : $(),
-
-            // price level and address
-            $('<div>').html(() => {
-                let info = ''
-                // get price level
-                if (place.price_level) {
-                    let price_level = place.price_level;
-                    while (price_level-- > 0) info += '$';
-
-                    info += ' &#183; ';
-                }
-
-                // get address
-                info += place.vicinity.split(',')[0];
-
-                return info;
-            }).css('color', '#555'),
-        )[0],
-
-        // prevents map from moving
-        disableAutoPan: true,
-    });
 }
 
 async function filterMarkers(ids) {

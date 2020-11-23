@@ -9,7 +9,7 @@ let currentInfoWindow;
 
 // for markers and search results
 let markers;
-
+let infoWindows;
 let expanded;
 
 // for djikstra

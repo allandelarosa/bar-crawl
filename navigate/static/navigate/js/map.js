@@ -119,6 +119,8 @@ function resetMap(pos) {
 
     hideMarkers();
     markers = {};
+    clearInfoWindows();
+    infoWindows = [];
 
     if (path) path.setMap(null);
 

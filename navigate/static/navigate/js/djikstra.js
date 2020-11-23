@@ -145,7 +145,7 @@ function drawPath(i, dists, totalDist, bars, storedPath, places) {
     let line = new google.maps.Polyline({
         path: [start, start],
         geodesic: true,
-        strokeColor: '#FF0000',
+        strokeColor: '#ff3333',
         strokeOpacity: 1.0,
         strokeWeight: 2,
         map: map,
