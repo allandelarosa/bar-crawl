@@ -23,7 +23,7 @@ function doDijkstra(places) {
         // console.log(response.path);
         // console.log(response.ids);
 
-        searchResetControl(places);
+        $('#itinerary-control').hide();
 
         // update markers and result list to itinerary
         bounds = new google.maps.LatLngBounds();
@@ -44,7 +44,7 @@ function doDijkstra(places) {
         let storedPath = [response.path[0]];
         let totalDist = response.distances.reduce((a, b) => a + b, 0);
 
-        drawPath(0, response.distances, totalDist, response.path, storedPath);
+        drawPath(0, response.distances, totalDist, response.path, storedPath, places);
     });
 }
 
@@ -123,9 +123,12 @@ function updateToVisit(place, addingTo) {
 }
 
 // animation for path
-function drawPath(i, dists, totalDist, bars, storedPath) {
+function drawPath(i, dists, totalDist, bars, storedPath, places) {
     // stop animation after all section drawn
-    if (i == dists.length) return;
+    if (i == dists.length) {
+        searchResetControl(places);
+        return;
+    }
 
     // speed of animation
     const step = 5;
@@ -163,7 +166,7 @@ function drawPath(i, dists, totalDist, bars, storedPath) {
             line.setMap(null);
 
             // draw next section
-            drawPath(i + 1, dists, totalDist, bars, storedPath)
+            drawPath(i + 1, dists, totalDist, bars, storedPath, places)
         } else {
             // update current section of temp line
             line.setPath([start, nextPoint(start, end, currTime, animTime)]);

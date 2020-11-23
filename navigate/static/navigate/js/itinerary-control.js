@@ -125,7 +125,7 @@ async function minimizeItineraryControl() {
 }
 
 async function searchResetControl(places) {
-    $('#itinerary-control').empty().off().append(
+    $('#itinerary-control').off().empty().append(
         $('<button>').addClass('btn btn-dark btn-sm reset-btn').click(() => {
             path.setMap(null);
             
@@ -147,5 +147,5 @@ async function searchResetControl(places) {
 
             expanded = "";
         }).text('Back to Search')
-    );
+    ).fadeIn();
 }

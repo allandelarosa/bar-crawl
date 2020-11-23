@@ -1,6 +1,11 @@
 {% extends "navigate/base.html" %}
 {% load static %}
 
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'navigate/css/search-results.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'navigate/css/itinerary-control.css' %}">
+{% endblock css %}
+
 {% block content %}
 {% csrf_token %}
 <!-- search bar -->
