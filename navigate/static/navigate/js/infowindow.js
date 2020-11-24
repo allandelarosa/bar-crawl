@@ -62,7 +62,9 @@ function infoWindowContent(place) {
     return $('<div>').addClass('info-window').append(
         // picture
         place.photos ? $('<div>').append(
-            $('<img>').addClass('result-photo').attr('src', place.photos[0].getUrl())
+            $('<img>').addClass(
+                (place.photos[0].width > place.photos[0].height ? 'wide-photo' : 'long-photo'), 'result-photo'
+            ).attr('src', place.photos[0].getUrl())
         ).addClass('photo-container') : $(),
 
         // name

@@ -172,7 +172,7 @@ function nearbyCallback(results, status) {
     }
 
     // any other error, not sure how to handle
-    if (status !== "OK") return;
+    if (status !== 'OK') return;
 
     location_data = []
     for (let place of results) {

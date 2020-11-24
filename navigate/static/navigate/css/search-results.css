@@ -7,10 +7,16 @@
     border-left: 1px solid #aaa;
 }
 
+#search-title {
+    font-weight: bold;
+    font-size: 30px;
+    padding: 10px 20px 10px 20px;
+}
+
 #search-results {
     list-style-type: none;
     padding: 0;
-    height: calc(100% - max(2.5vw, 2.5vh, 20px) - 45px);
+    height: calc(100% - 30px - 45px);
     overflow-y: scroll;
 }
 
@@ -27,31 +33,38 @@
 
 #search-results li {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-between;
+    
     border: 1px solid #e0e0e0;
     border-radius: 3px;
     margin: 10px 20px 10px 20px;
     padding: 20px;
-    font-size: max(1vw, 1vh, 10px);
+    font-size: 14px;
 }
 
 #search-results li:hover {
     box-shadow: 0 0 10px #bbb;
 }
 
-#search-title {
-    /* font-family: "Calisto MT", "Bookman Old Style", Bookman, "Goudy Old Style", Garamond, "Hoefler Text", "Bitstream Charter", Georgia, serif; */
-    font-weight: bold;
-    font-size: max(2.5vw, 2.5vh, 20px);
-    padding: 10px 20px 10px 20px;
-    /* overflow: hidden; */
+.info-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.place-info {
+    display: flex;
+    flex-direction: column;
+
+    margin-top: 10px;
 }
 
 .search-result-title-bar {
-    font-size: max(1.5vw, 1.5vh, 15px);
+    font-size: 19px;
 }
 
-.search-results li .place-name:hover {
+.search-result-title-bar .place-name:hover {
     text-decoration: underline;
 }
 
@@ -59,23 +72,17 @@
     float: left;
 }
 
-:root {
-    --star-size: max(1.2vw, 1.2vh, 12px);
-    --star-color: #ccc;
-    --star-background: #fb0;
-}
-
 .Stars {
     margin: 0 3px 0 5px;
     --percent: calc(var(--rating) / 5 * 100%);
     display: inline-block;
-    font-size: var(--star-size);
-    line-height: 1.25;
+    font-size: 17px;
+    line-height: 1.1;
 }
 
 .Stars::before {
     content: '★★★★★';
-    background: linear-gradient(90deg, var(--star-background) var(--percent), var(--star-color) var(--percent));
+    background: linear-gradient(90deg, #fb0, var(--percent), #ccc var(--percent));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -84,21 +91,46 @@
     display: none;
 }
 
+.button-container {
+    margin-top: 20px;
+}
+
+.button-container button {
+    font-size: 14px;
+}
+
+.button-container :not(:last-child) {
+    margin-right: 5px;
+}
+
 .start-end-btn {
-    font-size: max(1vw, 1vh, 10px);
+    font-size: 15px;
     margin: 5px 5px 0 0;
 }
 
 .photo-container {
-    margin: 5px 0 5px 0;
-    width: max(15vw, 15vh, 150px);
-    height: max(15vw, 15vh, 150px);
-    background-size: cover;
-    background-position: center;
+    margin-left: 15px;
+    min-width: 175px;
+    width: 175px;
+    height: 175px;
+    border-radius: 7px;
+    overflow: hidden;
+    position: relative;
 }
 
 .result-photo {
-    border-radius: 5px;
-    width: 100%;
-    height: 100%;
+    border-radius: 7px;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.wide-photo {
+    height: 175px;
+}
+
+.long-photo {
+    width: 175px;
 }

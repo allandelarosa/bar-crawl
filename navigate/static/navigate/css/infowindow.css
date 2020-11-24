@@ -1,15 +1,15 @@
 /* pixel amount is different inside map iframe */
 
 .info-window {
-    max-width: 180px;
-    padding: 10px 15px 15px 15px;
+    width: 180px;
+    padding: 15px;
     font-size: 12px;
     display: flex;
     flex-direction: column;
 }
 
 .info-window> :not(:first-child) {
-    margin-top: 3px;
+    margin-top: 6px;
 }
 
 .info-window .place-name {
@@ -19,8 +19,18 @@
 }
 
 .info-window .photo-container {
+    margin: 0;
+    min-width: 150px;
     width: 150px;
     height: 150px;
+}
+
+.info-window .wide-photo {
+    height: 150px;
+}
+
+.info-window .long-photo {
+    width: 150px;
 }
 
 .info-window .Stars {
@@ -65,7 +75,7 @@
     /* The tip is a https://css-tricks.com/snippets/css/css-triangle/ */
     width: 0;
     height: 0;
-    /* The tip is 8px high, and 12px wide. */
+    /* The tip is 10px high, and (8+8)px wide. */
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
     border-top: 10px solid white;
