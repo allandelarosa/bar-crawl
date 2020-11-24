@@ -20,10 +20,7 @@ async function createSearchResult(place, index) {
         // info
         $('<div>').addClass('info-container').append(
             // name
-            $('<div>').addClass('search-result-title-bar').append(
-                $('<strong>').addClass('place-index').text(`${index}. `),
-                $('<strong>').text(place.name).addClass('place-name'),
-            ),
+            $('<div>').addClass('search-result-title').text(`${index}. ${place.name}`),
 
             $('<div>').addClass('place-info').append(
                 // ratings
@@ -70,10 +67,7 @@ async function createSearchResult(place, index) {
                     updateToVisit(place, 'end');
                 }),
             ),
-        ).click((event) => {
-            // expandResult(event.target, place.place_id);
-            return;
-        }),
+        ),
         // picture
         place.photos ? $('<div>').append(
             $('<img>').addClass(
@@ -84,15 +78,17 @@ async function createSearchResult(place, index) {
         // highlight corresponding markers when hovering
         () => { highlightMarker(markers[place.place_id]) },
         () => { unhighlightMarker(markers[place.place_id]) },
-    );
+    ).click(() => {
+        scrollResults(place.place_id);
+    });
 }
 
 async function scrollResults(id) {
     // expand result
-    expandResult(null, id);
+    // expandResult(null, id);
 
     // make search result visible
-    $(`#${id}`)[0].scrollIntoView({ behavior: "smooth" });
+    $(`#${id}`)[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 function expandResult(target, id) {

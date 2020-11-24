@@ -18,34 +18,33 @@ function doDijkstra(places) {
     });
 
     fetch(request)
-    .then(response => response.json())
-    .then((response) => {
-        // console.log(response.path);
-        // console.log(response.ids);
+        .then(response => response.json())
+        .then((response) => {
+            // console.log(response.path);
+            // console.log(response.ids);
 
-        $('#itinerary-control').hide();
+            $('#itinerary-control').hide();
 
-        // update markers and result list to itinerary
-        bounds = new google.maps.LatLngBounds();
-        hideMarkers();
-        filterMarkers(response.ids);
-        expanded = "";
-        createItinerary(places, response.ids);
+            // update markers and result list to itinerary
+            bounds = new google.maps.LatLngBounds();
+            hideMarkers();
+            filterMarkers(response.ids);
+            expanded = "";
+            createItinerary(places, response.ids);
 
-        path = new google.maps.Polyline({
-            geodesic: true,
-            strokeColor: '#FF0000',
-            strokeOpacity: 1.0,
-            strokeWeight: 2,
-            map: map,
+            path = new google.maps.Polyline({
+                geodesic: true,
+                strokeColor: '#FF0000',
+                strokeOpacity: 1.0,
+                strokeWeight: 2,
+                map: map,
+            });
+
+            let storedPath = [response.path[0]];
+            let totalDist = response.distances.reduce((a, b) => a + b, 0);
+
+            drawPath(0, response.distances, totalDist, response.path, storedPath, places, response.ids);
         });
-
-
-        let storedPath = [response.path[0]];
-        let totalDist = response.distances.reduce((a, b) => a + b, 0);
-
-        drawPath(0, response.distances, totalDist, response.path, storedPath, places);
-    });
 }
 
 async function createGraph() {
@@ -61,23 +60,23 @@ async function createGraph() {
     });
 
     fetch(request)
-    .then(response => response.json())
-    .then((response) => {
-        graph = response.graph;
+        .then(response => response.json())
+        .then((response) => {
+            graph = response.graph;
 
-        // to display graph
+            // to display graph
 
-        // for (let pair of response.to_display) {
-        //     let edge = new google.maps.Polyline({
-        //         path: pair,
-        //         geodesic: true,
-        //         strokeColor: '#FF0000',
-        //         strokeOpacity: 1.0,
-        //         strokeWeight: 2
-        //     });
-        //     edge.setMap(map)
-        // }
-    });
+            // for (let pair of response.to_display) {
+            //     let edge = new google.maps.Polyline({
+            //         path: pair,
+            //         geodesic: true,
+            //         strokeColor: '#FF0000',
+            //         strokeOpacity: 1.0,
+            //         strokeWeight: 2
+            //     });
+            //     edge.setMap(map)
+            // }
+        });
 }
 
 // set start and end points
@@ -86,7 +85,7 @@ function updateToVisit(place, addingTo) {
         // update start point
         startPoint = {
             id: place.place_id,
-            lat: place.geometry.location.lat(), 
+            lat: place.geometry.location.lat(),
             lng: place.geometry.location.lng()
         };
 
@@ -101,7 +100,7 @@ function updateToVisit(place, addingTo) {
         // update end point
         endPoint = {
             id: place.place_id,
-            lat: place.geometry.location.lat(), 
+            lat: place.geometry.location.lat(),
             lng: place.geometry.location.lng()
         }
 
@@ -133,7 +132,7 @@ function drawPath(i, dists, totalDist, bars, storedPath, places) {
     // speed of animation
     const step = 5;
     // time for animation of entire path
-    const totalTime = 1000; 
+    const totalTime = 1000;
 
     let start = bars[i];
     let end = bars[i + 1];
@@ -166,7 +165,7 @@ function drawPath(i, dists, totalDist, bars, storedPath, places) {
             line.setMap(null);
 
             // draw next section
-            drawPath(i + 1, dists, totalDist, bars, storedPath, places)
+            drawPath(i + 1, dists, totalDist, bars, storedPath, places);
         } else {
             // update current section of temp line
             line.setPath([start, nextPoint(start, end, currTime, animTime)]);
@@ -181,5 +180,5 @@ function nextPoint(a, b, curr, total) {
     let lat = a.lat + (b.lat - a.lat) * ratio;
     let lng = a.lng + (b.lng - a.lng) * ratio;
 
-    return {lat:lat, lng:lng};
+    return { lat: lat, lng: lng };
 }

@@ -5,11 +5,17 @@
     padding: 10px;
     background-color: #303030;
     color: white;
+
+    box-shadow: 0 3px 3px -3px #555555;
 }
 
 .itinerary-control-entry {
     height: 25px;
     margin-top: 7px;
+}
+
+.itinerary-control-entry .place-name:hover {
+    text-decoration: underline;
 }
 
 .itinerary-control-title {
@@ -35,8 +41,4 @@
 
 .reset-btn {
     width: 100%;
-}
-
-.btn {
-    font-size: 12px;
 }
