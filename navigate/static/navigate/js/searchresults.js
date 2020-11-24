@@ -20,7 +20,9 @@ async function createSearchResult(place, index) {
         // info
         $('<div>').addClass('info-container').append(
             // name
-            $('<div>').addClass('search-result-title').text(`${index}. ${place.name}`),
+            $('<div>').addClass('search-result-title').append(
+                $('<strong>').text(`${index}. ${place.name}`),
+            ),
 
             $('<div>').addClass('place-info').append(
                 // ratings
@@ -84,40 +86,6 @@ async function createSearchResult(place, index) {
 }
 
 async function scrollResults(id) {
-    // expand result
-    // expandResult(null, id);
-
     // make search result visible
     $(`#${id}`)[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
-}
-
-function expandResult(target, id) {
-    // don't unexpand if result was not clicked
-    if (!target && expanded === id) return;
-
-    // if button or link was clicked, do nothing
-    if (target) {
-        if (target.tagName === 'BUTTON') return;
-        if (target.tagName === 'A') return;
-    }
-
-    // if result was clicked and already expanded, unexpand
-    if (expanded === id) {
-        $(`#${expanded} .hidden-container`).slideUp();
-        expanded = "";
-        return;
-    }
-
-    // if another entry already expanded, unexpand it
-    if (expanded.length > 0) {
-        if (target) {
-            $(`#${expanded} .hidden-container`).slideUp();
-        } else {
-            $(`#${expanded} .hidden-container`).hide();
-        }
-    }
-
-    // show hidden elements
-    expanded = id;
-    $(`#${expanded} .hidden-container`).slideDown();
 }

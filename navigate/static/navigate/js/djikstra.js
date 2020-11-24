@@ -122,9 +122,10 @@ function updateToVisit(place, addingTo) {
 }
 
 // animation for path
-function drawPath(i, dists, totalDist, bars, storedPath, places) {
+function drawPath(i, dists, totalDist, bars, storedPath, places, ids) {
     // stop animation after all section drawn
     if (i == dists.length) {
+        expandItineraryEntry(ids[0]);
         searchResetControl(places);
         return;
     }
@@ -165,7 +166,7 @@ function drawPath(i, dists, totalDist, bars, storedPath, places) {
             line.setMap(null);
 
             // draw next section
-            drawPath(i + 1, dists, totalDist, bars, storedPath, places);
+            drawPath(i + 1, dists, totalDist, bars, storedPath, places, ids);
         } else {
             // update current section of temp line
             line.setPath([start, nextPoint(start, end, currTime, animTime)]);

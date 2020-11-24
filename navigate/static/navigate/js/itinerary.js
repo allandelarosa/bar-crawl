@@ -23,9 +23,12 @@ async function createItineraryEntry(place, index) {
         // info
         $('<div>').addClass('info-container').append(
             // name
-            $('<div>').addClass('search-result-title').text(`${index}. ${place.name}`),
+            $('<div>').addClass('search-result-title').append(
+                $('<strong>').text(`${index}. `),
+                $('<strong>').text(place.name).addClass('clickable-title'),
+            ),
 
-            $('<div>').addClass('place-info').append(
+            $('<div>').addClass('place-info hidden').append(
                 // ratings
                 place.rating ? $('<div>').append(
                     // rating number
@@ -59,19 +62,59 @@ async function createItineraryEntry(place, index) {
                         $('<div>').text('Open now').css('color', 'green') :
                         $('<div>').text('Closed').css('color', 'red')
                 ) : $(),
-            ),
+            ).hide(),
         ),
         // picture
         place.photos ? $('<div>').append(
             $('<img>').addClass(
                 (place.photos[0].width > place.photos[0].height ? 'wide-photo' : 'long-photo'), 'result-photo'
             ).attr('src', place.photos[0].getUrl())
-        ).addClass('photo-container') : $(),
+        ).addClass('photo-container hidden').hide() : $(),
     ).hover(
         // highlight corresponding markers when hovering
         () => { highlightMarker(markers[place.place_id]) },
         () => { unhighlightMarker(markers[place.place_id]) },
     ).click(() => {
-        scrollResults(place.place_id);
+        expandItineraryEntry(place.place_id);
     });
+}
+
+async function expandItineraryEntry(id) {
+    // if another element expanded, unexpand it first
+    unexpandItineraryEntry($('.expanded').attr('id'));
+
+    // grow for info
+    $(`#${id} .hidden`).animate({ height: 'toggle', 'margin-top': 'toggle' }, () => {
+        scrollResults(id);
+    });
+
+    // fade in elements
+    $(`#${id} .hidden`).animate({ opacity: '1' });
+
+    // swap listener from li to title
+    $(`#${id}`).off('click').toggleClass('expanded').click(() => {
+        scrollResults(id);
+    });
+    $(`#${id} .clickable-title`).click((event) => {
+        event.stopPropagation();
+        unexpandItineraryEntry(id);
+    });
+}
+
+async function unexpandItineraryEntry(id) {
+    // if nothing was expanded, do nothing
+    if (!id) return;
+
+    // fade out elements
+    $(`#${id} .hidden`).animate({ opacity: '0' });
+
+    // shrink space
+    $(`#${id} .hidden`).animate({ height: 'toggle', 'margin-top': 'toggle' });
+
+    // swap listener from title to li
+    $(`#${id} .clickable-title`).off();
+    $(`#${id}`).toggleClass('expanded').click(() => {
+        expandItineraryEntry(id);
+    });
+    
 }

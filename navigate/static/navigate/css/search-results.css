@@ -53,6 +53,8 @@
 }
 
 .info-container {
+    flex-grow: 1;
+
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -67,7 +69,12 @@
 
 .search-result-title {
     font-size: 19px;
-    font-weight: bold;
+
+    width: 100%;
+}
+
+.clickable-title:hover {
+    text-decoration: underline;
 }
 
 .ratings-container div {
@@ -87,10 +94,6 @@
     background: linear-gradient(90deg, #fb0, var(--percent), #ccc var(--percent));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-}
-
-.hidden-container {
-    display: none;
 }
 
 .button-container {
@@ -124,4 +127,8 @@
 
 .long-photo {
     width: 175px;
+}
+
+.hidden {
+    opacity: 0%;
 }
