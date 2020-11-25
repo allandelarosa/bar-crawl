@@ -2,33 +2,40 @@ function dijkstraItineraryControl() {
     $('#itinerary-control').empty().off().append(
         // title bar
         $('<div>').addClass('itinerary-control-title').append(
+            $('<div>').text('Selected Bars'),
             $('<button>').addClass('btn btn-outline-light').attr('id', 'minimize-button').append(
                 $('<i>').addClass('fa fa-compress'),
-            ).click(() => {
+            ).click((event) => {
+                event.stopPropagation();
                 minimizeItineraryControl();
             }),
-            $('<strong>').text('Selected Bars'),
-        ),
+        ).click(() => {
+            minimizeItineraryControl();
+        }),
 
         // start and end entries
-        $('<div>').attr('id', 'itinerary-start').addClass('itinerary-control-entry').append(
-            $('<button>').addClass('btn btn-danger remove-button').append(
-                $('<i>').addClass('fa fa-minus'),
-            ).click(() => {
-                removeItineraryControlEntry('start');
-            }),
-        ),
+        $('<div>').addClass('itinerary-control-entries').append(
+            $('<div>').attr('id', 'itinerary-start').append(
+                $('<button>').addClass('btn btn-danger remove-button').append(
+                    $('<i>').addClass('fa fa-minus'),
+                ).click(() => {
+                    removeItineraryControlEntry('start');
+                }),
+            ),
 
-        $('<div>').attr('id', 'itinerary-end').addClass('itinerary-control-entry').append(
-            $('<button>').addClass('btn btn-danger remove-button').append(
-                $('<i>').addClass('fa fa-minus'),
-            ).click(() => {
-                removeItineraryControlEntry('end');
-            }),
+            $('<div>').attr('id', 'itinerary-end').append(
+                $('<button>').addClass('btn btn-danger remove-button').append(
+                    $('<i>').addClass('fa fa-minus'),
+                ).click(() => {
+                    removeItineraryControlEntry('end');
+                }),
+            ),
         ),
 
         // dijkstra button
-        $('<button>').addClass('btn btn-primary btn-sm').attr('id', 'do-dijkstra').text('Create Itinerary'),
+        $('<div>').addClass('dijkstra-container').append(
+            $('<button>').addClass('btn btn-primary btn-sm').attr('id', 'do-dijkstra').text('Create Itinerary'),
+        ),
     );
 }
 
@@ -78,7 +85,7 @@ async function removeItineraryControlEntry(addingTo) {
         endPoint = {};
     }
 
-    $('#do-dijkstra').fadeOut();
+    $('.dijkstra-container').fadeOut();
 
     if ($.isEmptyObject(startPoint) && $.isEmptyObject(endPoint)) {
         itineraryControlVisible = false;
@@ -103,22 +110,18 @@ async function replaceItineraryControlEntry(first, second, place) {
     );
     $(`#itinerary-${second}`).show();
 
-    $('#do-dijkstra').fadeOut();
+    $('.dijkstra-container').fadeOut();
 }
 
 async function minimizeItineraryControl() {
     $('#minimize-button i').toggleClass('fa-compress fa-expand');
 
-    if (!$.isEmptyObject(startPoint)) {
-        itineraryControlMinimized ? $('#itinerary-start').slideDown() : $('#itinerary-start').slideUp();
-    }
+    // $('.itinerary-control-title').toggleClass('control-expanded');
 
-    if (!$.isEmptyObject(endPoint)) {
-        itineraryControlMinimized ? $('#itinerary-end').slideDown() : $('#itinerary-end').slideUp();
-    }
+    itineraryControlMinimized ? $('.itinerary-control-entries').slideDown() : $('.itinerary-control-entries').slideUp();
 
     if (!$.isEmptyObject(startPoint) && !$.isEmptyObject(endPoint)) {
-        itineraryControlMinimized ? $('#do-dijkstra').slideDown() : $('#do-dijkstra').slideUp();
+        itineraryControlMinimized ? $('.dijkstra-container').slideDown() : $('.dijkstra-container').slideUp();
     }
 
     itineraryControlMinimized = !itineraryControlMinimized;
@@ -126,7 +129,7 @@ async function minimizeItineraryControl() {
 
 async function searchResetControl(places) {
     $('#itinerary-control').off().empty().append(
-        $('<button>').addClass('btn btn-dark btn-sm reset-btn').click(() => {
+        $('<button>').addClass('btn btn-dark reset-btn').click(() => {
             path.setMap(null);
             
             $('#itinerary-control').hide();
@@ -136,6 +139,8 @@ async function searchResetControl(places) {
                 doDijkstra(places);
             });
             clearItineraryControl();
+
+            itineraryCreated = false;
 
             startPoint = {};
             endPoint = {};

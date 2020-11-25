@@ -22,5 +22,7 @@ let endPoint;
 let itineraryControlVisible = false;
 let itineraryControlMinimized = false;
 
+let itineraryCreated;
+
 let graph;
 let path;

@@ -25,6 +25,8 @@ function doDijkstra(places) {
 
             $('#itinerary-control').hide();
 
+            itineraryCreated = true;
+
             // update markers and result list to itinerary
             bounds = new google.maps.LatLngBounds();
             hideMarkers();
@@ -118,7 +120,7 @@ function updateToVisit(place, addingTo) {
 
     // enable button if valid start and end
     if (!$.isEmptyObject(startPoint) && !$.isEmptyObject(endPoint)) {
-        $('#do-dijkstra').fadeIn();
+        $('.dijkstra-container').fadeIn();
     }
 
     if (itineraryControlMinimized) minimizeItineraryControl();

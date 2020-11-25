@@ -95,7 +95,7 @@ async function createMarker(place, index) {
 
     // Scroll to Place
     marker.addListener("click", () => {
-        scrollResults(place.place_id);
+        itineraryCreated ? expandItineraryEntry(place.place_id) : scrollResults(place.place_id);
     });
 
     // save marker for later reference

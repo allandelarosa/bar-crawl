@@ -36,12 +36,11 @@ function initMap() {
                 map = new google.maps.Map(document.getElementById('map'), {
                     center: pos,
                     zoom: 15,
+                    mapTypeControl: false,
                     zoomControlOptions: {
                         position: google.maps.ControlPosition.LEFT_BOTTOM,
                     },
-                    streetViewControlOptions: {
-                        position: google.maps.ControlPosition.LEFT_BOTTOM,
-                    },
+                    streetViewControl: false,
                     fullscreenControlOptions: {
                         position: google.maps.ControlPosition.RIGHT_BOTTOM,
                     },
@@ -112,6 +111,8 @@ function resetMap(pos) {
     
     itineraryControlVisible = false;
     if (itineraryControlMinimized) minimizeItineraryControl();
+
+    itineraryCreated = false;
 
     expanded = "";
     startPoint = {};
