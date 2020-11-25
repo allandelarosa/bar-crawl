@@ -42,6 +42,7 @@
 
     padding: 6px;
     margin: 10px 20px;
+    background-color: #353535;
 
     border: 1px solid white;
     border-radius: 5px;
@@ -78,13 +79,18 @@
 
 .dijkstra-container {
     padding: 0 20px 10px 20px;
+
+    display: flex;
+    justify-content: center;
 }
 
 #do-dijkstra {
-    width: 100%;
+    width: 200px;
 }
 
 .reset-btn {
+    padding: 10px 20px;
     width: 100%;
+
     font-size: 15px;
 }

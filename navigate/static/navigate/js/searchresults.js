@@ -62,10 +62,10 @@ async function createSearchResult(place, index) {
 
             // buttons to set as start and end
             $('<div>').addClass('button-container').append(
-                $('<button>').addClass('btn btn-outline-dark btn-sm').text('Set as start').click(() => {
+                $('<button>').addClass('btn btn-outline-primary btn-sm').text('Set as start').click(() => {
                     updateToVisit(place, 'start');
                 }),
-                $('<button>').addClass('btn btn-outline-dark btn-sm').text('Set as end').click(() => {
+                $('<button>').addClass('btn btn-outline-primary btn-sm').text('Set as end').click(() => {
                     updateToVisit(place, 'end');
                 }),
             ),
