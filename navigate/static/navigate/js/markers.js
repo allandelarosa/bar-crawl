@@ -66,7 +66,7 @@ async function createMarker(place, index) {
     const marker = new google.maps.Marker({
         map: map,
         icon: markerImage,
-        title: place.name,
+        // title: place.name,
         position: place.geometry.location,
         label: { text: `${index}`, color: '#FFFFFF' },
         zIndex: -index,

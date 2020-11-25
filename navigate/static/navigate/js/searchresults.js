@@ -50,7 +50,7 @@ async function createSearchResult(place, index) {
                     info += place.vicinity.split(',')[0];
 
                     return info;
-                }).css('color', '#555'),
+                }),
 
                 // opening hours (deprecated)
                 place.opening_hours ? (

@@ -18,8 +18,7 @@
 }
 
 .info-window .photo-container {
-    margin: 0 0 5px 0;
-    min-width: 150px;
+    margin-bottom: 5px;
     width: 150px;
     height: 150px;
 }

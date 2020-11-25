@@ -1,4 +1,9 @@
+let detailsRetrieved;
+
 async function createItinerary(places, ids) {
+    // reset details
+    detailsRetrieved = new Set();
+
     // set title
     $('#search-title').text('Your Itinerary');
 
@@ -14,8 +19,6 @@ async function createItinerary(places, ids) {
             }
         }
     }
-
-    $('#search-results').fadeIn();
 }
 
 async function createItineraryEntry(place, index) {
@@ -54,14 +57,14 @@ async function createItineraryEntry(place, index) {
                     info += place.vicinity.split(',')[0];
 
                     return info;
-                }).css('color', '#555'),
+                }),
 
                 // opening hours (deprecated)
-                place.opening_hours ? (
-                    place.opening_hours.open_now ?
-                        $('<div>').text('Open now').css('color', 'green') :
-                        $('<div>').text('Closed').css('color', 'red')
-                ) : $(),
+                // place.opening_hours ? (
+                //     place.opening_hours.open_now ?
+                //         $('<div>').text('Open now').css('color', 'green') :
+                //         $('<div>').text('Closed').css('color', 'red')
+                // ) : $(),
             ).hide(),
         ),
         // picture
@@ -80,41 +83,93 @@ async function createItineraryEntry(place, index) {
 }
 
 async function expandItineraryEntry(id) {
+    // get additional details if not already
+    if (!detailsRetrieved.has(id)) {
+        await getAdditionalInfo(id);
+    }
+
     // if another element expanded, unexpand it first
-    unexpandItineraryEntry($('.expanded').attr('id'));
-
-    // grow for info
-    $(`#${id} .hidden`).animate({ height: 'toggle', 'margin-top': 'toggle' }, () => {
-        scrollResults(id);
-    });
-
-    // fade in elements
-    $(`#${id} .hidden`).animate({ opacity: '1' });
+    unexpandItineraryEntry($('.itinerary-entry-expanded').attr('id'));
 
     // swap listener from li to title
-    $(`#${id}`).off('click').toggleClass('expanded').click(() => {
+    $(`#${id}`).off('click').toggleClass('itinerary-entry-expanded').click(() => {
         scrollResults(id);
     });
     $(`#${id} .clickable-title`).click((event) => {
         event.stopPropagation();
         unexpandItineraryEntry(id);
     });
+
+    // grow for info
+    $(`#${id} .place-info`).animate({ height: 'toggle', 'margin-top': 'toggle' }, () => {
+        scrollResults(id);
+    });
+
+    $(`#${id} .photo-container`).animate({height: 'toggle'});
+
+    // fade in elements
+    $(`#${id} .hidden`).animate({ opacity: '1' });
 }
 
 async function unexpandItineraryEntry(id) {
     // if nothing was expanded, do nothing
     if (!id) return;
 
+    // swap listener from title to li
+    $(`#${id} .clickable-title`).off();
+    $(`#${id}`).off('click').toggleClass('itinerary-entry-expanded').click(() => {
+        expandItineraryEntry(id);
+    });
+
     // fade out elements
     $(`#${id} .hidden`).animate({ opacity: '0' });
 
     // shrink space
-    $(`#${id} .hidden`).animate({ height: 'toggle', 'margin-top': 'toggle' });
+    $(`#${id} .photo-container`).animate({height: 'toggle'});
 
-    // swap listener from title to li
-    $(`#${id} .clickable-title`).off();
-    $(`#${id}`).toggleClass('expanded').click(() => {
-        expandItineraryEntry(id);
+    $(`#${id} .place-info`).animate({ height: 'toggle', 'margin-top': 'toggle' });
+}
+
+async function getAdditionalInfo(id) {
+    const request = {
+        placeId: id,
+        fields: [
+            'business_status',
+            'formatted_phone_number',
+            'utc_offset_minutes',
+            'opening_hours',
+            'url',
+            'website',
+        ],
+    };
+
+    detailsRetrieved.add(id);
+
+    await service.getDetails(request, (place, status) => {
+        if (status !== 'OK') return;
+
+        $(`#${id} .place-info`).append(
+            // opening hours 
+            place.opening_hours ? (
+                place.opening_hours.isOpen() ?
+                    $('<div>').text('Open now').css('color', 'green') :
+                    $('<div>').text('Closed').css('color', 'red')
+            ) : $(),
+
+            // phone number
+            place.formatted_phone_number ?
+                $('<div>').text(place.formatted_phone_number) :
+                $(),
+
+            // website
+            place.website ? $('<div>').append(
+                $('<a>').text('Visit website').attr({href: place.website, target: '_blank'}).addClass('btn btn-link')
+            ) : $(),
+
+            // google maps link
+            $('<div>').append(
+                $('<a>').text('View on Google Maps').attr({href: place.url, target: '_blank'}).addClass('btn btn-link')
+            ),
+        );
     });
-    
 }

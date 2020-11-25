@@ -34,16 +34,19 @@ function doDijkstra(places) {
 
             path = new google.maps.Polyline({
                 geodesic: true,
-                strokeColor: '#FF0000',
+                strokeColor: '#ff3333',
                 strokeOpacity: 1.0,
-                strokeWeight: 2,
+                strokeWeight: 3,
                 map: map,
             });
 
             let storedPath = [response.path[0]];
             let totalDist = response.distances.reduce((a, b) => a + b, 0);
 
-            drawPath(0, response.distances, totalDist, response.path, storedPath, places, response.ids);
+            $('#search-results').fadeIn(1000, () => {
+                expandItineraryEntry(response.ids[0]);
+            });
+            drawPath(0, response.distances, totalDist, response.path, storedPath, places);
         });
 }
 
@@ -122,10 +125,9 @@ function updateToVisit(place, addingTo) {
 }
 
 // animation for path
-function drawPath(i, dists, totalDist, bars, storedPath, places, ids) {
+function drawPath(i, dists, totalDist, bars, storedPath, places) {
     // stop animation after all section drawn
     if (i == dists.length) {
-        expandItineraryEntry(ids[0]);
         searchResetControl(places);
         return;
     }
@@ -147,7 +149,7 @@ function drawPath(i, dists, totalDist, bars, storedPath, places, ids) {
         geodesic: true,
         strokeColor: '#ff3333',
         strokeOpacity: 1.0,
-        strokeWeight: 2,
+        strokeWeight: 3,
         map: map,
     });
 
@@ -166,7 +168,7 @@ function drawPath(i, dists, totalDist, bars, storedPath, places, ids) {
             line.setMap(null);
 
             // draw next section
-            drawPath(i + 1, dists, totalDist, bars, storedPath, places, ids);
+            drawPath(i + 1, dists, totalDist, bars, storedPath, places);
         } else {
             // update current section of temp line
             line.setPath([start, nextPoint(start, end, currTime, animTime)]);
