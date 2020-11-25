@@ -23,6 +23,10 @@ function initMap() {
                 });
             }
 
+            $('.logo-nav img').click(() => {
+                window.location.href = "/";
+            });
+
             geocoder.geocode({ address: input.value }, (results, status) => {
                 if (status !== 'OK') return;
 
