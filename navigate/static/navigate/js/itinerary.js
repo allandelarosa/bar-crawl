@@ -158,17 +158,31 @@ async function getAdditionalInfo(id) {
 
             // phone number
             place.formatted_phone_number ?
-                $('<div>').text(place.formatted_phone_number) :
-                $(),
+                $('<div>').append(
+                    $('<div>').append(
+                        $('<i>').addClass('fa fa-phone info-icon'),
+                    ), 
+                    $('<div>').text(place.formatted_phone_number),
+                ).addClass('additional-info') : $(),
 
             // website
             place.website ? $('<div>').append(
-                $('<a>').text('Visit website').attr({href: place.website, target: '_blank'}).addClass('btn btn-link')
+                $('<a>').append(
+                    $('<div>').append(
+                        $('<i>').addClass('fa fa-globe info-icon'),
+                    ), 
+                    $('<div>').text('Visit website'),
+                ).attr({href: place.website, target: '_blank', title: place.website}).addClass('btn btn-link additional-info'),
             ) : $(),
 
             // google maps link
             $('<div>').append(
-                $('<a>').text('View on Google Maps').attr({href: place.url, target: '_blank'}).addClass('btn btn-link')
+                $('<a>').append(
+                    $('<div>').append(
+                        $('<i>').addClass('fa fa-external-link info-icon'),
+                    ), 
+                    $('<div>').text('View on Google Maps'),
+                ).attr({href: place.url, target: '_blank', title: place.url}).addClass('btn btn-link additional-info')
             ),
         );
     });

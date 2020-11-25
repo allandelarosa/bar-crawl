@@ -72,7 +72,7 @@
     display: flex;
     flex-direction: column;
 
-    margin-top: 10px;
+    margin-top: 5px;
 }
 
 .search-result-title {
@@ -143,4 +143,19 @@
 
 .hidden {
     opacity: 0%;
+}
+
+.additional-info {
+    display: flex;
+    flex-direction: row;
+    margin-top: 5px;
+}
+
+/* .additional-info > :not(:first-child) {
+    margin-left: 7px;
+} */
+
+.info-icon {
+    /* display: none; */
+    margin-right: 7px;
 }
