@@ -5,8 +5,13 @@
 }
 
 .logo {
-  height: 200px;
-  width: 200px;
+  height: 250px;
+  width: 250px;
+}
+
+.logo img{
+  width: 100%;
+  height: 100%;
 }
 
 body, html {
@@ -14,7 +19,35 @@ body, html {
   margin: 0;
 }
 
-.bgimg-1, .bgimg-2 {
+.split {
+  height: 100%;
+  width: 50%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  overflow-x: hidden;
+  padding-top: 20px;
+  display: block;
+}
+
+.split-container{
+display: flex;
+flex-direction: row;
+
+}
+
+/* Control the left side */
+.left {
+  left: 0;
+}
+
+/* Control the right side */
+.right {
+  right: 0;
+/*  background-color: white;*/
+}
+
+.bgimg-1, .bgimg-2, .bgimg-3 {
   position: relative;
   background-position: center;
   background-size: cover;
@@ -23,10 +56,16 @@ body, html {
 
 .bgimg-1 {
   background-image: url('/static/navigate/images/barpic.jpeg');
-  min-height: 100%;
+  min-height: 100vh;
 }
 
 .bgimg-2 {
+  background-color: #B89063;
+  height: 100vh;
+}
+
+
+.bgimg-3 {
   background-color: #F0F0F0;
   height: 100vh;
 }
@@ -39,23 +78,13 @@ body, html {
 
 }
 
-.imgSteps img{
-  width: 100%;
-  height: auto;
-}
-
-.logo img {
-  max-width: 100%;
-  max-height: 100%;
-}
-
 .descrip{
-  color: white;
-/*  background-color: white;
-*/  text-align: center;
+  color: black;
   padding: 1px;
-  font-size: 25px;
-  font-family: "Trebuchet MS", Helvetica, sans-serif;
+  font-size: 40px;
+  font-family: "Arial Verdana", Helvetica, sans-serif;
+  font-weight: bold;
+  margin-bottom: -40px;
 }
 
 .logo-nav {
@@ -74,15 +103,6 @@ body, html {
   color: #606C78;
   font-family: "Arial Black", Gadget, sans-serif;
   font-weight: 20;
-}
-
-.desc {
-  text-align: center;
-  color: darkgrey;
-}
-
-.searchbar-color {
-  color: #697988;
 }
 
 .centered {
@@ -113,11 +133,40 @@ body, html {
   background: #3D3D3D;
 }
 
+#search-bar-main {
+  height: 50px;
+  min-width: 550px;
+  width: calc(60% - 130px - 20px);
+/*  margin: 25px 10px 25px 10px;*/
+  border: 1px solid darkgrey;
+  border-radius: 8px;
+}
+
+#search-bar-main * {
+  border: 0px;
+  outline: none;
+}
+
+#search-bar-main button {
+  width: 40px;
+  background-color: white;
+  color: #ccc;
+  border-radius: 0 8px 8px 0;
+}
+
+#search-bar-main input {
+  padding-left: 15px;
+  width: calc(100% - 40px);
+  border-radius: 8px 0 0 8px;
+}
+
 #search-bar {
   height: 50px;
-  min-width: 300px;
+  min-width: 550px;
   width: calc(60% - 130px - 20px);
   margin: 25px 10px 25px 10px;
+  border: 1px solid darkgrey;
+  border-radius: 8px;
 }
 
 #search-bar * {
@@ -141,28 +190,4 @@ body, html {
 #map {
   height: 100%;
   width: 100%;
-}
-
-.homepage-search {
-  height: 100px;
-  width: 90vw;
-}
-
-.homepage {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-
-  background-image: url('/static/navigate/images/barpic.jpeg');
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-size: cover;
-}
-
-.homepage-elements {
-  display: flex;
-  flex-direction: column;
-  transform: translate(-50%, -80%);
-  max-height: 100%;
-  max-width: 100%;
 }
