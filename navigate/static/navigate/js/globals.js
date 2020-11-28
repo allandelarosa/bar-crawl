@@ -4,8 +4,7 @@ const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 let map;
 let bounds;
 let service;
-let infoWindow;
-let currentInfoWindow;
+let geocoder;
 
 // for markers and search results
 let markers;
