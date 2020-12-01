@@ -98,7 +98,7 @@ body, html {
 .top {
   display: flex;
   height: 100px;
-  background: #2f2626;
+  background: #222;
 }
 
 .bottom {
