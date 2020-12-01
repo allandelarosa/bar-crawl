@@ -3,6 +3,6 @@ function initMap() {
     const searchBox = new google.maps.places.SearchBox(input);
 
     searchBox.addListener("places_changed", () => {
-        window.location.href = "/hop/" + input.value;
+        window.location.href = "/crawl/" + input.value;
     });
 }

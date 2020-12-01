@@ -46,7 +46,7 @@ function initMap() {
 
         searchBox.addListener("places_changed", () => {
             // change url of page without redirecting
-            window.history.replaceState("", "", "/hop/" + input.value);
+            window.history.replaceState("", "", "/crawl/" + input.value);
 
             const places = searchBox.getPlaces();
             let newpos = places[0].geometry.location;
@@ -68,16 +68,16 @@ function redirectPage() {
             // perform search on user's location
             geocoder.geocode({ location: pos }, (results, status) => {
                 if (status !== 'OK') return;
-                window.location.replace('/hop/' + results[0].formatted_address);
+                window.location.replace('/crawl/' + results[0].formatted_address);
             });
 
         }, () => {
             // use default location if geolocation denied
-            window.location.replace('/hop/New York, NY, USA');
+            window.location.replace('/crawl/New York, NY, USA');
         });
     } else {
         // use default location if geolocation not supported
-        window.location.replace('/hop/New York, NY, USA');
+        window.location.replace('/crawl/New York, NY, USA');
     }
 }
 
