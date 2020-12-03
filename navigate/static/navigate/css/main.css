@@ -9,12 +9,63 @@
   width: 200px;
 }
 
+.logo img{
+  width: 100%;
+  height: 100%;
+}
+
+.motto {
+  width: 100%;
+}
+
+.motto img{
+
+  float: right;
+
+  width: 60%;
+  min-width: 250px;
+}
+
+
 body, html {
   height: 100%;
   margin: 0;
 }
 
-.bgimg-1, .bgimg-2 {
+.split {
+  height: 100%;
+  width: 50%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  overflow-x: hidden;
+  padding-top: 20px;
+  display: block;
+}
+
+.split-container{
+display: flex;
+flex-direction: row;
+
+}
+
+/* Control the left side */
+.left {
+  left: 0;
+}
+
+/* Control the right side */
+.right {
+  right: 0;
+/*  background-color: white;*/
+}
+
+.right .centered{
+  width: 100%;
+  padding: 50px;
+}
+
+.bgimg-1, .bgimg-2, .bgimg-3, .bgimg-4 {
   position: relative;
   background-position: center;
   background-size: cover;
@@ -23,32 +74,77 @@ body, html {
 
 .bgimg-1 {
   background-image: url('/static/navigate/images/barpic.jpeg');
-  min-height: 100%;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .bgimg-2 {
-  background-color: #F0F0F0;
+  background-color: white;
   height: 100vh;
 }
 
 
-.gallery {
-  margin: 20px;
-/*  border: 3px solid black;*/
-  float: left;
-  width: 40%;
+.bgimg-3 {
+  background-color: rgb(246,246,247);
+  height: 100vh;
+  font-size: 25px;
+  color: #606070;
+  text-align: center;
+  font-weight: 450;
 }
 
-.gallery img {
-/*  margin-left: 50px;*/
-  margin-right: auto;
+.bgimg-4 {
+  background-image: linear-gradient(transparent, white),
+  url('/static/navigate/images/fern-allan.jpg');
+  background-color: white;
+  height: 100vh;
+  font-size: 17px;
+}
+
+.aboutus-title{
+  font-size: 55px;
+  color: #404040;
+  font-weight: bold;
+  margin-bottom: 45px;
+}
+
+.imgContainer {
+  height: 250px;
   width: 250px;
-  height: auto;
+  position: relative;
+  margin-bottom: 15px;
+
 }
 
-.logo img {
-  max-width: 100%;
+.imgContainer img{
   max-height: 100%;
+  max-width: 100%;
+  margin-left: 30px;
+}
+
+.descrip{
+  color: #404040;
+  padding: 1px;
+  font-size: 40px;
+  font-weight: bold;
+  margin-bottom: -40px;
+}
+
+.links{
+  display: flex;
+  float: right;
+  color: #007bff;
+  font-size: 20px;
+  margin: 10px 20px;
+}
+
+.links .btn{
+  padding-top: 3px; 
+  font-size: inherit;
 }
 
 .logo-nav {
@@ -63,19 +159,10 @@ body, html {
 }
 
 .steps-Title{
-  font-size: 50px;
-  color: #606C78;
-  font-family: "Arial Black", Gadget, sans-serif;
-  font-weight: 20;
-}
-
-.desc {
-  text-align: center;
-  color: darkgrey;
-}
-
-.searchbar-color {
-  color: #697988;
+  font-size: 55px;
+  color: #606070;
+  font-weight: bold;
+  margin-bottom: 100px;
 }
 
 .centered {
@@ -83,6 +170,10 @@ body, html {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.bgimg-3 > .centered{
+  width: 80%;
 }
 
 .middle {
@@ -98,19 +189,49 @@ body, html {
 .top {
   display: flex;
   height: 100px;
-  background: #2f2626;
+  background: #353535;
 }
 
 .bottom {
   height: calc(100vh - 100px);
-  background: #404040;
+  background: #3D3D3D;
+}
+
+#search-bar-main {
+  height: 50px;
+  min-width: 550px;
+/*  width: calc(60% - 130px - 20px);
+*//*  margin: 25px 10px 25px 10px;*/
+  width: 100%;
+
+}
+
+#search-bar-main button {
+  width: 130px;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgb(0, 0, 0, 0.5);
+  font-size: 16px;
+  font-weight: bold;
+  
+}
+
+#search-bar-main input {
+  padding-left: 15px;
+  width: calc(100% - 160px);
+  border-radius: 8px;
+  border: 0px;
+  margin-right: 30px;
+  outline: none;
+  box-shadow: 0 0 5px rgb(0, 0, 0, 0.5);
 }
 
 #search-bar {
   height: 50px;
-  min-width: 300px;
+  min-width: 550px;
   width: calc(60% - 130px - 20px);
   margin: 25px 10px 25px 10px;
+  border: 1px solid darkgrey;
+  border-radius: 8px;
 }
 
 #search-bar * {
@@ -134,28 +255,4 @@ body, html {
 #map {
   height: 100%;
   width: 100%;
-}
-
-.homepage-search {
-  height: 100px;
-  width: 90vw;
-}
-
-.homepage {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-
-  background-image: url('/static/navigate/images/barpic.jpeg');
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-size: cover;
-}
-
-.homepage-elements {
-  display: flex;
-  flex-direction: column;
-  transform: translate(-50%, -80%);
-  max-height: 100%;
-  max-width: 100%;
 }

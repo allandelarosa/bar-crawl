@@ -1,7 +1,7 @@
 .results-container {
     display: flex;
     flex-direction: column;
-    background-color: white;
+    background-color: #5C5C5C;
     height: 100%;
     width: 100%;
     border-left: 1px solid  #aaa;
@@ -10,6 +10,7 @@
 .search-title {
     font-family: "Calisto MT", "Bookman Old Style", Bookman, "Goudy Old Style", Garamond, "Hoefler Text", "Bitstream Charter", Georgia, serif;
     font-weight: bold;
+    color: white;
     font-size: max(2.5vw, 2.5vh, 20px);
 
     padding: 10px 20px 10px 20px;
@@ -124,6 +125,7 @@
     margin: 10px 20px 10px 20px;
     padding: 20px;
     font-size: max(1vw, 1vh, 10px);
+    background-color: white;
 }
 
 #search-results li:hover {
