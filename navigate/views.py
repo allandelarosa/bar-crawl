@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 from django.conf import settings
 
-def hop(request, place=''):
+def crawl(request, place=''):
     context = {
         'API_KEY': settings.API_KEY,
         'place': place,

@@ -1,126 +1,127 @@
-function clearMarkers() {
+let topZ = 20;
+const markerColor = '#ff3333';
+
+function hideMarkers() {
+    if (!markers) return;
+
     Object.values(markers).forEach((marker) => {
         marker.setMap(null);
     });
-    markers = {};
+
+    topZ = 20;
 }
 
 async function highlightMarker(marker) {
     // move map position to include marker if not visible
     if (!map.getBounds().contains(marker.position)) {
-        let newCenter = {
-            lat: .9 * marker.position.lat() + .1 * map.getCenter().lat(),
-            lng: .9 * marker.position.lng() + .1 * map.getCenter().lng(),
-        };
-        map.panTo(newCenter);
+        map.panTo(marker.position);
     }
 
     let icon = marker.icon;
-    icon.fillColor = '#FFDD33';
+    icon.fillColor = '#ffffff';
+    icon.strokeColor = markerColor;
     marker.setIcon(icon);
-    marker.zIndex += 30;
+    marker.label.color = markerColor;
+    marker.zIndex = ++topZ;
 }
 
 async function unhighlightMarker(marker) {
     let icon = marker.icon;
-    icon.fillColor = '#FF3333';
+    icon.fillColor = markerColor;
+    icon.strokeColor = '#ffffff';
     marker.setIcon(icon);
-    marker.zIndex -= 30;
+    marker.label.color = '#ffffff';
+    marker.setIcon(icon);
 }
 
-function createMarkers(places) {
-    labelIndex = 1;
-    var pinColor = '#FF3333';
+async function createMarkers(places) {
+    for (let i = 0, place; (place = places[i]); i++) {
+        createMarker(place, i + 1);
 
+        // extend bounds to include marker on map
+        bounds.extend(place.geometry.location);
+    }
+    // show map with all markers visible
+    map.fitBounds(bounds);
+}
+
+async function createMarker(place, index) {
     // Pick your pin (hole or no hole)
-    var pinSVGHole = "M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z";
-    var labelOriginHole = new google.maps.Point(12, 15);
-    var pinSVGFilled = "M 12,2 C 8.1340068,2 5,5.1340068 5,9 c 0,5.25 7,13 7,13 0,0 7,-7.75 7,-13 0,-3.8659932 -3.134007,-7 -7,-7 z";
-    var labelOriginFilled = new google.maps.Point(12, 9);
+    // const pinSVGHole = "M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z";
+    // const labelOriginHole = new google.maps.Point(12, 15);
+    const pinSVGFilled = "M 12,2 C 8.1340068,2 5,5.1340068 5,9 c 0,5.25 7,13 7,13 0,0 7,-7.75 7,-13 0,-3.8659932 -3.134007,-7 -7,-7 z";
+    const labelOriginFilled = new google.maps.Point(12, 9);
 
-    var markerImage = {  // https://developers.google.com/maps/documentation/javascript/reference/marker#MarkerLabel
+    const markerImage = {  // https://developers.google.com/maps/documentation/javascript/reference/marker#MarkerLabel
         path: pinSVGFilled,
         anchor: new google.maps.Point(12, 22),
         fillOpacity: 1,
-        fillColor: pinColor,
+        fillColor: markerColor,
         strokeWeight: 2,
-        strokeColor: "#ffffff",
+        strokeColor: '#FFFFFF',
         scale: 2,
         labelOrigin: labelOriginFilled,
     };
 
+    const marker = new google.maps.Marker({
+        map: map,
+        icon: markerImage,
+        // title: place.name,
+        position: place.geometry.location,
+        label: { text: `${index}`, color: '#FFFFFF' },
+        zIndex: -index,
+    });
 
-    for (let i = 0, place; (place = places[i]); i++) {
-        let marker = new google.maps.Marker({
-            map: map,
-            icon: markerImage,
-            title: place.name,
-            position: place.geometry.location,
-            label: { text: "" + labelIndex, color: '#FFFFFF' },
-            zIndex: -(labelIndex),
-        });
+    // const markerinfowindow = await createInfoWindow(place);
+    const markerinfowindow = await createInfoWindow(marker.position, place);
+    
+    markerinfowindow.setMap(map);
+    markerinfowindow.hide()
 
+    // store info window so it can be cleared
+    infoWindows.push(markerinfowindow);
 
-        const li = document.createElement("div");
+    // Mouseover
+    marker.addListener("mouseover", () => {
+        highlightMarker(marker);
+        markerinfowindow.show();
+    });
 
-        let photoContainer = document.createElement('div');
-        let infoContainer = document.createElement('div');
+    // Mouseout
+    marker.addListener("mouseout", () => {
+        unhighlightMarker(marker);
+        markerinfowindow.hide();
+    });
 
-        photoContainer.classList.add('photo-container-2');
-        infoContainer.classList.add('info-container-2');
+    // Scroll to Place
+    marker.addListener("click", () => {
+        itineraryCreated ? expandItineraryEntry(place.place_id) : scrollResults(place.place_id);
+    });
 
-        infoContainer.innerHTML =
-            "<div>" +
-            "<div class='nameTitle'>" +
-            place.name +
-            "</div>"
-            +
-            "rating: " +
-            place.rating +
-            " " +
-            (place.price_level) +
-            "<br>" +
-            place.vicinity +
-            "</div>"
+    // save marker for later reference
+    markers[place.place_id] = marker;
+}
 
-        if (place.photos != null) {
-            let photo = document.createElement('img');
-            let firstPhoto = place.photos[0];
-            photo.classList.add('result-photo');
-            photo.src = firstPhoto.getUrl();
-            photoContainer.appendChild(photo)
-        }
+async function filterMarkers(ids) {
+    let index = 1;
 
-        li.appendChild(photoContainer);
-        li.appendChild(infoContainer);
+    for (let id of ids) {
+        markers[id].setMap(map);
+        markers[id].zIndex = -index;
+        markers[id].label.text = index++;
 
-        const markerinfowindow = new google.maps.InfoWindow({
-            content: li,
-            // prevents map from moving
-            // disableAutoPan: true, 
-        });
-
-        // Mouseover
-        marker.addListener("mouseover", () => {
-            highlightMarker(marker);
-            markerinfowindow.open(map, marker);
-        });
-
-        // Mouseout
-        marker.addListener("mouseout", () => {
-            unhighlightMarker(marker);
-            markerinfowindow.close();
-        });
-
-        markers[place.place_id] = marker
-        placesList.appendChild(createSearchResult(place, labelIndex++));
-
-        // Scroll to Place
-        marker.addListener("click", () => {
-            scrollResults(place);
-        });
-
-        bounds.extend(place.geometry.location);
+        // extend bounds to include marker on map
+        bounds.extend(markers[id].position);
     }
+    // show map with all markers visible
     map.fitBounds(bounds);
+}
+
+async function resetMarkers(places) {
+    let index = 1;
+    for (let place of places) {
+        markers[place.place_id].setMap(map);
+        markers[place.place_id].zIndex = -index;
+        markers[place.place_id].label.text = index++;
+    }
 }

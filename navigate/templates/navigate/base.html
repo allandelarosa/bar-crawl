@@ -17,9 +17,6 @@
     <!-- custom stylesheets -->
     {% block css %}{% endblock %}
     <link rel="stylesheet" type="text/css" href="{% static 'navigate/css/main.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'navigate/css/search-results.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'navigate/css/itinerary.css' %}">
-
 
     {% if title %}
     <title>Bar Crawl - {{ title }}</title>
@@ -29,10 +26,7 @@
 </head>
 
 <body>
-    
     {% block content %}{% endblock %}
-
-
 
     <!-- scripts for bootstrap -->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" 

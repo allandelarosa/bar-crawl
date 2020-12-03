@@ -1,0 +1,96 @@
+#itinerary-control {
+    display: flex;
+    flex-direction: column;
+
+    margin: 10px;
+    max-width: 280px;
+    background-color: #303030;
+    overflow: hidden;
+
+    color: white;
+    font-size: 14px;
+
+    border-radius: 3px;
+    box-shadow: 0 0 5px rgb(0, 0, 0, 0.4);
+}
+
+.itinerary-control-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    background-color: #222;
+    width: 280px;
+    padding: 10px 20px;
+
+    font-size: 18px;
+}
+
+/* .control-expanded {
+    background-color: #f0f0f0;
+} */
+
+.itinerary-control-title:hover {
+    /* background-color: #222; */
+    text-decoration: underline;
+}
+
+.itinerary-control-entries {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    padding: 6px;
+    margin: 10px 20px;
+    background-color: #353535;
+
+    border: 1px solid white;
+    border-radius: 5px;
+
+    font-size: 12px;
+}
+
+.itinerary-control-entries > * {
+    margin: 4px;
+}
+
+.itinerary-control-entries .place-name:hover {
+    text-decoration: underline;
+}
+
+.remove-button {
+    margin-left: 10px;
+    padding: 2px 3px;
+    font-size: 9px;
+    float: right;
+}
+
+#minimize-button {
+    padding: 1px 4px;
+    font-size: 13px;
+
+    outline: none;
+    box-shadow: none;
+}
+
+#minimize-button:hover {
+    background-color:black;
+}
+
+.dijkstra-container {
+    padding: 0 20px 10px 20px;
+
+    display: flex;
+    justify-content: center;
+}
+
+#do-dijkstra {
+    width: 200px;
+}
+
+.reset-btn {
+    padding: 10px 20px;
+    width: 100%;
+
+    font-size: 15px;
+}

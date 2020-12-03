@@ -189,7 +189,7 @@ flex-direction: row;
 .top {
   display: flex;
   height: 100px;
-  background: #353535;
+  background: #222;
 }
 
 .bottom {

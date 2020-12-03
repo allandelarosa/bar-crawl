@@ -1,0 +1,87 @@
+/* pixel amount is different inside map iframe */
+
+.info-window {
+    width: 180px;
+    padding: 15px;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.info-window > :not(:first-child) {
+    margin-top: 5px;
+}
+
+.info-window .place-name {
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.info-window .photo-container {
+    margin-bottom: 5px;
+    width: 150px;
+    height: 150px;
+}
+
+.info-window .wide-photo {
+    height: 150px;
+}
+
+.info-window .long-photo {
+    width: 150px;
+}
+
+.info-window .Stars {
+    line-height: .9;
+}
+
+/* The popup bubble styling. */
+
+.popup-bubble {
+    /* Position the bubble centred-above its parent. */
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -100%);
+    /* Style the bubble. */
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+/* The parent of the bubble. A zero-height div at the top of the tip. */
+
+.popup-bubble-anchor {
+    /* Position the div a fixed distance above the tip. */
+    position: absolute;
+    width: 100%;
+    bottom: 53px;
+    left: 0;
+}
+
+/* This element draws the tip. */
+
+.popup-bubble-anchor::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* Center the tip horizontally. */
+    transform: translate(-50%, 0);
+    /* The tip is a https://css-tricks.com/snippets/css/css-triangle/ */
+    width: 0;
+    height: 0;
+    /* The tip is 10px high, and (8+8)px wide. */
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 10px solid white;
+    /* filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.3)); */
+}
+
+/* JavaScript will position this div at the bottom of the popup tip. */
+
+.popup-container {
+    /* cursor: auto; */
+    height: 0;
+    position: absolute;
+}

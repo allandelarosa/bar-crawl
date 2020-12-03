@@ -1,12 +1,18 @@
 {% extends "navigate/base.html" %}
 {% load static %}
 
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'navigate/css/search-results.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'navigate/css/infowindow.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'navigate/css/itinerary-control.css' %}">
+{% endblock css %}
+
 {% block content %}
 {% csrf_token %}
 <!-- search bar -->
 <div class="row top">
 	<div class="logo-nav">
-		<img src='/static/navigate/images/bar_crawl_logo.png'>
+		<img src='/static/navigate/images/white-logo.png'>
 	</div>
 
 	<div class="row" id="search-bar">
@@ -38,11 +44,7 @@
 
 
 		<div class="results-container centered">
-			<div class="search-title">
-				<!-- <img src='/static/navigate/images/searchTitle.png'> -->
-				Top 20 Bars in the Area
-				
-			</div>
+			<div id="search-title"></div>
 
 			<ul id="search-results"></ul>
 		</div>
@@ -54,5 +56,7 @@
 <script src="{% static 'navigate/js/markers.js' %}"></script>
 <script src="{% static 'navigate/js/searchresults.js' %}"></script>
 <script src="{% static 'navigate/js/djikstra.js' %}"></script>
+<script src="{% static 'navigate/js/itinerary-control.js' %}"></script>
 <script src="{% static 'navigate/js/itinerary.js' %}"></script>
+<script src="{% static 'navigate/js/infowindow.js' %}"></script>
 {% endblock content %}

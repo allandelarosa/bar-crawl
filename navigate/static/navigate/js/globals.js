@@ -4,13 +4,11 @@ const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 let map;
 let bounds;
 let service;
-let infoWindow;
-let currentInfoWindow;
+let geocoder;
 
 // for markers and search results
-let markers = {};
-let placesList = document.getElementById("search-results");
-
+let markers;
+let infoWindows;
 let expanded;
 
 // for djikstra
@@ -20,8 +18,10 @@ let toVisit;
 let startPoint;
 let endPoint;
 
-let itineraryVisible = false;
-let itineraryMinimized = false;
+let itineraryControlVisible = false;
+let itineraryControlMinimized = false;
+
+let itineraryCreated;
 
 let graph;
 let path;

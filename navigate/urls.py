@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('hop/', views.hop, name='navigate-hop'),
-    path('hop/<str:place>', views.hop),
+    path('crawl/', views.crawl, name='navigate-crawl'),
+    path('crawl/<str:place>', views.crawl),
     path('', views.home, name='navigate-home'),
 ]

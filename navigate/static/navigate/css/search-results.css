@@ -1,110 +1,33 @@
+/* overwrite bootstrap button styling */
+.btn {
+    font-size: inherit;
+}
+
+.btn-link {
+    padding: 0;
+    margin: 0;
+}
+
 .results-container {
     display: flex;
     flex-direction: column;
-    background-color: #5C5C5C;
+    background-color: white;
     height: 100%;
     width: 100%;
-    border-left: 1px solid  #aaa;
+    border-left: 1px solid #aaa;
 }
 
-.search-title {
-    font-family: "Calisto MT", "Bookman Old Style", Bookman, "Goudy Old Style", Garamond, "Hoefler Text", "Bitstream Charter", Georgia, serif;
+#search-title {
     font-weight: bold;
-    color: white;
-    font-size: max(2.5vw, 2.5vh, 20px);
+    font-size: 30px;
 
     padding: 10px 20px 10px 20px;
-    overflow: hidden;
-}
-
-.search-result-title-bar {
-    font-size: max(1.5vw, 1.5vh, 15px);
-}
-
-.place-name:hover {
-    text-decoration: underline;
-}
-
-.ratings-container div {
-    float: left;
-}
-
-:root {
-    --star-size: max(1.2vw, 1.2vh, 12px);
-    --star-color: #ccc;
-    --star-background: #fb0;
-}
-
-.Stars {
-    margin-top: max(0.2vw, 0.2vh);
-    margin-left: 5px;
-    --percent: calc(var(--rating) / 5 * 100%);
-    display: inline-block;
-    font-size: var(--star-size);
-    font-family: Times;
-    line-height: 1;
-}
-
-.Stars::before {
-    content: '★★★★★';
-    letter-spacing: 3px;
-    background: linear-gradient(90deg, var(--star-background) var(--percent), var(--star-color) var(--percent));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.photo-container {
-    width: max(15vw, 15vh, 150px);
-    height: max(15vw, 15vh, 150px);
-    background-size: cover;
-    background-position: center;
-    margin: 5px 0 5px 0;
-}
-
-.photo-container-2 {
-    width: 150px;
-    height: 150px;
-    background-size: cover;
-    background-position: center;
-    float: right;
-}
-
-/* .info-container {
-    width: 70%;
-    float: left;
-    word-wrap: break-word;
-} */
-
-.info-container-2 {
-    width: 40%;
-    float: left;
-    word-wrap: break-word;
-}
-
-.buttons-container {
-    margin-top: 5px;
-    display: none;
-}
-
-.start-end-btn {
-    font-size: max(1vw, 1vh, 10px);
-    margin-right: 5px;
-}
-
-.show-more-link {
-    color: blue;
-}
-
-.result-photo {
-    border-radius: 5px;
-    width: 100%;
-    height: 100%;
 }
 
 #search-results {
     list-style-type: none;
     padding: 0;
-    height: calc(100% - max(2.5vw, 2.5vh, 20px) - 45px);
+    height: calc(100% - 30px - 45px);
     overflow-y: scroll;
 }
 
@@ -120,14 +43,118 @@
 } */
 
 #search-results li {
+    display: flex;
+    flex-direction: row;
+    
     border: 1px solid #e0e0e0;
-    border-radius: 3px;
+    border-radius: 7px;
     margin: 10px 20px 10px 20px;
     padding: 20px;
-    font-size: max(1vw, 1vh, 10px);
-    background-color: white;
+
+    font-size: 13px;
+    color: #555;
 }
 
 #search-results li:hover {
     box-shadow: 0 0 10px #bbb;
+}
+
+.info-container {
+    flex-grow: 1;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;;
+}
+
+.place-info {
+    display: flex;
+    flex-direction: column;
+
+    margin-top: 5px;
+}
+
+.search-result-title {
+    font-size: 19px;
+    color: black;
+
+    width: 100%;
+}
+
+.clickable-title:hover {
+    text-decoration: underline;
+}
+
+.ratings-container div {
+    float: left;
+}
+
+.Stars {
+    margin: 0 3px 0 5px;
+    --percent: calc(var(--rating) / 5 * 100%);
+    display: inline-block;
+    font-size: 17px;
+    line-height: 1.1;
+}
+
+.Stars::before {
+    content: '★★★★★';
+    background: linear-gradient(90deg, #fb0, var(--percent), #ccc var(--percent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.button-container {
+    margin-top: 20px;
+}
+
+.button-container :not(:last-child) {
+    margin-right: 5px;
+}
+
+.photo-container {
+    border-radius: 7px;
+    overflow: hidden;
+    position: relative;
+}
+
+#search-results .photo-container {
+    margin-left: 15px;
+    min-width: 175px;
+    width: 175px;
+    height: 175px;
+}
+
+.result-photo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.wide-photo {
+    height: 175px;
+}
+
+.long-photo {
+    width: 175px;
+}
+
+.hidden {
+    opacity: 0%;
+}
+
+.additional-info {
+    display: flex;
+    flex-direction: row;
+    margin-top: 5px;
+}
+
+/* .additional-info > :not(:first-child) {
+    margin-left: 7px;
+} */
+
+.info-icon {
+    /* display: none; */
+    margin-right: 7px;
 }

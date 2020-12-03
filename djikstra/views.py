@@ -18,11 +18,12 @@ def path(request):
     inf = float("inf")
 
     graph = json_data['graph']
-    start = json_data['start_point']['name']
-    stop = json_data['end_point']['name']
+    start = json_data['start_point']['id']
+    stop = json_data['end_point']['id']
     location_data = json_data['location_data']
 
-    coords = {loc["name"]: {"lat": loc["lat"], "lng": loc["lng"]} for loc in location_data}
+    coords = {loc["id"]: {"lat": loc["lat"], "lng": loc["lng"]}
+              for loc in location_data}
 
     costs = {}
     parents = {}
@@ -74,14 +75,24 @@ def path(request):
 
         # print(f"The shortest path is {path[::-1]}")
 
+    # return edge weights, for animation
+    distances = []
+    for i in range(len(path) - 1):
+        distances.append(graph[path[i]][path[i + 1]])
+
     # data = {'path': [coord[loc] for loc in path[::-1]]}
-    return JsonResponse([coords[loc] for loc in path[::-1]], safe=False)
+    return JsonResponse({
+        'path': [coords[loc] for loc in path[::-1]],
+        'ids': path[::-1],
+        'distances': distances[::-1],
+    }, safe=False)
 
 
 def graph(request):
     location_data = json.loads(request.body)
 
-    coords = {loc["name"]: {"lat": loc["lat"], "lng": loc["lng"]} for loc in location_data}
+    coords = {loc["id"]: {"lat": loc["lat"], "lng": loc["lng"]}
+              for loc in location_data}
 
     def distance(a, b):
         R = 6371  # Radius of the earth in km
@@ -104,10 +115,10 @@ def graph(request):
         for loc2 in location_data[i + 1:]:
             dist = distance(loc1, loc2)
 
-            edges.append((dist, loc1["name"], loc2["name"]))
+            edges.append((dist, loc1["id"], loc2["id"]))
 
-            distances[loc1["name"]][loc2["name"]] = dist
-            distances[loc2["name"]][loc1["name"]] = dist
+            distances[loc1["id"]][loc2["id"]] = dist
+            distances[loc2["id"]][loc1["id"]] = dist
 
     heapq.heapify(edges)
 
@@ -148,4 +159,7 @@ def graph(request):
         graph[loc1][loc2] = dist
         graph[loc2][loc1] = dist
 
-    return JsonResponse({'to_display': to_display, 'graph': graph}, safe=False)
+    return JsonResponse({
+        'to_display': to_display,
+        'graph': graph,
+    }, safe=False)
