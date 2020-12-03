@@ -5,4 +5,16 @@ function initMap() {
     searchBox.addListener("places_changed", () => {
         window.location.href = "/hop/" + input.value;
     });
+
+    $('#search-button').click(() => {
+    	window.location.href = "/hop/" + input.value;
+    });
+
+    $('#steps').click(() => {
+    	$('.bgimg-3')[0].scrollIntoView({behavior: 'smooth', block: 'center'});
+    });
+
+    $('#aboutus').click(() => {
+    	$('.bgimg-4')[0].scrollIntoView({behavior: 'smooth', block: 'center'});
+    });
 }
