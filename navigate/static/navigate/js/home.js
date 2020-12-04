@@ -7,7 +7,7 @@ function initMap() {
     });
 
     $('#search-button').click(() => {
-    	window.location.href = "/hop/" + input.value;
+    	window.location.href = "/crawl/" + input.value;
     });
 
     $('#steps').click(() => {
